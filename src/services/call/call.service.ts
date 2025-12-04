@@ -119,6 +119,10 @@ class Call extends ServiceBase {
   public hangup(callUUID: string): Promise<TerminateResponse | ErrorResponse> {
     return this.http.delete<TerminateResponse>(`/v2/calls/${callUUID}`)
   }
+
+  public async getRecord(callUUID: string): Promise<ArrayBuffer | ErrorResponse> {
+    return await this.http.get(`/v1/recordings/${callUUID}`, { responseType: "arraybuffer" })
+  }
 }
 
 export { Call }

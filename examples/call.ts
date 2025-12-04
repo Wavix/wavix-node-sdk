@@ -8,41 +8,38 @@ wavix.call.onEvent(event => {
 
   if (event.event_type === "answered") {
     wavix.call.playAudio(event.uuid, "https://<YOUR AUDIO FILE>")
-
-    setTimeout(() => {
-      wavix.call.collectDTMF(event.uuid, {
-        min_digits: 0,
-        max_digits: 4,
-        timeout: 10,
-        termination_character: "#",
-        audio: {
-          url: "https://<YOUR AUDIO FILE>"
-        }
-      })
-    }, 1000)
   }
 
-  if (event.event_payload?.in_call_event === "collect_completed") {
-    const digits = event.event_payload.in_call_event_data.digits
-    wavix.call.tts(event.uuid, `You pressed: ${digits.split("").join(", ")}`)
+  if (event.event_type === "on_call_event" && event.event_payload?.type === "audio") {
+    console.log("Audio event:", event.event_payload.payload.status)
+  }
 
-    setTimeout(() => wavix.call.hangup(event.uuid), 5000)
+  if (event.event_type === "completed") {
+    console.log("Call completed")
   }
 })
 
 const main = async () => {
   try {
     await wavix.call.connect()
-    const response = await wavix.call.start({ from: "", to: "" })
 
-    if (response.uuid) {
+    const response = await wavix.call.start({
+      from: "+1234567890",
+      to: "+0987654321",
+      callback_url: "https://your-callback-url.com/webhook"
+    })
+
+    if ("uuid" in response) {
       console.log("Call started!", response)
 
+      const call = await wavix.call.get(response.uuid)
+      console.log("Call details:", call)
+
       const list = await wavix.call.getList()
-      console.log("List", list)
+      console.log("Active calls:", list)
     }
   } catch (error) {
-    console.error("Error connecting to websocket:", error.message)
+    console.error("Error:", (error as Error).message)
   }
 }
 

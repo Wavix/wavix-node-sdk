@@ -1,92 +1,87 @@
-export type CallContext = "outbound" | "inbound"
-export type EventType = "call_setup" | "ringing" | "answered" | "completed" | "in_call_event"
+export type CallDirection = "outbound" | "inbound"
 
-export interface Call {
-  id: string
-  context: CallContext
+export type EventType =
+  | "call_setup"
+  | "ringing"
+  | "early_media"
+  | "answered"
+  | "completed"
+  | "busy"
+  | "cancelled"
+  | "rejected"
+  | "on_call_event"
+
+export interface AudioEventPayload {
+  type: "audio"
+  payload: {
+    status: "started" | "completed"
+  }
+}
+
+export interface CallEvent {
+  uuid: string
+  direction: CallDirection
+  event_type: EventType
+  event_time: Date
+  event_payload: AudioEventPayload | null
   from: string
   to: string
-  started_at: Date
-  answered_at: Date | null
-  is_recording: boolean
+  call_started: Date
+  call_answered: Date | null
+  call_completed: Date | null
+  machine_detected: boolean
+  tag: string | null
+}
+
+export interface CallsResponse {
+  success: boolean
+  calls: Array<CallEvent>
 }
 
 export interface CallResponse {
-  calls: Array<Call>
+  success: boolean
+  call: CallEvent
+}
+
+export interface StartCallRequest {
+  from: string
+  to: string
+  callback_url: string
+  recording?: boolean
+  voicemail_detection?: boolean
+  timeout?: number
+  tag?: string
+}
+
+export interface StartCallErrorResponse {
+  success: boolean
+  message: string
+  errors?: {
+    [field: string]: string
+  }
 }
 
 export interface TerminateResponse {
   success: boolean
 }
 
-export interface StartCall {
-  from: string
-  to: string
-  status_callback?: string
+export interface AnswerCallRequest {
   call_recording?: boolean
-  machine_detection?: boolean
-  max_duration?: number
+  call_transcription?: boolean
 }
 
-export interface CallEvent {
-  uuid: string
-  event_type: EventType
-  event_time: Date
-  event_payload: CallEventPayload | null
-  from: string
-  to: string
-  call_started: Date
-  call_answered: null
-  machine_detected: boolean
-  tag: string
-}
-
-type CallEventPayload = CallEventDTMF
-
-interface CallEventDTMF {
-  in_call_event: "collect_completed"
-  in_call_event_data: { digits: string; reason: string }
-}
-
-export interface StartCallErrorResponse {
+export interface AnswerCallResponse {
   success: boolean
-  message: string
-  error?: {
-    [field: string]: string
-  }
+}
+
+export interface UpdateCallRequest {
+  tag: string
 }
 
 export type SocketEventType = "connect" | "event" | "disconnect"
 
-export interface PlayAudioOptions {
-  timeout_before_playing: number
-  timeout_between_playing: number
-}
-
-export interface CollectDTMFOptions {
-  min_digits?: number
-  max_digits?: number
-  timeout?: number
-  termination_character?: string
-  audio: {
-    url: string
-    stop_on_keypress?: boolean
-  }
-  callback_url?: string
-}
-
-export interface PlayAudioPayload extends PlayAudioOptions {
+export interface PlayAudioPayload {
   audio_file: string
-}
-
-export interface TTSOptions {
-  delay_before_playing?: number
-  max_repeat_count?: number
-  voice?: string
-}
-
-export interface TTSPayload extends TTSOptions {
-  text: string
 }
 
 export interface TransferOptions {

@@ -1,5 +1,14 @@
 export type CallContext = "outbound" | "inbound"
-export type EventType = "call_setup" | "ringing" | "answered" | "completed" | "in_call_event"
+export type EventType =
+  | "call_setup"
+  | "ringing"
+  | "answered"
+  | "completed"
+  | "busy"
+  | "cancelled"
+  | "rejected"
+  | "early_media"
+  | "on_call_event"
 
 export interface Call {
   id: string
@@ -30,22 +39,35 @@ export interface StartCall {
 
 export interface CallEvent {
   uuid: string
+  direction: "inbound" | "outbound"
   event_type: EventType
   event_time: Date
   event_payload: CallEventPayload | null
   from: string
   to: string
   call_started: Date
-  call_answered: null
+  call_answered: Date | null
+  call_completed: Date | null
   machine_detected: boolean
   tag: string
 }
 
-type CallEventPayload = CallEventDTMF
+type CallEventPayload = AudioEventPayload | CollectCompletedEventPayload
 
-interface CallEventDTMF {
-  in_call_event: "collect_completed"
-  in_call_event_data: { digits: string; reason: string }
+interface AudioEventPayload {
+  type: "audio"
+  payload: {
+    playback_id: string
+    status: "started" | "completed"
+  }
+}
+
+interface CollectCompletedEventPayload {
+  type: "collect_completed"
+  payload: {
+    digits: string
+    reason: "collected" | "timeout"
+  }
 }
 
 export interface StartCallErrorResponse {

@@ -22,8 +22,8 @@ wavix.call.onEvent(event => {
     }, 1000)
   }
 
-  if (event.event_payload?.in_call_event === "collect_completed") {
-    const digits = event.event_payload.in_call_event_data.digits
+  if (event.event_payload?.type === "collect_completed") {
+    const digits = event.event_payload.payload.digits
     wavix.call.tts(event.uuid, `You pressed: ${digits.split("").join(", ")}`)
 
     setTimeout(() => wavix.call.hangup(event.uuid), 5000)
@@ -42,7 +42,7 @@ const main = async () => {
       console.log("List", list)
     }
   } catch (error) {
-    console.error("Error connecting to websocket:", error.message)
+    console.error("Error connecting to websocket:", (error as Error).message)
   }
 }
 

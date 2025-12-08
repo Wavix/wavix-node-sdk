@@ -22,6 +22,7 @@ export interface StartCall {
     recording?: boolean;
     voicemail_detection?: boolean;
     timeout?: number;
+    max_duration?: number;
     tag?: string;
 }
 export interface CallEvent {

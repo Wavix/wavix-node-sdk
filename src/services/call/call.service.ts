@@ -96,6 +96,7 @@ class Call extends ServiceBase {
   public tts(callUUID: string, text: string, options?: TTSOptions): Promise<BasicSuccess> {
     return this.http.post<BasicSuccess, TTSPayload>(`/v1/calls/${callUUID}/tts`, {
       text,
+      voice: options?.voice || "Joey",
       ...options
     })
   }

@@ -6,7 +6,6 @@ import {
   StartCall,
   CallEvent,
   StartCallErrorResponse,
-  PlayAudioOptions,
   CollectDTMFOptions,
   TTSOptions,
   TTSPayload,
@@ -65,23 +64,29 @@ class Call extends ServiceBase {
   }
 
   public getList(): Promise<CallResponse | ErrorResponse> {
-    return this.http.get<CallResponse>("/v1/call")
+    return this.http.get<CallResponse>("/v1/calls")
+  }
+
+  public getCall(callUUID: string): Promise<{ success: boolean; call: CallEvent } | ErrorResponse> {
+    return this.http.get(`/v1/calls/${callUUID}`)
   }
 
   public start(payload: StartCall): Promise<(CallEvent & StartCallErrorResponse) | ErrorResponse> {
-    return this.http.post<CallEvent & StartCallErrorResponse, StartCall>("/v1/call", {
+    return this.http.post<CallEvent & StartCallErrorResponse, StartCall>("/v1/calls", {
       ...payload,
-      call_recording: payload.call_recording || false,
-      machine_detection: payload.machine_detection || false
+      recording: payload.recording || false,
+      voicemail_detection: payload.voicemail_detection || false
     })
   }
 
-  public playAudio(callUUID: string, url: string, options?: PlayAudioOptions): Promise<BasicSuccess> {
-    return this.http.post<BasicSuccess, PlayAudioPayload>(`/v1/call/${callUUID}/play`, {
-      audio_file: url,
-      timeout_before_playing: options?.timeout_before_playing || 0,
-      timeout_between_playing: options?.timeout_between_playing || 0
+  public playAudio(callUUID: string, url: string): Promise<BasicSuccess> {
+    return this.http.post<BasicSuccess, PlayAudioPayload>(`/v1/calls/${callUUID}/play`, {
+      audio_file: url
     })
+  }
+
+  public stopAudio(callUUID: string): Promise<BasicSuccess> {
+    return this.http.delete<BasicSuccess>(`/v1/calls/${callUUID}/audio`)
   }
 
   /**
@@ -89,16 +94,14 @@ class Call extends ServiceBase {
    * https://docs.aws.amazon.com/polly/latest/dg/voicelist.html
    */
   public tts(callUUID: string, text: string, options?: TTSOptions): Promise<BasicSuccess> {
-    return this.http.post<BasicSuccess, TTSPayload>(`/v1/call/${callUUID}/tts`, {
+    return this.http.post<BasicSuccess, TTSPayload>(`/v1/calls/${callUUID}/tts`, {
       text,
-      voice: options?.voice || "Joey",
-      delay_before_playing: options?.delay_before_playing || 0,
-      max_repeat_count: options?.max_repeat_count || 0
+      ...options
     })
   }
 
   public transfer(callUUID: string, options: TransferOptions): Promise<BasicSuccess> {
-    return this.http.post<BasicSuccess, TransferOptions>(`/v1/call/${callUUID}/transfer`, {
+    return this.http.post<BasicSuccess, TransferOptions>(`/v1/calls/${callUUID}/transfer`, {
       from: options.from,
       to: options.to,
       call_recording: options.call_recording || false,
@@ -110,11 +113,15 @@ class Call extends ServiceBase {
   }
 
   public collectDTMF(callUUID: string, options: CollectDTMFOptions): Promise<BasicSuccess> {
-    return this.http.post<BasicSuccess, CollectDTMFOptions>(`/v1/call/${callUUID}/collect`, options)
+    return this.http.post<BasicSuccess, CollectDTMFOptions>(`/v1/calls/${callUUID}/collect`, options)
+  }
+
+  public updateCall(callUUID: string, tag: string): Promise<BasicSuccess> {
+    return this.http.patch<BasicSuccess, { tag: string }>(`/v1/calls/${callUUID}`, { tag })
   }
 
   public hangup(callUUID: string): Promise<TerminateResponse> {
-    return this.http.delete<TerminateResponse>(`/v1/call/${callUUID}`)
+    return this.http.delete<TerminateResponse>(`/v1/calls/${callUUID}`)
   }
 
   public async getRecord(callUUID: string): Promise<ArrayBuffer | ErrorResponse> {

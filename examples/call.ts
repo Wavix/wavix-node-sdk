@@ -33,7 +33,7 @@ wavix.call.onEvent(event => {
 const main = async () => {
   try {
     await wavix.call.connect()
-    const response = await wavix.call.start({ from: "", to: "" })
+    const response = await wavix.call.start({ from: "", to: "", callback_url: "" })
 
     if (response.uuid) {
       console.log("Call started!", response)

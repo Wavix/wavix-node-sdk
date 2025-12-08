@@ -9,6 +9,8 @@ export type EventType =
   | "rejected"
   | "early_media"
   | "on_call_event"
+  | "failed"
+  | "transfer"
 
 export interface Call {
   id: string
@@ -31,10 +33,11 @@ export interface TerminateResponse {
 export interface StartCall {
   from: string
   to: string
-  status_callback?: string
-  call_recording?: boolean
-  machine_detection?: boolean
-  max_duration?: number
+  callback_url: string
+  recording?: boolean
+  voicemail_detection?: boolean
+  timeout?: number
+  tag?: string
 }
 
 export interface CallEvent {
@@ -80,10 +83,6 @@ export interface StartCallErrorResponse {
 
 export type SocketEventType = "connect" | "event" | "disconnect"
 
-export interface PlayAudioOptions {
-  timeout_before_playing: number
-  timeout_between_playing: number
-}
 
 export interface CollectDTMFOptions {
   min_digits?: number
@@ -97,14 +96,14 @@ export interface CollectDTMFOptions {
   callback_url?: string
 }
 
-export interface PlayAudioPayload extends PlayAudioOptions {
+export interface PlayAudioPayload {
   audio_file: string
 }
 
 export interface TTSOptions {
+  voice?: string
   delay_before_playing?: number
   max_repeat_count?: number
-  voice?: string
 }
 
 export interface TTSPayload extends TTSOptions {

@@ -90,7 +90,7 @@ class Http {
   }
 
   private getUrl(path: string) {
-    return `${this.baseURL}${path}`
+    return `${this.baseURL}${path}${path.includes("?") ? "&" : "?"}`
   }
 
   private errorHandler(error: AxiosError): ErrorResponse {

@@ -11,12 +11,11 @@ wavix.call.onEvent(event => {
 
     setTimeout(() => {
       wavix.call.collectDTMF(event.uuid, {
-        min_digits: 0,
         max_digits: 4,
         timeout: 10,
         termination_character: "#",
-        audio: {
-          url: "https://<YOUR AUDIO FILE>"
+        prompt: {
+          play: "https://<YOUR AUDIO FILE>"
         }
       })
     }, 1000)

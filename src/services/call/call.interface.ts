@@ -85,16 +85,24 @@ export interface StartCallErrorResponse {
 export type SocketEventType = "connect" | "event" | "disconnect"
 
 
+export interface CollectPromptSay {
+  text: string
+  voice: string
+  language?: string
+}
+
+export interface CollectPrompt {
+  play?: string
+  say?: CollectPromptSay
+}
+
 export interface CollectDTMFOptions {
-  min_digits?: number
   max_digits?: number
   timeout?: number
   termination_character?: string
-  audio: {
-    url: string
-    stop_on_keypress?: boolean
-  }
-  callback_url?: string
+  max_attempts?: number
+  stop_on_keypress?: boolean
+  prompt?: CollectPrompt
 }
 
 export interface PlayAudioPayload {

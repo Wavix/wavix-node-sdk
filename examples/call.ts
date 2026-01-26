@@ -11,19 +11,18 @@ wavix.call.onEvent(event => {
 
     setTimeout(() => {
       wavix.call.collectDTMF(event.uuid, {
-        min_digits: 0,
         max_digits: 4,
         timeout: 10,
         termination_character: "#",
-        audio: {
-          url: "https://<YOUR AUDIO FILE>"
+        prompt: {
+          play: "https://<YOUR AUDIO FILE>"
         }
       })
     }, 1000)
   }
 
-  if (event.event_payload?.in_call_event === "collect_completed") {
-    const digits = event.event_payload.in_call_event_data.digits
+  if (event.event_payload?.type === "collect_completed") {
+    const digits = event.event_payload.payload.digits
     wavix.call.tts(event.uuid, `You pressed: ${digits.split("").join(", ")}`)
 
     setTimeout(() => wavix.call.hangup(event.uuid), 5000)
@@ -33,7 +32,7 @@ wavix.call.onEvent(event => {
 const main = async () => {
   try {
     await wavix.call.connect()
-    const response = await wavix.call.start({ from: "", to: "" })
+    const response = await wavix.call.start({ from: "", to: "", callback_url: "" })
 
     if (response.uuid) {
       console.log("Call started!", response)
@@ -42,7 +41,7 @@ const main = async () => {
       console.log("List", list)
     }
   } catch (error) {
-    console.error("Error connecting to websocket:", error.message)
+    console.error("Error connecting to websocket:", (error as Error).message)
   }
 }
 

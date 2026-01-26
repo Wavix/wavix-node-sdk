@@ -1,5 +1,16 @@
 export type CallContext = "outbound" | "inbound"
-export type EventType = "call_setup" | "ringing" | "answered" | "completed" | "in_call_event"
+export type EventType =
+  | "call_setup"
+  | "ringing"
+  | "answered"
+  | "completed"
+  | "busy"
+  | "cancelled"
+  | "rejected"
+  | "early_media"
+  | "on_call_event"
+  | "failed"
+  | "transfer"
 
 export interface Call {
   id: string
@@ -22,30 +33,45 @@ export interface TerminateResponse {
 export interface StartCall {
   from: string
   to: string
-  status_callback?: string
-  call_recording?: boolean
-  machine_detection?: boolean
+  callback_url: string
+  recording?: boolean
+  voicemail_detection?: boolean
+  timeout?: number
   max_duration?: number
+  tag?: string
 }
 
 export interface CallEvent {
   uuid: string
+  direction: "inbound" | "outbound"
   event_type: EventType
   event_time: Date
   event_payload: CallEventPayload | null
   from: string
   to: string
   call_started: Date
-  call_answered: null
+  call_answered: Date | null
+  call_completed: Date | null
   machine_detected: boolean
   tag: string
 }
 
-type CallEventPayload = CallEventDTMF
+type CallEventPayload = AudioEventPayload | CollectCompletedEventPayload
 
-interface CallEventDTMF {
-  in_call_event: "collect_completed"
-  in_call_event_data: { digits: string; reason: string }
+interface AudioEventPayload {
+  type: "audio"
+  payload: {
+    playback_id: string
+    status: "started" | "completed"
+  }
+}
+
+interface CollectCompletedEventPayload {
+  type: "collect_completed"
+  payload: {
+    digits: string
+    reason: "collected" | "timeout"
+  }
 }
 
 export interface StartCallErrorResponse {
@@ -58,31 +84,35 @@ export interface StartCallErrorResponse {
 
 export type SocketEventType = "connect" | "event" | "disconnect"
 
-export interface PlayAudioOptions {
-  timeout_before_playing: number
-  timeout_between_playing: number
+
+export interface CollectPromptSay {
+  text: string
+  voice: string
+  language?: string
+}
+
+export interface CollectPrompt {
+  play?: string
+  say?: CollectPromptSay
 }
 
 export interface CollectDTMFOptions {
-  min_digits?: number
   max_digits?: number
   timeout?: number
   termination_character?: string
-  audio: {
-    url: string
-    stop_on_keypress?: boolean
-  }
-  callback_url?: string
+  max_attempts?: number
+  stop_on_keypress?: boolean
+  prompt?: CollectPrompt
 }
 
-export interface PlayAudioPayload extends PlayAudioOptions {
+export interface PlayAudioPayload {
   audio_file: string
 }
 
 export interface TTSOptions {
+  voice?: string
   delay_before_playing?: number
   max_repeat_count?: number
-  voice?: string
 }
 
 export interface TTSPayload extends TTSOptions {

@@ -29,7 +29,11 @@ class Call extends ServiceBase {
     const url = new URL(this.baseURL)
 
     return new Promise((resolve, reject) => {
-      this.ws = new WebSocket(`wss://${url.host}/sip?appid=${this.options.appid}`)
+      this.ws = new WebSocket(`wss://${url.host}/sip`, {
+        headers: {
+          Authorization: `Bearer ${this.options.appid}`
+        }
+      })
 
       this.ws.onmessage = event => {
         this.callback.onEvent.forEach(cb => cb(event.data.toString()))

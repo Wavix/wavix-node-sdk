@@ -5,18 +5,17 @@ interface QueryParams {
 }
 
 class Http {
-  private appid: string
   private instance: AxiosInstance
 
   constructor(
     private baseURL: string,
     appid: string
   ) {
-    this.appid = appid
     this.instance = axios.create({
       baseURL,
       headers: {
-        Accept: "application/json"
+        Accept: "application/json",
+        Authorization: `Bearer ${appid}`,
       }
     })
   }
@@ -91,7 +90,7 @@ class Http {
   }
 
   private getUrl(path: string) {
-    return `${this.baseURL}${path}${path.includes("?") ? "&" : "?"}appid=${this.appid}`
+    return `${this.baseURL}${path}${path.includes("?") ? "&" : "?"}`
   }
 
   private errorHandler(error: AxiosError): ErrorResponse {

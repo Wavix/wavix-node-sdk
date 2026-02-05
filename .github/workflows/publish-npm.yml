@@ -3,7 +3,7 @@ name: Publish to NPM
 on:
   push:
     branches:
-      - main
+      - fix/npm-publish-1
 
 permissions:
   id-token: write

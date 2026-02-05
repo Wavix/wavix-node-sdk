@@ -6,6 +6,10 @@
   "type": "commonjs",
   "license": "MIT",
   "author": "Wavix Inc. <product@wavix.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Wavix/wavix-node-sdk.git"
+  },
   "scripts": {
     "clean": "rm -rf ./lib",
     "type": "tsc --project tsconfig.json --noEmit",

@@ -21,7 +21,7 @@ wavix.call.onEvent(event => {
     }, 1000)
   }
 
-  if (event.event_payload?.type === "collect_completed") {
+  if (event.event_payload?.type === "collect") {
     const digits = event.event_payload.payload.digits
     wavix.call.tts(event.uuid, `You pressed: ${digits.split("").join(", ")}`)
 

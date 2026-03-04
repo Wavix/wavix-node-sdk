@@ -56,7 +56,7 @@ export interface CallEvent {
   tag: string
 }
 
-type CallEventPayload = AudioEventPayload | CollectCompletedEventPayload
+type CallEventPayload = AudioEventPayload | CollectEventPayload
 
 interface AudioEventPayload {
   type: "audio"
@@ -66,11 +66,11 @@ interface AudioEventPayload {
   }
 }
 
-interface CollectCompletedEventPayload {
-  type: "collect_completed"
+interface CollectEventPayload {
+  type: "collect"
   payload: {
     digits: string
-    reason: "collected" | "timeout"
+    status: "started" | "completed" | "failed"
   }
 }
 
@@ -98,6 +98,7 @@ export interface CollectPrompt {
 
 export interface CollectDTMFOptions {
   max_digits?: number
+  min_digits?: number
   timeout?: number
   termination_character?: string
   max_attempts?: number

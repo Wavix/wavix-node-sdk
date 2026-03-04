@@ -33,7 +33,7 @@ export interface TerminateResponse {
 export interface StartCall {
   from: string
   to: string
-  callback_url: string
+  callback_url?: string
   recording?: boolean
   voicemail_detection?: boolean
   timeout?: number

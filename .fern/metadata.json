@@ -1,0 +1,13 @@
+{
+    "cliVersion": "5.45.3",
+    "generatorName": "fernapi/fern-typescript-sdk",
+    "generatorVersion": "3.72.3",
+    "generatorConfig": {
+        "namespaceExport": "Wavix"
+    },
+    "originGitCommit": "7841fb6abf522142afa0742151a4f6da427c025e",
+    "originGitCommitIsDirty": true,
+    "invokedBy": "manual",
+    "requestedVersion": "v0.1.0",
+    "sdkVersion": "v0.1.0"
+}

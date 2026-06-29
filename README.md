@@ -1,7 +1,7 @@
 # Wavix TypeScript SDK
 
-[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fwavix%2Fwavix-typescript)
-[![npm shield](https://img.shields.io/npm/v/@wavix/sdk)](https://www.npmjs.com/package/@wavix/sdk)
+[![fern shield](https://img.shields.io/badge/%F0%9F%8C%BF-Built%20with%20Fern-brightgreen)](https://buildwithfern.com?utm_source=github&utm_medium=github&utm_campaign=readme&utm_source=https%3A%2F%2Fgithub.com%2Fwavix%2Fwavix-node-sdk)
+[![npm shield](https://img.shields.io/npm/v/wavix-node-sdk)](https://www.npmjs.com/package/wavix-node-sdk)
 
 The official Wavix TypeScript SDK provides programmatic access to the
 [Wavix](https://wavix.com) APIs. Use it to add messaging, voice, and account management capabilities to your application.
@@ -49,7 +49,7 @@ Use the SDK to:
 ## Installation
 
 ```sh
-npm i -s @wavix/sdk
+npm i -s wavix-node-sdk
 ```
 
 **Requirements:** Node.js 18 or later when you use the SDK with Node.js. See
@@ -65,7 +65,7 @@ export WAVIX_API_KEY="your-api-key"
 ```
 
 ```typescript
-import { WavixClient } from "@wavix/sdk";
+import { WavixClient } from "wavix-node-sdk";
 
 const client = new WavixClient({ token: process.env.WAVIX_API_KEY });
 ```
@@ -79,7 +79,7 @@ const client = new WavixClient({ token: process.env.WAVIX_API_KEY });
 Create a client and send an SMS message:
 
 ```typescript
-import { WavixClient } from "@wavix/sdk";
+import { WavixClient } from "wavix-node-sdk";
 
 const client = new WavixClient({ token: "YOUR_TOKEN" });
 await client.smsAndMms.messages.send({
@@ -101,7 +101,7 @@ The SDK exports request and response types as TypeScript interfaces. Import
 the `Wavix` namespace to use these types:
 
 ```typescript
-import { Wavix } from "@wavix/sdk";
+import { Wavix } from "wavix-node-sdk";
 
 const request: Wavix.ListApiKeysRequest = {
     ...
@@ -115,7 +115,7 @@ of `WavixError`. Use the error properties to inspect the status code, message,
 response body, and raw response:
 
 ```typescript
-import { WavixError } from "@wavix/sdk";
+import { WavixError } from "wavix-node-sdk";
 
 try {
     await client.smsAndMms.messages.send(...);
@@ -150,7 +150,7 @@ Pass a supported file type to an endpoint that accepts file uploads:
 ```typescript
 import { createReadStream } from "fs";
 import * as fs from "fs";
-import { WavixClient } from "@wavix/sdk";
+import { WavixClient } from "wavix-node-sdk";
 
 const client = new WavixClient({ token: "YOUR_TOKEN" });
 await client.speechAnalytics.create({
@@ -639,7 +639,7 @@ Import a subpackage client directly to help JavaScript bundlers remove unused
 SDK code and reduce the bundle size:
 
 ```typescript
-import { ApiKeysClient } from '@wavix/sdk/apiKeys';
+import { ApiKeysClient } from 'wavix-node-sdk/apiKeys';
 
 const client = new ApiKeysClient({...});
 ```
@@ -650,7 +650,7 @@ Use the `headers` request option to add headers to every request from a client
 or to an individual request:
 
 ```typescript
-import { WavixClient } from "@wavix/sdk";
+import { WavixClient } from "wavix-node-sdk";
 
 const client = new WavixClient({
     ...
@@ -723,7 +723,7 @@ console.log(rawResponse.headers['X-My-Header']);
 Pass a `logging` object to the client options to configure SDK logs:
 
 ```typescript
-import { WavixClient, logging } from "@wavix/sdk";
+import { WavixClient, logging } from "wavix-node-sdk";
 
 const client = new WavixClient({
     ...
@@ -831,19 +831,19 @@ when that SDK version is released. Update the SDK regularly to access the
 latest API capabilities and fixes.
 
 Before you update the SDK, review the
-[GitHub releases](https://github.com/wavix/wavix-typescript/releases) for
+[GitHub releases](https://github.com/wavix/wavix-node-sdk/releases) for
 changes that might affect your application.
 
 ## Release notes
 
-See [GitHub releases](https://github.com/wavix/wavix-typescript/releases) for
+See [GitHub releases](https://github.com/wavix/wavix-node-sdk/releases) for
 new features, fixes, and breaking changes in each SDK release.
 
 ## Major-version upgrades
 
 The SDK doesn't provide separate migration guides. Breaking changes ship only
 in major versions, so before you upgrade, review the
-[GitHub releases](https://github.com/wavix/wavix-typescript/releases) for
+[GitHub releases](https://github.com/wavix/wavix-node-sdk/releases) for
 breaking changes, then update and test in a development environment before you
 deploy.
 
@@ -852,7 +852,7 @@ deploy.
 - For API guides and API reference documentation, see the
   [Wavix documentation](https://docs.wavix.com).
 - For SDK methods and types, see the
-  [TypeScript SDK reference](https://github.com/wavix/wavix-typescript/blob/HEAD/reference.md).
+  [TypeScript SDK reference](https://github.com/wavix/wavix-node-sdk/blob/HEAD/reference.md).
 
 ## Resources and support
 
@@ -864,7 +864,7 @@ deploy.
 - **Support:** For product and API support, contact
   [support@wavix.com](mailto:support@wavix.com).
 - **Issues:** To report an SDK bug or request a feature, open a
-  [GitHub issue](https://github.com/wavix/wavix-typescript/issues).
+  [GitHub issue](https://github.com/wavix/wavix-node-sdk/issues).
 - **License:** The SDK is available under the [MIT License](./LICENSE).
 
 ## Contributing

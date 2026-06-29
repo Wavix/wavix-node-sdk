@@ -1,0 +1,630 @@
+{
+    "name": "wavix-node-sdk",
+    "version": "1.0.0",
+    "private": false,
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/wavix/wavix-node-sdk.git"
+    },
+    "type": "commonjs",
+    "main": "./dist/cjs/index.js",
+    "module": "./dist/esm/index.mjs",
+    "types": "./dist/cjs/index.d.ts",
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./dist/esm/index.d.mts",
+                "default": "./dist/esm/index.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/index.d.ts",
+                "default": "./dist/cjs/index.js"
+            },
+            "default": "./dist/cjs/index.js"
+        },
+        "./apiKeys": {
+            "import": {
+                "types": "./dist/esm/api/resources/apiKeys/exports.d.mts",
+                "default": "./dist/esm/api/resources/apiKeys/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/apiKeys/exports.d.ts",
+                "default": "./dist/cjs/api/resources/apiKeys/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/apiKeys/exports.js"
+        },
+        "./sipTrunks": {
+            "import": {
+                "types": "./dist/esm/api/resources/sipTrunks/exports.d.mts",
+                "default": "./dist/esm/api/resources/sipTrunks/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/sipTrunks/exports.d.ts",
+                "default": "./dist/cjs/api/resources/sipTrunks/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/sipTrunks/exports.js"
+        },
+        "./cart": {
+            "import": {
+                "types": "./dist/esm/api/resources/cart/exports.d.mts",
+                "default": "./dist/esm/api/resources/cart/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/cart/exports.d.ts",
+                "default": "./dist/cjs/api/resources/cart/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/cart/exports.js"
+        },
+        "./numbers": {
+            "import": {
+                "types": "./dist/esm/api/resources/numbers/exports.d.mts",
+                "default": "./dist/esm/api/resources/numbers/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/numbers/exports.d.ts",
+                "default": "./dist/cjs/api/resources/numbers/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/numbers/exports.js"
+        },
+        "./cdrs": {
+            "import": {
+                "types": "./dist/esm/api/resources/cdrs/exports.d.mts",
+                "default": "./dist/esm/api/resources/cdrs/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/cdrs/exports.d.ts",
+                "default": "./dist/cjs/api/resources/cdrs/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/cdrs/exports.js"
+        },
+        "./callRecording": {
+            "import": {
+                "types": "./dist/esm/api/resources/callRecording/exports.d.mts",
+                "default": "./dist/esm/api/resources/callRecording/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/callRecording/exports.d.ts",
+                "default": "./dist/cjs/api/resources/callRecording/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/callRecording/exports.js"
+        },
+        "./speechAnalytics": {
+            "import": {
+                "types": "./dist/esm/api/resources/speechAnalytics/exports.d.mts",
+                "default": "./dist/esm/api/resources/speechAnalytics/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/speechAnalytics/exports.d.ts",
+                "default": "./dist/cjs/api/resources/speechAnalytics/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/speechAnalytics/exports.js"
+        },
+        "./callWebhooks": {
+            "import": {
+                "types": "./dist/esm/api/resources/callWebhooks/exports.d.mts",
+                "default": "./dist/esm/api/resources/callWebhooks/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/callWebhooks/exports.d.ts",
+                "default": "./dist/cjs/api/resources/callWebhooks/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/callWebhooks/exports.js"
+        },
+        "./callControl": {
+            "import": {
+                "types": "./dist/esm/api/resources/callControl/exports.d.mts",
+                "default": "./dist/esm/api/resources/callControl/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/callControl/exports.d.ts",
+                "default": "./dist/cjs/api/resources/callControl/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/callControl/exports.js"
+        },
+        "./numberValidator": {
+            "import": {
+                "types": "./dist/esm/api/resources/numberValidator/exports.d.mts",
+                "default": "./dist/esm/api/resources/numberValidator/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/numberValidator/exports.d.ts",
+                "default": "./dist/cjs/api/resources/numberValidator/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/numberValidator/exports.js"
+        },
+        "./voiceCampaigns": {
+            "import": {
+                "types": "./dist/esm/api/resources/voiceCampaigns/exports.d.mts",
+                "default": "./dist/esm/api/resources/voiceCampaigns/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/voiceCampaigns/exports.d.ts",
+                "default": "./dist/cjs/api/resources/voiceCampaigns/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/voiceCampaigns/exports.js"
+        },
+        "./linkShortener": {
+            "import": {
+                "types": "./dist/esm/api/resources/linkShortener/exports.d.mts",
+                "default": "./dist/esm/api/resources/linkShortener/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/linkShortener/exports.d.ts",
+                "default": "./dist/cjs/api/resources/linkShortener/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/linkShortener/exports.js"
+        },
+        "./profile": {
+            "import": {
+                "types": "./dist/esm/api/resources/profile/exports.d.mts",
+                "default": "./dist/esm/api/resources/profile/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/profile/exports.d.ts",
+                "default": "./dist/cjs/api/resources/profile/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/profile/exports.js"
+        },
+        "./subAccounts": {
+            "import": {
+                "types": "./dist/esm/api/resources/subAccounts/exports.d.mts",
+                "default": "./dist/esm/api/resources/subAccounts/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/subAccounts/exports.d.ts",
+                "default": "./dist/cjs/api/resources/subAccounts/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/subAccounts/exports.js"
+        },
+        "./smsAndMms": {
+            "import": {
+                "types": "./dist/esm/api/resources/smsAndMms/exports.d.mts",
+                "default": "./dist/esm/api/resources/smsAndMms/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/smsAndMms/exports.d.ts",
+                "default": "./dist/cjs/api/resources/smsAndMms/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/smsAndMms/exports.js"
+        },
+        "./billing": {
+            "import": {
+                "types": "./dist/esm/api/resources/billing/exports.d.mts",
+                "default": "./dist/esm/api/resources/billing/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/billing/exports.d.ts",
+                "default": "./dist/cjs/api/resources/billing/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/billing/exports.js"
+        },
+        "./billing/transactions": {
+            "import": {
+                "types": "./dist/esm/api/resources/billing/resources/transactions/exports.d.mts",
+                "default": "./dist/esm/api/resources/billing/resources/transactions/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/billing/resources/transactions/exports.d.ts",
+                "default": "./dist/cjs/api/resources/billing/resources/transactions/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/billing/resources/transactions/exports.js"
+        },
+        "./billing/invoices": {
+            "import": {
+                "types": "./dist/esm/api/resources/billing/resources/invoices/exports.d.mts",
+                "default": "./dist/esm/api/resources/billing/resources/invoices/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/billing/resources/invoices/exports.d.ts",
+                "default": "./dist/cjs/api/resources/billing/resources/invoices/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/billing/resources/invoices/exports.js"
+        },
+        "./buy": {
+            "import": {
+                "types": "./dist/esm/api/resources/buy/exports.d.mts",
+                "default": "./dist/esm/api/resources/buy/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/buy/exports.d.ts",
+                "default": "./dist/cjs/api/resources/buy/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/buy/exports.js"
+        },
+        "./buy/countries": {
+            "import": {
+                "types": "./dist/esm/api/resources/buy/resources/countries/exports.d.mts",
+                "default": "./dist/esm/api/resources/buy/resources/countries/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/buy/resources/countries/exports.d.ts",
+                "default": "./dist/cjs/api/resources/buy/resources/countries/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/buy/resources/countries/exports.js"
+        },
+        "./buy/regions": {
+            "import": {
+                "types": "./dist/esm/api/resources/buy/resources/regions/exports.d.mts",
+                "default": "./dist/esm/api/resources/buy/resources/regions/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/buy/resources/regions/exports.d.ts",
+                "default": "./dist/cjs/api/resources/buy/resources/regions/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/buy/resources/regions/exports.js"
+        },
+        "./buy/cities": {
+            "import": {
+                "types": "./dist/esm/api/resources/buy/resources/cities/exports.d.mts",
+                "default": "./dist/esm/api/resources/buy/resources/cities/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/buy/resources/cities/exports.d.ts",
+                "default": "./dist/cjs/api/resources/buy/resources/cities/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/buy/resources/cities/exports.js"
+        },
+        "./buy/regionCities": {
+            "import": {
+                "types": "./dist/esm/api/resources/buy/resources/regionCities/exports.d.mts",
+                "default": "./dist/esm/api/resources/buy/resources/regionCities/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/buy/resources/regionCities/exports.d.ts",
+                "default": "./dist/cjs/api/resources/buy/resources/regionCities/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/buy/resources/regionCities/exports.js"
+        },
+        "./buy/numbers": {
+            "import": {
+                "types": "./dist/esm/api/resources/buy/resources/numbers/exports.d.mts",
+                "default": "./dist/esm/api/resources/buy/resources/numbers/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/buy/resources/numbers/exports.d.ts",
+                "default": "./dist/cjs/api/resources/buy/resources/numbers/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/buy/resources/numbers/exports.js"
+        },
+        "./callControl/streams": {
+            "import": {
+                "types": "./dist/esm/api/resources/callControl/resources/streams/exports.d.mts",
+                "default": "./dist/esm/api/resources/callControl/resources/streams/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/callControl/resources/streams/exports.d.ts",
+                "default": "./dist/cjs/api/resources/callControl/resources/streams/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/callControl/resources/streams/exports.js"
+        },
+        "./callControl/audio": {
+            "import": {
+                "types": "./dist/esm/api/resources/callControl/resources/audio/exports.d.mts",
+                "default": "./dist/esm/api/resources/callControl/resources/audio/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/callControl/resources/audio/exports.d.ts",
+                "default": "./dist/cjs/api/resources/callControl/resources/audio/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/callControl/resources/audio/exports.js"
+        },
+        "./cdrs/transcription": {
+            "import": {
+                "types": "./dist/esm/api/resources/cdrs/resources/transcription/exports.d.mts",
+                "default": "./dist/esm/api/resources/cdrs/resources/transcription/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/cdrs/resources/transcription/exports.d.ts",
+                "default": "./dist/cjs/api/resources/cdrs/resources/transcription/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/cdrs/resources/transcription/exports.js"
+        },
+        "./linkShortener/metrics": {
+            "import": {
+                "types": "./dist/esm/api/resources/linkShortener/resources/metrics/exports.d.mts",
+                "default": "./dist/esm/api/resources/linkShortener/resources/metrics/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/linkShortener/resources/metrics/exports.d.ts",
+                "default": "./dist/cjs/api/resources/linkShortener/resources/metrics/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/linkShortener/resources/metrics/exports.js"
+        },
+        "./numberValidator/results": {
+            "import": {
+                "types": "./dist/esm/api/resources/numberValidator/resources/results/exports.d.mts",
+                "default": "./dist/esm/api/resources/numberValidator/resources/results/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/numberValidator/resources/results/exports.d.ts",
+                "default": "./dist/cjs/api/resources/numberValidator/resources/results/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/numberValidator/resources/results/exports.js"
+        },
+        "./numbers/papers": {
+            "import": {
+                "types": "./dist/esm/api/resources/numbers/resources/papers/exports.d.mts",
+                "default": "./dist/esm/api/resources/numbers/resources/papers/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/numbers/resources/papers/exports.d.ts",
+                "default": "./dist/cjs/api/resources/numbers/resources/papers/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/numbers/resources/papers/exports.js"
+        },
+        "./profile/config": {
+            "import": {
+                "types": "./dist/esm/api/resources/profile/resources/config/exports.d.mts",
+                "default": "./dist/esm/api/resources/profile/resources/config/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/profile/resources/config/exports.d.ts",
+                "default": "./dist/cjs/api/resources/profile/resources/config/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/profile/resources/config/exports.js"
+        },
+        "./smsAndMms/senderIds": {
+            "import": {
+                "types": "./dist/esm/api/resources/smsAndMms/resources/senderIds/exports.d.mts",
+                "default": "./dist/esm/api/resources/smsAndMms/resources/senderIds/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/smsAndMms/resources/senderIds/exports.d.ts",
+                "default": "./dist/cjs/api/resources/smsAndMms/resources/senderIds/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/smsAndMms/resources/senderIds/exports.js"
+        },
+        "./smsAndMms/optOuts": {
+            "import": {
+                "types": "./dist/esm/api/resources/smsAndMms/resources/optOuts/exports.d.mts",
+                "default": "./dist/esm/api/resources/smsAndMms/resources/optOuts/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/smsAndMms/resources/optOuts/exports.d.ts",
+                "default": "./dist/cjs/api/resources/smsAndMms/resources/optOuts/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/smsAndMms/resources/optOuts/exports.js"
+        },
+        "./smsAndMms/messages": {
+            "import": {
+                "types": "./dist/esm/api/resources/smsAndMms/resources/messages/exports.d.mts",
+                "default": "./dist/esm/api/resources/smsAndMms/resources/messages/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/smsAndMms/resources/messages/exports.d.ts",
+                "default": "./dist/cjs/api/resources/smsAndMms/resources/messages/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/smsAndMms/resources/messages/exports.js"
+        },
+        "./speechAnalytics/file": {
+            "import": {
+                "types": "./dist/esm/api/resources/speechAnalytics/resources/file/exports.d.mts",
+                "default": "./dist/esm/api/resources/speechAnalytics/resources/file/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/speechAnalytics/resources/file/exports.d.ts",
+                "default": "./dist/cjs/api/resources/speechAnalytics/resources/file/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/speechAnalytics/resources/file/exports.js"
+        },
+        "./subAccounts/transactions": {
+            "import": {
+                "types": "./dist/esm/api/resources/subAccounts/resources/transactions/exports.d.mts",
+                "default": "./dist/esm/api/resources/subAccounts/resources/transactions/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/subAccounts/resources/transactions/exports.d.ts",
+                "default": "./dist/cjs/api/resources/subAccounts/resources/transactions/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/subAccounts/resources/transactions/exports.js"
+        },
+        "./tenDlc": {
+            "import": {
+                "types": "./dist/esm/api/resources/tenDlc/exports.d.mts",
+                "default": "./dist/esm/api/resources/tenDlc/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/tenDlc/exports.d.ts",
+                "default": "./dist/cjs/api/resources/tenDlc/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/tenDlc/exports.js"
+        },
+        "./tenDlc/brands": {
+            "import": {
+                "types": "./dist/esm/api/resources/tenDlc/resources/brands/exports.d.mts",
+                "default": "./dist/esm/api/resources/tenDlc/resources/brands/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/tenDlc/resources/brands/exports.d.ts",
+                "default": "./dist/cjs/api/resources/tenDlc/resources/brands/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/tenDlc/resources/brands/exports.js"
+        },
+        "./tenDlc/brandAppeals": {
+            "import": {
+                "types": "./dist/esm/api/resources/tenDlc/resources/brandAppeals/exports.d.mts",
+                "default": "./dist/esm/api/resources/tenDlc/resources/brandAppeals/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/tenDlc/resources/brandAppeals/exports.d.ts",
+                "default": "./dist/cjs/api/resources/tenDlc/resources/brandAppeals/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/tenDlc/resources/brandAppeals/exports.js"
+        },
+        "./tenDlc/brandEvidence": {
+            "import": {
+                "types": "./dist/esm/api/resources/tenDlc/resources/brandEvidence/exports.d.mts",
+                "default": "./dist/esm/api/resources/tenDlc/resources/brandEvidence/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/tenDlc/resources/brandEvidence/exports.d.ts",
+                "default": "./dist/cjs/api/resources/tenDlc/resources/brandEvidence/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/tenDlc/resources/brandEvidence/exports.js"
+        },
+        "./tenDlc/brandVettings": {
+            "import": {
+                "types": "./dist/esm/api/resources/tenDlc/resources/brandVettings/exports.d.mts",
+                "default": "./dist/esm/api/resources/tenDlc/resources/brandVettings/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/tenDlc/resources/brandVettings/exports.d.ts",
+                "default": "./dist/cjs/api/resources/tenDlc/resources/brandVettings/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/tenDlc/resources/brandVettings/exports.js"
+        },
+        "./tenDlc/brandVettingAppeals": {
+            "import": {
+                "types": "./dist/esm/api/resources/tenDlc/resources/brandVettingAppeals/exports.d.mts",
+                "default": "./dist/esm/api/resources/tenDlc/resources/brandVettingAppeals/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/tenDlc/resources/brandVettingAppeals/exports.d.ts",
+                "default": "./dist/cjs/api/resources/tenDlc/resources/brandVettingAppeals/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/tenDlc/resources/brandVettingAppeals/exports.js"
+        },
+        "./tenDlc/campaigns": {
+            "import": {
+                "types": "./dist/esm/api/resources/tenDlc/resources/campaigns/exports.d.mts",
+                "default": "./dist/esm/api/resources/tenDlc/resources/campaigns/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/tenDlc/resources/campaigns/exports.d.ts",
+                "default": "./dist/cjs/api/resources/tenDlc/resources/campaigns/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/tenDlc/resources/campaigns/exports.js"
+        },
+        "./tenDlc/subscriptions": {
+            "import": {
+                "types": "./dist/esm/api/resources/tenDlc/resources/subscriptions/exports.d.mts",
+                "default": "./dist/esm/api/resources/tenDlc/resources/subscriptions/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/tenDlc/resources/subscriptions/exports.d.ts",
+                "default": "./dist/cjs/api/resources/tenDlc/resources/subscriptions/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/tenDlc/resources/subscriptions/exports.js"
+        },
+        "./tenDlc/campaignNumbers": {
+            "import": {
+                "types": "./dist/esm/api/resources/tenDlc/resources/campaignNumbers/exports.d.mts",
+                "default": "./dist/esm/api/resources/tenDlc/resources/campaignNumbers/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/tenDlc/resources/campaignNumbers/exports.d.ts",
+                "default": "./dist/cjs/api/resources/tenDlc/resources/campaignNumbers/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/tenDlc/resources/campaignNumbers/exports.js"
+        },
+        "./twoFa": {
+            "import": {
+                "types": "./dist/esm/api/resources/twoFa/exports.d.mts",
+                "default": "./dist/esm/api/resources/twoFa/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/twoFa/exports.d.ts",
+                "default": "./dist/cjs/api/resources/twoFa/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/twoFa/exports.js"
+        },
+        "./twoFa/verification": {
+            "import": {
+                "types": "./dist/esm/api/resources/twoFa/resources/verification/exports.d.mts",
+                "default": "./dist/esm/api/resources/twoFa/resources/verification/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/twoFa/resources/verification/exports.d.ts",
+                "default": "./dist/cjs/api/resources/twoFa/resources/verification/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/twoFa/resources/verification/exports.js"
+        },
+        "./twoFa/sessions": {
+            "import": {
+                "types": "./dist/esm/api/resources/twoFa/resources/sessions/exports.d.mts",
+                "default": "./dist/esm/api/resources/twoFa/resources/sessions/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/twoFa/resources/sessions/exports.d.ts",
+                "default": "./dist/cjs/api/resources/twoFa/resources/sessions/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/twoFa/resources/sessions/exports.js"
+        },
+        "./twoFa/events": {
+            "import": {
+                "types": "./dist/esm/api/resources/twoFa/resources/events/exports.d.mts",
+                "default": "./dist/esm/api/resources/twoFa/resources/events/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/twoFa/resources/events/exports.d.ts",
+                "default": "./dist/cjs/api/resources/twoFa/resources/events/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/twoFa/resources/events/exports.js"
+        },
+        "./webrtc": {
+            "import": {
+                "types": "./dist/esm/api/resources/webrtc/exports.d.mts",
+                "default": "./dist/esm/api/resources/webrtc/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/webrtc/exports.d.ts",
+                "default": "./dist/cjs/api/resources/webrtc/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/webrtc/exports.js"
+        },
+        "./webrtc/tokens": {
+            "import": {
+                "types": "./dist/esm/api/resources/webrtc/resources/tokens/exports.d.mts",
+                "default": "./dist/esm/api/resources/webrtc/resources/tokens/exports.mjs"
+            },
+            "require": {
+                "types": "./dist/cjs/api/resources/webrtc/resources/tokens/exports.d.ts",
+                "default": "./dist/cjs/api/resources/webrtc/resources/tokens/exports.js"
+            },
+            "default": "./dist/cjs/api/resources/webrtc/resources/tokens/exports.js"
+        },
+        "./package.json": "./package.json"
+    },
+    "files": [
+        "dist",
+        "reference.md",
+        "README.md",
+        "LICENSE"
+    ],
+    "scripts": {
+        "format": "biome format --write --skip-parse-errors --no-errors-on-unmatched --max-diagnostics=none",
+        "format:check": "biome format --skip-parse-errors --no-errors-on-unmatched --max-diagnostics=none",
+        "lint": "biome lint --skip-parse-errors --no-errors-on-unmatched --max-diagnostics=none",
+        "lint:fix": "biome lint --fix --unsafe --skip-parse-errors --no-errors-on-unmatched --max-diagnostics=none",
+        "check": "biome check --skip-parse-errors --no-errors-on-unmatched --max-diagnostics=none",
+        "check:fix": "biome check --fix --unsafe --skip-parse-errors --no-errors-on-unmatched --max-diagnostics=none",
+        "build": "pnpm build:cjs && pnpm build:esm",
+        "build:cjs": "tsc --project ./tsconfig.cjs.json",
+        "build:esm": "tsc --project ./tsconfig.esm.json && node scripts/rename-to-esm-files.js dist/esm",
+        "test": "vitest",
+        "test:unit": "vitest --project unit",
+        "test:wire": "vitest --project wire"
+    },
+    "dependencies": {},
+    "devDependencies": {
+        "webpack": "^5.105.4",
+        "ts-loader": "^9.5.4",
+        "vitest": "^4.1.1",
+        "msw": "2.11.2",
+        "@types/node": "^20.0.0",
+        "typescript": "~5.9.3",
+        "@biomejs/biome": "2.4.10"
+    },
+    "browser": {
+        "fs": false,
+        "os": false,
+        "path": false,
+        "stream": false,
+        "crypto": false
+    },
+    "packageManager": "pnpm@10.33.0",
+    "engines": {
+        "node": ">=18.0.0"
+    },
+    "sideEffects": false
+}

@@ -4,7 +4,7 @@
     "private": false,
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/wavix/wavix-node-sdk.git"
+        "url": "git+https://github.com/Wavix/wavix-node-sdk.git"
     },
     "type": "commonjs",
     "main": "./dist/cjs/index.js",

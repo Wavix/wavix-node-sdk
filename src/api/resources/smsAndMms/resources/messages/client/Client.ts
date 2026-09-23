@@ -29,6 +29,7 @@ export class MessagesClient {
      * @param {MessagesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      *
      * @example
@@ -46,14 +47,14 @@ export class MessagesClient {
     public list(
         request: Wavix.smsAndMms.ListMessagesRequest,
         requestOptions?: MessagesClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.smsAndMms.ListMessagesResponse> {
+    ): core.HttpResponsePromise<Wavix.MessageListResponse> {
         return core.HttpResponsePromise.fromPromise(this.__list(request, requestOptions));
     }
 
     private async __list(
         request: Wavix.smsAndMms.ListMessagesRequest,
         requestOptions?: MessagesClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.smsAndMms.ListMessagesResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.MessageListResponse>> {
         const {
             sent_after: sentAfter,
             sent_before: sentBefore,
@@ -67,8 +68,8 @@ export class MessagesClient {
             per_page: perPage,
         } = request;
         const _queryParams: Record<string, unknown> = {
-            sent_after: sentAfter,
-            sent_before: sentBefore,
+            sent_after: sentAfter != null ? sentAfter : undefined,
+            sent_before: sentBefore != null ? sentBefore : undefined,
             type: type_,
             from: from_,
             to,
@@ -105,13 +106,18 @@ export class MessagesClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.smsAndMms.ListMessagesResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.MessageListResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -127,22 +133,24 @@ export class MessagesClient {
     }
 
     /**
-     * Sends an SMS or MMS message. MMS is supported for U.S. numbers only. Track delivery using the returned `message_id` and the message status callback.
-     * **Rate limit**: 20 messages per phone number in 24 hours.
+     * Sends an SMS or MMS message. MMS is supported for U.S. numbers only. Track delivery using the returned `message_id` and the message status callback. The recipient must be opted in to receive messages from the account; sending to an opted-out number fails.
      *
      * @param {Wavix.smsAndMms.SendMessagesRequest} request
      * @param {MessagesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
+     * @throws {@link Wavix.UnprocessableEntityError}
+     * @throws {@link Wavix.TooManyRequestsError}
      *
      * @example
      *     await client.smsAndMms.messages.send({
      *         from: "Wavix",
      *         to: "+447537151866",
      *         message_body: {
-     *             text: "Hi there, this is a message from Wavix",
-     *             media: null
+     *             text: "Hi there, this is a message from Wavix"
      *         },
      *         callback_url: "https://you-site.com/webhook",
      *         validity: 3600,
@@ -193,8 +201,19 @@ export class MessagesClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
+                case 429:
+                    throw new Wavix.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -213,6 +232,8 @@ export class MessagesClient {
      * @param {Wavix.smsAndMms.GetMessagesRequest} request
      * @param {MessagesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -224,14 +245,14 @@ export class MessagesClient {
     public get(
         request: Wavix.smsAndMms.GetMessagesRequest,
         requestOptions?: MessagesClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.smsAndMms.GetMessagesResponse> {
+    ): core.HttpResponsePromise<Wavix.MessageResponse> {
         return core.HttpResponsePromise.fromPromise(this.__get(request, requestOptions));
     }
 
     private async __get(
         request: Wavix.smsAndMms.GetMessagesRequest,
         requestOptions?: MessagesClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.smsAndMms.GetMessagesResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.MessageResponse>> {
         const { id } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -256,11 +277,18 @@ export class MessagesClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.smsAndMms.GetMessagesResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.MessageResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
@@ -283,6 +311,7 @@ export class MessagesClient {
      * @param {Wavix.smsAndMms.ListAllMessagesRequest} request
      * @param {MessagesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      *
      * @example
@@ -358,6 +387,11 @@ export class MessagesClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 default:

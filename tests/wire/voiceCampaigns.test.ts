@@ -70,6 +70,32 @@ describe("VoiceCampaignsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { voice_campaign: { callflow_id: 1, caller_id: "caller_id", contact: "contact" } };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v1/voice-campaigns")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.voiceCampaigns.create({
+                voice_campaign: {
+                    callflow_id: 1,
+                    caller_id: "caller_id",
+                    contact: "contact",
+                },
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("create (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { voice_campaign: { callflow_id: 1, caller_id: "caller_id", contact: "contact" } };
         const rawResponseBody = { key: "value" };
 
         server
@@ -92,7 +118,33 @@ describe("VoiceCampaignsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("create (4)", async () => {
+    test("create (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { voice_campaign: { callflow_id: 1, caller_id: "caller_id", contact: "contact" } };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/voice-campaigns")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.voiceCampaigns.create({
+                voice_campaign: {
+                    callflow_id: 1,
+                    caller_id: "caller_id",
+                    contact: "contact",
+                },
+            });
+        }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
+    test("create (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { voice_campaign: { callflow_id: 1, caller_id: "caller_id", contact: "contact" } };
@@ -156,6 +208,48 @@ describe("VoiceCampaignsClient", () => {
             .mockEndpoint()
             .get("/v1/voice-campaigns/1")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.voiceCampaigns.get({
+                id: 1,
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v1/voice-campaigns/1")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.voiceCampaigns.get({
+                id: 1,
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("get (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v1/voice-campaigns/1")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -167,7 +261,7 @@ describe("VoiceCampaignsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("get (3)", async () => {
+    test("get (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

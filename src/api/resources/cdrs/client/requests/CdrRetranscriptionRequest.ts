@@ -5,13 +5,13 @@ import type * as Wavix from "../../../../index.js";
 /**
  * @example
  *     {
- *         call_id: "bbaa37bf-430a-46da-ade3-c248e407016"
+ *         call_id: "bbaa37bf-430a-46da-ade3-c248e4070160"
  *     }
  */
 export interface CdrRetranscriptionRequest {
     /** The unique ID of the call. */
     call_id: string;
-    language?: Wavix.TranscriptionLanguage;
+    language?: Wavix.TranscriptionLanguage | null;
     /** Webhook URL to receive status updates. */
     webhook_url?: string;
 }

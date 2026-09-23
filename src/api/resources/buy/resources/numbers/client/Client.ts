@@ -29,6 +29,7 @@ export class NumbersClient {
      * @param {NumbersClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -41,14 +42,14 @@ export class NumbersClient {
     public list(
         request: Wavix.buy.ListNumbersRequest,
         requestOptions?: NumbersClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.buy.ListNumbersResponse> {
+    ): core.HttpResponsePromise<Wavix.AvailableNumberListResponse> {
         return core.HttpResponsePromise.fromPromise(this.__list(request, requestOptions));
     }
 
     private async __list(
         request: Wavix.buy.ListNumbersRequest,
         requestOptions?: NumbersClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.buy.ListNumbersResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.AvailableNumberListResponse>> {
         const {
             country_id: countryId,
             city_id: cityId,
@@ -88,13 +89,18 @@ export class NumbersClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.buy.ListNumbersResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.AvailableNumberListResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:

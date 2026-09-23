@@ -57,6 +57,25 @@ describe("OptOutsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v3/messages/opt-outs")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.optOuts.list();
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = { key: "value" };
 
         server
@@ -72,7 +91,7 @@ describe("OptOutsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("list (4)", async () => {
+    test("list (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -143,6 +162,30 @@ describe("OptOutsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { opt_out: { number: "number" } };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v3/messages/opt-outs")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.optOuts.create({
+                opt_out: {
+                    number: "number",
+                },
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("create (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { opt_out: { number: "number" } };
         const rawResponseBody = { key: "value" };
 
         server
@@ -163,7 +206,7 @@ describe("OptOutsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("create (4)", async () => {
+    test("create (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { opt_out: { number: "number" } };
@@ -187,7 +230,7 @@ describe("OptOutsClient", () => {
         }).rejects.toThrow(Wavix.NotFoundError);
     });
 
-    test("create (5)", async () => {
+    test("create (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { opt_out: { number: "number" } };

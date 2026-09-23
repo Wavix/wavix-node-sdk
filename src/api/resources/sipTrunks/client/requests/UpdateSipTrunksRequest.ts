@@ -13,7 +13,6 @@ import type * as Wavix from "../../../../index.js";
  *             ip_restrict: false,
  *             didinfo_enabled: true,
  *             call_restrict: true,
- *             cost_limit: true,
  *             channels_restrict: false,
  *             rewrite_enabled: true,
  *             transcription_enabled: true,

@@ -28,8 +28,11 @@ export class CampaignNumbersClient {
      * @param {Wavix.tenDlc.LinkCampaignNumbersRequest} request
      * @param {CampaignNumbersClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
+     * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.tenDlc.campaignNumbers.link({
@@ -41,14 +44,14 @@ export class CampaignNumbersClient {
     public link(
         request: Wavix.tenDlc.LinkCampaignNumbersRequest,
         requestOptions?: CampaignNumbersClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.LinkCampaignNumbersResponse> {
+    ): core.HttpResponsePromise<Wavix.SuccessResponse> {
         return core.HttpResponsePromise.fromPromise(this.__link(request, requestOptions));
     }
 
     private async __link(
         request: Wavix.tenDlc.LinkCampaignNumbersRequest,
         requestOptions?: CampaignNumbersClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.LinkCampaignNumbersResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.SuccessResponse>> {
         const { brand_id: brandId, campaign_id: campaignId, number: number_ } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -73,18 +76,24 @@ export class CampaignNumbersClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as Wavix.tenDlc.LinkCampaignNumbersResponse,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as Wavix.SuccessResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -108,6 +117,8 @@ export class CampaignNumbersClient {
      * @param {Wavix.tenDlc.UnlinkCampaignNumbersRequest} request
      * @param {CampaignNumbersClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -121,14 +132,14 @@ export class CampaignNumbersClient {
     public unlink(
         request: Wavix.tenDlc.UnlinkCampaignNumbersRequest,
         requestOptions?: CampaignNumbersClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.UnlinkCampaignNumbersResponse> {
+    ): core.HttpResponsePromise<Wavix.SuccessResponse> {
         return core.HttpResponsePromise.fromPromise(this.__unlink(request, requestOptions));
     }
 
     private async __unlink(
         request: Wavix.tenDlc.UnlinkCampaignNumbersRequest,
         requestOptions?: CampaignNumbersClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.UnlinkCampaignNumbersResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.SuccessResponse>> {
         const { brand_id: brandId, campaign_id: campaignId, number: number_ } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -153,14 +164,18 @@ export class CampaignNumbersClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as Wavix.tenDlc.UnlinkCampaignNumbersResponse,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as Wavix.SuccessResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
@@ -188,6 +203,8 @@ export class CampaignNumbersClient {
      * @param {Wavix.tenDlc.ListCampaignNumbersRequest} request
      * @param {CampaignNumbersClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -200,14 +217,14 @@ export class CampaignNumbersClient {
     public list(
         request: Wavix.tenDlc.ListCampaignNumbersRequest,
         requestOptions?: CampaignNumbersClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.ListCampaignNumbersResponse> {
+    ): core.HttpResponsePromise<Wavix.TenDlcCampaignNumberListResponse> {
         return core.HttpResponsePromise.fromPromise(this.__list(request, requestOptions));
     }
 
     private async __list(
         request: Wavix.tenDlc.ListCampaignNumbersRequest,
         requestOptions?: CampaignNumbersClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.ListCampaignNumbersResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.TenDlcCampaignNumberListResponse>> {
         const { brand_id: brandId, campaign_id: campaignId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -233,13 +250,20 @@ export class CampaignNumbersClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as Wavix.tenDlc.ListCampaignNumbersResponse,
+                data: _response.body as Wavix.TenDlcCampaignNumberListResponse,
                 rawResponse: _response.rawResponse,
             };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:

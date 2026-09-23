@@ -35,19 +35,61 @@ describe("TranscriptionClient", () => {
 
         server
             .mockEndpoint()
-            .get("/v1/cdrs/bbaa37bf-430a-46da-ade3-c248e407016/transcription")
+            .get("/v1/cdrs/bbaa37bf-430a-46da-ade3-c248e4070160/transcription")
             .respondWith()
             .statusCode(200)
             .jsonBody(rawResponseBody)
             .build();
 
         const response = await client.cdrs.transcription.get({
-            call_id: "bbaa37bf-430a-46da-ade3-c248e407016",
+            call_id: "bbaa37bf-430a-46da-ade3-c248e4070160",
         });
         expect(response).toEqual(rawResponseBody);
     });
 
     test("get (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v1/cdrs/call_id/transcription")
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.cdrs.transcription.get({
+                call_id: "call_id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v1/cdrs/call_id/transcription")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.cdrs.transcription.get({
+                call_id: "call_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("get (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -68,7 +110,7 @@ describe("TranscriptionClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("get (3)", async () => {
+    test("get (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

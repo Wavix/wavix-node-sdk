@@ -29,7 +29,9 @@ export class TransactionsClient {
      * @param {TransactionsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
      * @throws {@link Wavix.ServiceUnavailableError}
      *
      * @example
@@ -45,14 +47,14 @@ export class TransactionsClient {
     public list(
         request: Wavix.billing.ListTransactionsRequest,
         requestOptions?: TransactionsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.billing.ListTransactionsResponse> {
+    ): core.HttpResponsePromise<Wavix.BillingTransactionListResponse> {
         return core.HttpResponsePromise.fromPromise(this.__list(request, requestOptions));
     }
 
     private async __list(
         request: Wavix.billing.ListTransactionsRequest,
         requestOptions?: TransactionsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.billing.ListTransactionsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.BillingTransactionListResponse>> {
         const {
             from_date: fromDate,
             to_date: toDate,
@@ -98,18 +100,22 @@ export class TransactionsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as Wavix.billing.ListTransactionsResponse,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as Wavix.BillingTransactionListResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 503:
                     throw new Wavix.ServiceUnavailableError(
                         _response.error.body as Wavix.ValidationErrorResponse,

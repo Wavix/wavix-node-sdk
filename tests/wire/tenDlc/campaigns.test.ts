@@ -86,6 +86,44 @@ describe("CampaignsClient", () => {
             .mockEndpoint()
             .get("/v3/10dlc/brands/campaigns")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.list();
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("list (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v3/10dlc/brands/campaigns")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.list();
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v3/10dlc/brands/campaigns")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -93,6 +131,25 @@ describe("CampaignsClient", () => {
         await expect(async () => {
             return await client.tenDlc.campaigns.list();
         }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("list (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v3/10dlc/brands/campaigns")
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.list();
+        }).rejects.toThrow(Wavix.NotFoundError);
     });
 
     test("listByBrand (1)", async () => {
@@ -177,6 +234,48 @@ describe("CampaignsClient", () => {
             .mockEndpoint()
             .get("/v3/10dlc/brands/brand_id/campaigns")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.listByBrand({
+                brand_id: "brand_id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("listByBrand (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v3/10dlc/brands/brand_id/campaigns")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.listByBrand({
+                brand_id: "brand_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("listByBrand (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v3/10dlc/brands/brand_id/campaigns")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -188,7 +287,7 @@ describe("CampaignsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("listByBrand (3)", async () => {
+    test("listByBrand (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -335,8 +434,6 @@ describe("CampaignsClient", () => {
             auto_renewal: true,
             direct_lending: true,
             embedded_links: true,
-            embedded_phones: null,
-            embedded_link_sample: null,
             description: "description",
             optin_workflow: "optin_workflow",
             help: true,
@@ -350,10 +447,6 @@ describe("CampaignsClient", () => {
             optout_message: "optout_message",
             name: "name",
             sample1: "sample1",
-            sample2: null,
-            sample3: null,
-            sample4: null,
-            sample5: null,
             mock: true,
             usecase: "usecase",
             terms_conditions: "terms_conditions",
@@ -377,8 +470,6 @@ describe("CampaignsClient", () => {
                 auto_renewal: true,
                 direct_lending: true,
                 embedded_links: true,
-                embedded_phones: null,
-                embedded_link_sample: null,
                 description: "description",
                 optin_workflow: "optin_workflow",
                 help: true,
@@ -392,10 +483,6 @@ describe("CampaignsClient", () => {
                 optout_message: "optout_message",
                 name: "name",
                 sample1: "sample1",
-                sample2: null,
-                sample3: null,
-                sample4: null,
-                sample5: null,
                 mock: true,
                 usecase: "usecase",
                 terms_conditions: "terms_conditions",
@@ -412,8 +499,6 @@ describe("CampaignsClient", () => {
             auto_renewal: true,
             direct_lending: true,
             embedded_links: true,
-            embedded_phones: null,
-            embedded_link_sample: null,
             description: "description",
             optin_workflow: "optin_workflow",
             help: true,
@@ -427,10 +512,71 @@ describe("CampaignsClient", () => {
             optout_message: "optout_message",
             name: "name",
             sample1: "sample1",
-            sample2: null,
-            sample3: null,
-            sample4: null,
-            sample5: null,
+            mock: true,
+            usecase: "usecase",
+            terms_conditions: "terms_conditions",
+        };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v3/10dlc/brands/brand_id/campaigns")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.create({
+                brand_id: "brand_id",
+                affiliate_marketing: true,
+                age_gated: true,
+                auto_renewal: true,
+                direct_lending: true,
+                embedded_links: true,
+                description: "description",
+                optin_workflow: "optin_workflow",
+                help: true,
+                help_keywords: "help_keywords",
+                help_message: "help_message",
+                optin: true,
+                optin_keywords: "optin_keywords",
+                optin_message: "optin_message",
+                optout: true,
+                optout_keywords: "optout_keywords",
+                optout_message: "optout_message",
+                name: "name",
+                sample1: "sample1",
+                mock: true,
+                usecase: "usecase",
+                terms_conditions: "terms_conditions",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("create (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            affiliate_marketing: true,
+            age_gated: true,
+            auto_renewal: true,
+            direct_lending: true,
+            embedded_links: true,
+            description: "description",
+            optin_workflow: "optin_workflow",
+            help: true,
+            help_keywords: "help_keywords",
+            help_message: "help_message",
+            optin: true,
+            optin_keywords: "optin_keywords",
+            optin_message: "optin_message",
+            optout: true,
+            optout_keywords: "optout_keywords",
+            optout_message: "optout_message",
+            name: "name",
+            sample1: "sample1",
             mock: true,
             usecase: "usecase",
             terms_conditions: "terms_conditions",
@@ -454,8 +600,6 @@ describe("CampaignsClient", () => {
                 auto_renewal: true,
                 direct_lending: true,
                 embedded_links: true,
-                embedded_phones: null,
-                embedded_link_sample: null,
                 description: "description",
                 optin_workflow: "optin_workflow",
                 help: true,
@@ -469,10 +613,6 @@ describe("CampaignsClient", () => {
                 optout_message: "optout_message",
                 name: "name",
                 sample1: "sample1",
-                sample2: null,
-                sample3: null,
-                sample4: null,
-                sample5: null,
                 mock: true,
                 usecase: "usecase",
                 terms_conditions: "terms_conditions",
@@ -480,7 +620,7 @@ describe("CampaignsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("create (4)", async () => {
+    test("create (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {
@@ -489,8 +629,6 @@ describe("CampaignsClient", () => {
             auto_renewal: true,
             direct_lending: true,
             embedded_links: true,
-            embedded_phones: null,
-            embedded_link_sample: null,
             description: "description",
             optin_workflow: "optin_workflow",
             help: true,
@@ -504,10 +642,6 @@ describe("CampaignsClient", () => {
             optout_message: "optout_message",
             name: "name",
             sample1: "sample1",
-            sample2: null,
-            sample3: null,
-            sample4: null,
-            sample5: null,
             mock: true,
             usecase: "usecase",
             terms_conditions: "terms_conditions",
@@ -531,8 +665,6 @@ describe("CampaignsClient", () => {
                 auto_renewal: true,
                 direct_lending: true,
                 embedded_links: true,
-                embedded_phones: null,
-                embedded_link_sample: null,
                 description: "description",
                 optin_workflow: "optin_workflow",
                 help: true,
@@ -546,15 +678,76 @@ describe("CampaignsClient", () => {
                 optout_message: "optout_message",
                 name: "name",
                 sample1: "sample1",
-                sample2: null,
-                sample3: null,
-                sample4: null,
-                sample5: null,
                 mock: true,
                 usecase: "usecase",
                 terms_conditions: "terms_conditions",
             });
         }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
+    test("create (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            affiliate_marketing: true,
+            age_gated: true,
+            auto_renewal: true,
+            direct_lending: true,
+            embedded_links: true,
+            description: "description",
+            optin_workflow: "optin_workflow",
+            help: true,
+            help_keywords: "help_keywords",
+            help_message: "help_message",
+            optin: true,
+            optin_keywords: "optin_keywords",
+            optin_message: "optin_message",
+            optout: true,
+            optout_keywords: "optout_keywords",
+            optout_message: "optout_message",
+            name: "name",
+            sample1: "sample1",
+            mock: true,
+            usecase: "usecase",
+            terms_conditions: "terms_conditions",
+        };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v3/10dlc/brands/brand_id/campaigns")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.create({
+                brand_id: "brand_id",
+                affiliate_marketing: true,
+                age_gated: true,
+                auto_renewal: true,
+                direct_lending: true,
+                embedded_links: true,
+                description: "description",
+                optin_workflow: "optin_workflow",
+                help: true,
+                help_keywords: "help_keywords",
+                help_message: "help_message",
+                optin: true,
+                optin_keywords: "optin_keywords",
+                optin_message: "optin_message",
+                optout: true,
+                optout_keywords: "optout_keywords",
+                optout_message: "optout_message",
+                name: "name",
+                sample1: "sample1",
+                mock: true,
+                usecase: "usecase",
+                terms_conditions: "terms_conditions",
+            });
+        }).rejects.toThrow(Wavix.UnprocessableEntityError);
     });
 
     test("get (1)", async () => {
@@ -627,6 +820,50 @@ describe("CampaignsClient", () => {
             .mockEndpoint()
             .get("/v3/10dlc/brands/brand_id/campaigns/campaign_id")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.get({
+                brand_id: "brand_id",
+                campaign_id: "campaign_id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v3/10dlc/brands/brand_id/campaigns/campaign_id")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.get({
+                brand_id: "brand_id",
+                campaign_id: "campaign_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("get (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v3/10dlc/brands/brand_id/campaigns/campaign_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -639,7 +876,7 @@ describe("CampaignsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("get (3)", async () => {
+    test("get (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -749,6 +986,29 @@ describe("CampaignsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .put("/v3/10dlc/brands/brand_id/campaigns/campaign_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.update({
+                brand_id: "brand_id",
+                campaign_id: "campaign_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("update (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
         const rawResponseBody = { key: "value" };
 
         server
@@ -768,7 +1028,7 @@ describe("CampaignsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("update (4)", async () => {
+    test("update (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -789,6 +1049,29 @@ describe("CampaignsClient", () => {
                 campaign_id: "campaign_id",
             });
         }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
+    test("update (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .put("/v3/10dlc/brands/brand_id/campaigns/campaign_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.update({
+                brand_id: "brand_id",
+                campaign_id: "campaign_id",
+            });
+        }).rejects.toThrow(Wavix.UnprocessableEntityError);
     });
 
     test("delete (1)", async () => {
@@ -822,6 +1105,50 @@ describe("CampaignsClient", () => {
             .mockEndpoint()
             .delete("/v3/10dlc/brands/brand_id/campaigns/campaign_id")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.delete({
+                brand_id: "brand_id",
+                campaign_id: "campaign_id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("delete (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/v3/10dlc/brands/brand_id/campaigns/campaign_id")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.delete({
+                brand_id: "brand_id",
+                campaign_id: "campaign_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("delete (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .delete("/v3/10dlc/brands/brand_id/campaigns/campaign_id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -834,7 +1161,7 @@ describe("CampaignsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("delete (3)", async () => {
+    test("delete (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -909,6 +1236,31 @@ describe("CampaignsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { nudge_intent: "nudge_intent", description: "description" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v3/10dlc/brands/brand_id/campaigns/campaign_id/nudge")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.campaigns.nudge({
+                brand_id: "brand_id",
+                campaign_id: "campaign_id",
+                nudge_intent: "nudge_intent",
+                description: "description",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("nudge (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { nudge_intent: "nudge_intent", description: "description" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -930,7 +1282,7 @@ describe("CampaignsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("nudge (4)", async () => {
+    test("nudge (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { nudge_intent: "nudge_intent", description: "description" };
@@ -955,11 +1307,11 @@ describe("CampaignsClient", () => {
         }).rejects.toThrow(Wavix.NotFoundError);
     });
 
-    test("nudge (5)", async () => {
+    test("nudge (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { nudge_intent: "nudge_intent", description: "description" };
-        const rawResponseBody = {};
+        const rawResponseBody = { key: "value" };
 
         server
             .mockEndpoint()

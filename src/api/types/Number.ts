@@ -25,9 +25,9 @@ export interface Number {
     destination: Wavix.InboundCallDestination[];
     /** Maximum number of concurrent inbound calls. */
     channels: number;
-    /** Documents required to activate the phone number. */
-    require_docs: string[];
-    /** Uploaded documents for the phone number. */
+    /** Documents to activate the number. */
+    require_docs: Wavix.DocumentType[];
+    /** Uploaded documents. */
     documents: Wavix.NumberDocument[];
     /** Indicates whether the number can be used as the Caller ID for local calls. */
     domestic_cli: boolean;

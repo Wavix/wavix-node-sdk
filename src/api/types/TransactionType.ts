@@ -42,6 +42,7 @@
  *   * 53  - Inbound SMS carrier fee
  *   * 54  - Outbound MMS carrier fee
  *   * 55  - Inbound MMS carrier fee
+ *   * 56  - 10DLC Campaign vetting fee
  *   * 57  - Outbound SMS segment
  *   * 58  - Inbound SMS segment
  *   * 59  - Outbound MMS segment

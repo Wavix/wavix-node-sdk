@@ -27,22 +27,12 @@ export namespace TenDlcBrandAppeal {
         /** An optional attributes that might be returned from TCR */
         optional_attributes: Record<string, unknown>;
         /** Brand Identity Verification appeal outcome */
-        vetting_status: Outcome.VettingStatus;
+        vetting_status: Wavix.TenDlcBrandIdentityVerificationStatus;
         /** Brand Identity Verification appeal feedback, if any */
         feedback: Outcome.Feedback;
     }
 
     export namespace Outcome {
-        /** Brand Identity Verification appeal outcome */
-        export const VettingStatus = {
-            Review: "REVIEW",
-            Verified: "VERIFIED",
-            Unverified: "UNVERIFIED",
-            VettedVerified: "VETTED_VERIFIED",
-            Suspended: "SUSPENDED",
-        } as const;
-        export type VettingStatus = (typeof VettingStatus)[keyof typeof VettingStatus];
-
         /**
          * Brand Identity Verification appeal feedback, if any
          */

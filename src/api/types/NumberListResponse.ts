@@ -6,6 +6,6 @@ export interface NumberListResponse {
     /** List of phone numbers on the account. */
     items: Wavix.Number[];
     /** Documents required to activate phone numbers. */
-    doc_types: Wavix.DocumentType[];
+    doc_types: Wavix.DocumentTypeInfo[];
     pagination: Wavix.Pagination;
 }

@@ -51,9 +51,11 @@ export class SubAccountsClient {
         request: Wavix.ListSubAccountsRequest = {},
         requestOptions?: SubAccountsClient.RequestOptions,
     ): Promise<core.WithRawResponse<Wavix.SubAccountsListResponse>> {
-        const { status } = request;
+        const { status, page, per_page: perPage } = request;
         const _queryParams: Record<string, unknown> = {
             status: status != null ? status : undefined,
+            page,
+            per_page: perPage,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -113,6 +115,7 @@ export class SubAccountsClient {
      * @param {SubAccountsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.UnprocessableEntityError}
      *
@@ -169,6 +172,11 @@ export class SubAccountsClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
@@ -191,6 +199,7 @@ export class SubAccountsClient {
      * @param {Wavix.GetSubAccountsRequest} request
      * @param {SubAccountsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
@@ -240,6 +249,8 @@ export class SubAccountsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Wavix.UnauthorizedError(
                         _response.error.body as Wavix.UnauthorizedErrorResponse,

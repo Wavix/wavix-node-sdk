@@ -23,13 +23,16 @@ export class StreamsClient {
     }
 
     /**
-     * Starts streaming the media of the call identified by `call_id` to the configured destination. Returns the `stream_id`.
+     * Starts streaming the audio of the call identified by `call_id` to a WebSocket destination you supply, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The destination can be any URL you specify — Wavix does not restrict it. Returns the `stream_id`.
      *
      * @param {Wavix.callControl.CallStreamCreateRequest} request
      * @param {StreamsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
+     * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.callControl.streams.create({
@@ -89,6 +92,12 @@ export class StreamsClient {
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
                         _response.rawResponse,
                     );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -107,7 +116,10 @@ export class StreamsClient {
      * @param {Wavix.callControl.DeleteStreamsRequest} request
      * @param {StreamsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
      *
      * @example
      *     await client.callControl.streams.delete({
@@ -155,11 +167,17 @@ export class StreamsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Wavix.UnauthorizedError(
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
                         _response.rawResponse,
                     );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,

@@ -51,6 +51,8 @@ export class SpeechAnalyticsClient {
      * @param {SpeechAnalyticsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
@@ -63,14 +65,14 @@ export class SpeechAnalyticsClient {
     public create(
         request: Wavix.CreateSpeechAnalyticsRequest,
         requestOptions?: SpeechAnalyticsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.CreateSpeechAnalyticsResponse> {
+    ): core.HttpResponsePromise<Wavix.SubmitFileTranscriptionResponse> {
         return core.HttpResponsePromise.fromPromise(this.__create(request, requestOptions));
     }
 
     private async __create(
         request: Wavix.CreateSpeechAnalyticsRequest,
         requestOptions?: SpeechAnalyticsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.CreateSpeechAnalyticsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.SubmitFileTranscriptionResponse>> {
         const _body = await core.newFormData();
         await _body.appendFile("file", request.file);
         _body.append("callback_url", request.callback_url);
@@ -106,13 +108,23 @@ export class SpeechAnalyticsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.CreateSpeechAnalyticsResponse, rawResponse: _response.rawResponse };
+            return {
+                data: _response.body as Wavix.SubmitFileTranscriptionResponse,
+                rawResponse: _response.rawResponse,
+            };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
                     throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -133,6 +145,9 @@ export class SpeechAnalyticsClient {
      * @param {Wavix.GetSpeechAnalyticsRequest} request
      * @param {SpeechAnalyticsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
      * @example
@@ -143,14 +158,14 @@ export class SpeechAnalyticsClient {
     public get(
         request: Wavix.GetSpeechAnalyticsRequest,
         requestOptions?: SpeechAnalyticsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.GetSpeechAnalyticsResponse> {
+    ): core.HttpResponsePromise<Wavix.FileTranscriptionResponse> {
         return core.HttpResponsePromise.fromPromise(this.__get(request, requestOptions));
     }
 
     private async __get(
         request: Wavix.GetSpeechAnalyticsRequest,
         requestOptions?: SpeechAnalyticsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.GetSpeechAnalyticsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.FileTranscriptionResponse>> {
         const { request_id: requestId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -175,11 +190,20 @@ export class SpeechAnalyticsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.GetSpeechAnalyticsResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.FileTranscriptionResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -206,6 +230,8 @@ export class SpeechAnalyticsClient {
      * @param {SpeechAnalyticsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      * @throws {@link Wavix.UnprocessableEntityError}
      *
@@ -260,6 +286,13 @@ export class SpeechAnalyticsClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 422:

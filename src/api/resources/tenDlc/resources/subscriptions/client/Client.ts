@@ -27,6 +27,8 @@ export class SubscriptionsClient {
      *
      * @param {SubscriptionsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      *
      * @example
@@ -69,6 +71,13 @@ export class SubscriptionsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -89,7 +98,10 @@ export class SubscriptionsClient {
      * @param {Wavix.TenDlcEventSubscription} request
      * @param {SubscriptionsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.tenDlc.subscriptions.create({
@@ -100,14 +112,14 @@ export class SubscriptionsClient {
     public create(
         request: Wavix.TenDlcEventSubscription,
         requestOptions?: SubscriptionsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.CreateSubscriptionsResponse> {
+    ): core.HttpResponsePromise<Wavix.TenDlcEventSubscription> {
         return core.HttpResponsePromise.fromPromise(this.__create(request, requestOptions));
     }
 
     private async __create(
         request: Wavix.TenDlcEventSubscription,
         requestOptions?: SubscriptionsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.CreateSubscriptionsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.TenDlcEventSubscription>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -134,16 +146,22 @@ export class SubscriptionsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as Wavix.tenDlc.CreateSubscriptionsResponse,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as Wavix.TenDlcEventSubscription, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -163,7 +181,9 @@ export class SubscriptionsClient {
      * @param {SubscriptionsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
      *
      * @example
      *     await client.tenDlc.subscriptions.delete({
@@ -173,14 +193,14 @@ export class SubscriptionsClient {
     public delete(
         request: Wavix.tenDlc.DeleteSubscriptionsRequest,
         requestOptions?: SubscriptionsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.DeleteSubscriptionsResponse> {
+    ): core.HttpResponsePromise<Wavix.SuccessResponse> {
         return core.HttpResponsePromise.fromPromise(this.__delete(request, requestOptions));
     }
 
     private async __delete(
         request: Wavix.tenDlc.DeleteSubscriptionsRequest,
         requestOptions?: SubscriptionsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.DeleteSubscriptionsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.SuccessResponse>> {
         const { subscription_category: subscriptionCategory } = request;
         const _queryParams: Record<string, unknown> = {
             subscription_category: subscriptionCategory,
@@ -212,18 +232,22 @@ export class SubscriptionsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as Wavix.tenDlc.DeleteSubscriptionsResponse,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as Wavix.SuccessResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,

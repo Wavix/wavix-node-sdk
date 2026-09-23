@@ -87,7 +87,7 @@ describe("TokensClient", () => {
     test("create (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { sip_trunk: "sip_trunk", ttl: null };
+        const rawRequestBody = { sip_trunk: "sip_trunk" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -102,7 +102,6 @@ describe("TokensClient", () => {
         await expect(async () => {
             return await client.webrtc.tokens.create({
                 sip_trunk: "sip_trunk",
-                ttl: null,
             });
         }).rejects.toThrow(Wavix.BadRequestError);
     });
@@ -110,7 +109,7 @@ describe("TokensClient", () => {
     test("create (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { sip_trunk: "sip_trunk", ttl: null };
+        const rawRequestBody = { sip_trunk: "sip_trunk" };
         const rawResponseBody = {};
 
         server
@@ -125,7 +124,6 @@ describe("TokensClient", () => {
         await expect(async () => {
             return await client.webrtc.tokens.create({
                 sip_trunk: "sip_trunk",
-                ttl: null,
             });
         }).rejects.toThrow(Wavix.UnauthorizedError);
     });
@@ -133,7 +131,7 @@ describe("TokensClient", () => {
     test("create (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { sip_trunk: "sip_trunk", ttl: null };
+        const rawRequestBody = { sip_trunk: "sip_trunk" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -148,7 +146,6 @@ describe("TokensClient", () => {
         await expect(async () => {
             return await client.webrtc.tokens.create({
                 sip_trunk: "sip_trunk",
-                ttl: null,
             });
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
@@ -156,7 +153,7 @@ describe("TokensClient", () => {
     test("create (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { sip_trunk: "sip_trunk", ttl: null };
+        const rawRequestBody = { sip_trunk: "sip_trunk" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -171,7 +168,6 @@ describe("TokensClient", () => {
         await expect(async () => {
             return await client.webrtc.tokens.create({
                 sip_trunk: "sip_trunk",
-                ttl: null,
             });
         }).rejects.toThrow(Wavix.NotFoundError);
     });
@@ -205,6 +201,27 @@ describe("TokensClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v2/webrtc/tokens/id")
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webrtc.tokens.get({
+                id: "id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = {};
 
         server
@@ -222,7 +239,7 @@ describe("TokensClient", () => {
         }).rejects.toThrow(Wavix.UnauthorizedError);
     });
 
-    test("get (3)", async () => {
+    test("get (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -243,7 +260,7 @@ describe("TokensClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("get (4)", async () => {
+    test("get (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -425,6 +442,27 @@ describe("TokensClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .delete("/v2/webrtc/tokens/id")
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.webrtc.tokens.delete({
+                id: "id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("delete (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = {};
 
         server
@@ -442,7 +480,7 @@ describe("TokensClient", () => {
         }).rejects.toThrow(Wavix.UnauthorizedError);
     });
 
-    test("delete (3)", async () => {
+    test("delete (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -463,7 +501,7 @@ describe("TokensClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("delete (4)", async () => {
+    test("delete (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

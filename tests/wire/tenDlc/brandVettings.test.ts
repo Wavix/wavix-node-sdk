@@ -51,6 +51,48 @@ describe("BrandVettingsClient", () => {
             .mockEndpoint()
             .get("/v3/10dlc/brands/brand_id/vettings")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandVettings.list({
+                brand_id: "brand_id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("list (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v3/10dlc/brands/brand_id/vettings")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandVettings.list({
+                brand_id: "brand_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v3/10dlc/brands/brand_id/vettings")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -62,7 +104,7 @@ describe("BrandVettingsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("list (3)", async () => {
+    test("list (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -131,6 +173,54 @@ describe("BrandVettingsClient", () => {
             .post("/v3/10dlc/brands/brand_id/vettings")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandVettings.create({
+                brand_id: "brand_id",
+                evp_id: "evp_id",
+                vetting_class: "vetting_class",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("create (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { evp_id: "evp_id", vetting_class: "vetting_class" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v3/10dlc/brands/brand_id/vettings")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandVettings.create({
+                brand_id: "brand_id",
+                evp_id: "evp_id",
+                vetting_class: "vetting_class",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("create (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { evp_id: "evp_id", vetting_class: "vetting_class" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v3/10dlc/brands/brand_id/vettings")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -144,7 +234,7 @@ describe("BrandVettingsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("create (3)", async () => {
+    test("create (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { evp_id: "evp_id", vetting_class: "vetting_class" };
@@ -166,6 +256,30 @@ describe("BrandVettingsClient", () => {
                 vetting_class: "vetting_class",
             });
         }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
+    test("create (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { evp_id: "evp_id", vetting_class: "vetting_class" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v3/10dlc/brands/brand_id/vettings")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandVettings.create({
+                brand_id: "brand_id",
+                evp_id: "evp_id",
+                vetting_class: "vetting_class",
+            });
+        }).rejects.toThrow(Wavix.UnprocessableEntityError);
     });
 
     test("import (1)", async () => {
@@ -223,6 +337,56 @@ describe("BrandVettingsClient", () => {
             .put("/v3/10dlc/brands/brand_id/vettings")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandVettings.import({
+                brand_id: "brand_id",
+                evp_id: "evp_id",
+                vetting_id: "vetting_id",
+                vetting_token: "vetting_token",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("import (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { evp_id: "evp_id", vetting_id: "vetting_id", vetting_token: "vetting_token" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .put("/v3/10dlc/brands/brand_id/vettings")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandVettings.import({
+                brand_id: "brand_id",
+                evp_id: "evp_id",
+                vetting_id: "vetting_id",
+                vetting_token: "vetting_token",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("import (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { evp_id: "evp_id", vetting_id: "vetting_id", vetting_token: "vetting_token" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .put("/v3/10dlc/brands/brand_id/vettings")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -237,7 +401,7 @@ describe("BrandVettingsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("import (3)", async () => {
+    test("import (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { evp_id: "evp_id", vetting_id: "vetting_id", vetting_token: "vetting_token" };
@@ -262,7 +426,7 @@ describe("BrandVettingsClient", () => {
         }).rejects.toThrow(Wavix.NotFoundError);
     });
 
-    test("import (4)", async () => {
+    test("import (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { evp_id: "evp_id", vetting_id: "vetting_id", vetting_token: "vetting_token" };

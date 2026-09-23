@@ -23,7 +23,7 @@ export class VerificationClient {
     }
 
     /**
-     * Creates a 2FA verification and sends a one-time password (OTP) to the destination phone number over the selected channel. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
+     * Creates a 2FA verification and sends a real one-time password (OTP) to the destination phone number over the selected channel; this bills the account per OTP sent. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
      *
      * The verification proceeds through three steps:
      * 1. Create a verification to generate and send an OTP.
@@ -34,7 +34,10 @@ export class VerificationClient {
      * @param {VerificationClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
+     * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.twoFa.verification.create({
@@ -46,14 +49,14 @@ export class VerificationClient {
     public create(
         request: Wavix.twoFa.TwoFactorVerificationCreateRequest,
         requestOptions?: VerificationClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.twoFa.CreateVerificationResponse> {
+    ): core.HttpResponsePromise<Wavix.TwoFactorVerificationResponse> {
         return core.HttpResponsePromise.fromPromise(this.__create(request, requestOptions));
     }
 
     private async __create(
         request: Wavix.twoFa.TwoFactorVerificationCreateRequest,
         requestOptions?: VerificationClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.twoFa.CreateVerificationResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.TwoFactorVerificationResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -80,18 +83,24 @@ export class VerificationClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as Wavix.twoFa.CreateVerificationResponse,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as Wavix.TwoFactorVerificationResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -111,7 +120,10 @@ export class VerificationClient {
      * @param {VerificationClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
+     * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.twoFa.verification.resend({
@@ -122,14 +134,14 @@ export class VerificationClient {
     public resend(
         request: Wavix.twoFa.TwoFactorVerificationResendRequest,
         requestOptions?: VerificationClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.twoFa.ResendVerificationResponse> {
+    ): core.HttpResponsePromise<Wavix.TwoFactorVerificationResendResponse> {
         return core.HttpResponsePromise.fromPromise(this.__resend(request, requestOptions));
     }
 
     private async __resend(
         request: Wavix.twoFa.TwoFactorVerificationResendRequest,
         requestOptions?: VerificationClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.twoFa.ResendVerificationResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.TwoFactorVerificationResendResponse>> {
         const { session_id: sessionId, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -158,7 +170,7 @@ export class VerificationClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as Wavix.twoFa.ResendVerificationResponse,
+                data: _response.body as Wavix.TwoFactorVerificationResendResponse,
                 rawResponse: _response.rawResponse,
             };
         }
@@ -167,8 +179,17 @@ export class VerificationClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -187,13 +208,16 @@ export class VerificationClient {
     }
 
     /**
-     * Validates the OTP submitted by the end user against the verification identified by `session_id`.
+     * Validates the OTP submitted by the end user against the verification identified by `session_id`. Non-idempotent — each call consumes one of a limited number of attempts tracked server-side; once exhausted, the verification returns `429` until a new verification is created.
      *
      * @param {Wavix.twoFa.TwoFactorVerificationCheckRequest} request
      * @param {VerificationClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
+     * @throws {@link Wavix.TooManyRequestsError}
      *
      * @example
      *     await client.twoFa.verification.check({
@@ -204,14 +228,14 @@ export class VerificationClient {
     public check(
         request: Wavix.twoFa.TwoFactorVerificationCheckRequest,
         requestOptions?: VerificationClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.twoFa.CheckVerificationResponse> {
+    ): core.HttpResponsePromise<Wavix.TwoFactorVerificationCheckResponse> {
         return core.HttpResponsePromise.fromPromise(this.__check(request, requestOptions));
     }
 
     private async __check(
         request: Wavix.twoFa.TwoFactorVerificationCheckRequest,
         requestOptions?: VerificationClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.twoFa.CheckVerificationResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.TwoFactorVerificationCheckResponse>> {
         const { session_id: sessionId, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -240,7 +264,7 @@ export class VerificationClient {
         });
         if (_response.ok) {
             return {
-                data: _response.body as Wavix.twoFa.CheckVerificationResponse,
+                data: _response.body as Wavix.TwoFactorVerificationCheckResponse,
                 rawResponse: _response.rawResponse,
             };
         }
@@ -249,8 +273,17 @@ export class VerificationClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 429:
+                    throw new Wavix.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -275,6 +308,7 @@ export class VerificationClient {
      * @param {VerificationClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -325,6 +359,11 @@ export class VerificationClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:

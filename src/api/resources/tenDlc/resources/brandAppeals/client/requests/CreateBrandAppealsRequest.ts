@@ -12,9 +12,22 @@ export interface CreateBrandAppealsRequest {
     /** The unique ID of the 10DLC Brand. */
     brand_id: string;
     /** List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT` */
-    appeal_categories: string[];
+    appeal_categories: CreateBrandAppealsRequest.AppealCategories.Item[];
     /** List of evidence IDs associated with the appeal. */
     evidence: string[];
     /** Appeal comment or justification. */
     explanation?: string;
+}
+
+export namespace CreateBrandAppealsRequest {
+    export type AppealCategories = AppealCategories.Item[];
+
+    export namespace AppealCategories {
+        export const Item = {
+            VerifyTaxId: "VERIFY_TAX_ID",
+            VerifyNonProfit: "VERIFY_NON_PROFIT",
+            VerifyGovernment: "VERIFY_GOVERNMENT",
+        } as const;
+        export type Item = (typeof Item)[keyof typeof Item];
+    }
 }

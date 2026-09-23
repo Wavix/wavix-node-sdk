@@ -28,6 +28,7 @@ export class CountriesClient {
      * @param {Wavix.buy.ListCountriesRequest} request
      * @param {CountriesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      *
      * @example
@@ -36,14 +37,14 @@ export class CountriesClient {
     public list(
         request: Wavix.buy.ListCountriesRequest = {},
         requestOptions?: CountriesClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.buy.ListCountriesResponse> {
+    ): core.HttpResponsePromise<Wavix.CountryListResponse> {
         return core.HttpResponsePromise.fromPromise(this.__list(request, requestOptions));
     }
 
     private async __list(
         request: Wavix.buy.ListCountriesRequest = {},
         requestOptions?: CountriesClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.buy.ListCountriesResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.CountryListResponse>> {
         const { text_enabled_only: textEnabledOnly } = request;
         const _queryParams: Record<string, unknown> = {
             text_enabled_only: textEnabledOnly,
@@ -75,11 +76,16 @@ export class CountriesClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.buy.ListCountriesResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.CountryListResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 default:

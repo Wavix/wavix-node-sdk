@@ -64,10 +64,61 @@ describe("CdrsClient", () => {
         }).rejects.toThrow(Wavix.BadRequestError);
     });
 
+    test("list (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v1/cdrs").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.cdrs.list({
+                from: "2023-01-15",
+                to: "2023-01-15",
+                type: "type",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server.mockEndpoint().get("/v1/cdrs").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.cdrs.list({
+                from: "2023-01-15",
+                to: "2023-01-15",
+                type: "type",
+            });
+        }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("list (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server.mockEndpoint().get("/v1/cdrs").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.cdrs.list({
+                from: "2023-01-15",
+                to: "2023-01-15",
+                type: "type",
+            });
+        }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
     test("search (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { type: "placed", from: "2023-08-01", to: "2023-08-31", page: 1, per_page: 50 };
+        const rawRequestBody = { type: "placed", from: "2023-08-01", to: "2023-08-31" };
         const rawResponseBody = {
             items: [
                 {
@@ -107,8 +158,6 @@ describe("CdrsClient", () => {
             type: "placed",
             from: "2023-08-01",
             to: "2023-08-31",
-            page: 1,
-            per_page: 50,
         });
         expect(response).toEqual(rawResponseBody);
     });
@@ -116,7 +165,31 @@ describe("CdrsClient", () => {
     test("search (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { type: "placed", from: "2023-01-15", to: "2023-01-15", page: 1, per_page: 1 };
+        const rawRequestBody = { type: "placed", from: "2023-01-15", to: "2023-01-15" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v1/cdrs")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.cdrs.search({
+                type: "placed",
+                from: "2023-01-15",
+                to: "2023-01-15",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("search (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { type: "placed", from: "2023-01-15", to: "2023-01-15" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -133,16 +206,14 @@ describe("CdrsClient", () => {
                 type: "placed",
                 from: "2023-01-15",
                 to: "2023-01-15",
-                page: 1,
-                per_page: 1,
             });
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("search (3)", async () => {
+    test("search (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { type: "placed", from: "2023-01-15", to: "2023-01-15", page: 1, per_page: 1 };
+        const rawRequestBody = { type: "placed", from: "2023-01-15", to: "2023-01-15" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -159,8 +230,6 @@ describe("CdrsClient", () => {
                 type: "placed",
                 from: "2023-01-15",
                 to: "2023-01-15",
-                page: 1,
-                per_page: 1,
             });
         }).rejects.toThrow(Wavix.UnprocessableEntityError);
     });
@@ -173,7 +242,7 @@ describe("CdrsClient", () => {
 
         server
             .mockEndpoint()
-            .put("/v1/cdrs/bbaa37bf-430a-46da-ade3-c248e407016/retranscribe")
+            .put("/v1/cdrs/bbaa37bf-430a-46da-ade3-c248e4070160/retranscribe")
             .jsonBody(rawRequestBody)
             .respondWith()
             .statusCode(200)
@@ -181,12 +250,56 @@ describe("CdrsClient", () => {
             .build();
 
         const response = await client.cdrs.retranscribe({
-            call_id: "bbaa37bf-430a-46da-ade3-c248e407016",
+            call_id: "bbaa37bf-430a-46da-ade3-c248e4070160",
         });
         expect(response).toEqual(rawResponseBody);
     });
 
     test("retranscribe (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .put("/v1/cdrs/call_id/retranscribe")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.cdrs.retranscribe({
+                call_id: "call_id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("retranscribe (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .put("/v1/cdrs/call_id/retranscribe")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.cdrs.retranscribe({
+                call_id: "call_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("retranscribe (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -208,7 +321,7 @@ describe("CdrsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("retranscribe (3)", async () => {
+    test("retranscribe (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -230,7 +343,7 @@ describe("CdrsClient", () => {
         }).rejects.toThrow(Wavix.NotFoundError);
     });
 
-    test("retranscribe (4)", async () => {
+    test("retranscribe (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
@@ -282,19 +395,40 @@ describe("CdrsClient", () => {
 
         server
             .mockEndpoint()
-            .get("/v1/cdrs/bbaa37bf-430a-46da-ade3-c248e407016/transcriptions")
+            .get("/v1/cdrs/bbaa37bf-430a-46da-ade3-c248e4070160/transcriptions")
             .respondWith()
             .statusCode(200)
             .jsonBody(rawResponseBody)
             .build();
 
         const response = await client.cdrs.transcriptions({
-            call_id: "bbaa37bf-430a-46da-ade3-c248e407016",
+            call_id: "bbaa37bf-430a-46da-ade3-c248e4070160",
         });
         expect(response).toEqual(rawResponseBody);
     });
 
     test("transcriptions (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v1/cdrs/call_id/transcriptions")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.cdrs.transcriptions({
+                call_id: "call_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("transcriptions (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -315,7 +449,7 @@ describe("CdrsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("transcriptions (3)", async () => {
+    test("transcriptions (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -383,6 +517,51 @@ describe("CdrsClient", () => {
 
         const rawResponseBody = { key: "value" };
 
+        server.mockEndpoint().get("/v1/cdrs/call_id").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.cdrs.get({
+                call_id: "call_id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v1/cdrs/call_id").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.cdrs.get({
+                call_id: "call_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("get (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server.mockEndpoint().get("/v1/cdrs/call_id").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.cdrs.get({
+                call_id: "call_id",
+            });
+        }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("get (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
         server.mockEndpoint().get("/v1/cdrs/call_id").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
 
         await expect(async () => {
@@ -416,6 +595,23 @@ describe("CdrsClient", () => {
     });
 
     test("listAll (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v1/cdrs/all").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.cdrs.listAll({
+                from: "2023-01-15",
+                to: "2023-01-15",
+                type: "type",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("listAll (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

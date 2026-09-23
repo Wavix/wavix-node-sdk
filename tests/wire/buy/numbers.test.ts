@@ -23,7 +23,7 @@ describe("NumbersClient", () => {
                     cnam: false,
                     free_min: 0,
                     number: "541139862174",
-                    require_docs: [1, 3],
+                    require_docs: ["address"],
                     sms_enabled: false,
                     sms_price: 0,
                     domestic_cli: false,
@@ -73,6 +73,28 @@ describe("NumbersClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v1/buy/countries/1/cities/1/dids")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.buy.numbers.list({
+                country_id: 1,
+                city_id: 1,
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = { key: "value" };
 
         server
@@ -91,7 +113,7 @@ describe("NumbersClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("list (4)", async () => {
+    test("list (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

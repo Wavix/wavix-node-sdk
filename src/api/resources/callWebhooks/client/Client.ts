@@ -30,6 +30,7 @@ export class CallWebhooksClient {
      *
      * @param {CallWebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      *
@@ -73,6 +74,8 @@ export class CallWebhooksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Wavix.UnauthorizedError(
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
@@ -93,7 +96,7 @@ export class CallWebhooksClient {
     }
 
     /**
-     * Registers a callback URL for the `on-call` or `post-call` event. Wavix sends a POST callback to the URL when the event occurs.
+     * Registers a callback URL for the `on-call` or `post-call` event. Wavix sends a POST callback to the URL when the event occurs. Creates persistent configuration that forwards call metadata to the URL on every matching call until the webhook is deleted.
      *
      * @param {Wavix.CallWebhooksCreateRequest} request
      * @param {CallWebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -101,6 +104,7 @@ export class CallWebhooksClient {
      * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.callWebhooks.create({
@@ -159,6 +163,8 @@ export class CallWebhooksClient {
                     );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,

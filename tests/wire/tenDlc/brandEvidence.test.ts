@@ -14,7 +14,7 @@ describe("BrandEvidenceClient", () => {
                 {
                     file_name: "file.png",
                     mime_type: "image/png",
-                    url: "https://api.qa1.wavix.dev/v3/10dlc/brands/BRGQVL0/evidence/3d8d97b6-61f7-4f91-8c1c-7ef83828e072",
+                    url: "https://api.wavix.com/v3/10dlc/brands/BRGQVL0/evidence/3d8d97b6-61f7-4f91-8c1c-7ef83828e072",
                     uuid: "3d8d97b6-61f7-4f91-8c1c-7ef83828e072",
                 },
             ],
@@ -44,6 +44,48 @@ describe("BrandEvidenceClient", () => {
             .mockEndpoint()
             .get("/v3/10dlc/brands/brand_id/evidence")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandEvidence.list({
+                brand_id: "brand_id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("list (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v3/10dlc/brands/brand_id/evidence")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandEvidence.list({
+                brand_id: "brand_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v3/10dlc/brands/brand_id/evidence")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -55,7 +97,7 @@ describe("BrandEvidenceClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("list (3)", async () => {
+    test("list (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -107,6 +149,50 @@ describe("BrandEvidenceClient", () => {
             .mockEndpoint()
             .delete("/v3/10dlc/brands/brand_id/evidence/id")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandEvidence.delete({
+                brand_id: "brand_id",
+                id: "id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("delete (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/v3/10dlc/brands/brand_id/evidence/id")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandEvidence.delete({
+                brand_id: "brand_id",
+                id: "id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("delete (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .delete("/v3/10dlc/brands/brand_id/evidence/id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -119,7 +205,7 @@ describe("BrandEvidenceClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("delete (3)", async () => {
+    test("delete (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

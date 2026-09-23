@@ -19,7 +19,7 @@ describe("MetricsClient", () => {
                     language: "English",
                     phone: "12762025555",
                     utm_campaign: "summer",
-                    created_at: "2023-07-19 18:23:42.120Z",
+                    created_at: "2023-07-19 18:23:42",
                     link_hash: "hd82Jhs21",
                     user_id: 100017,
                 },
@@ -72,6 +72,28 @@ describe("MetricsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v1/short-links/metrics")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.linkShortener.metrics.list({
+                from: "2023-01-15",
+                to: "2023-01-15",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = { key: "value" };
 
         server
@@ -88,5 +110,27 @@ describe("MetricsClient", () => {
                 to: "2023-01-15",
             });
         }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("list (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v1/short-links/metrics")
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.linkShortener.metrics.list({
+                from: "2023-01-15",
+                to: "2023-01-15",
+            });
+        }).rejects.toThrow(Wavix.NotFoundError);
     });
 });

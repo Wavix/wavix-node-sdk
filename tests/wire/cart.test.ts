@@ -23,7 +23,7 @@ describe("CartClient", () => {
                     cnam: false,
                     free_min: 0,
                     number: "541139862174",
-                    require_docs: [1, 3],
+                    require_docs: ["address"],
                     sms_enabled: false,
                     sms_price: 0,
                     domestic_cli: false,
@@ -46,13 +46,13 @@ describe("CartClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
-        const rawResponseBody = { key: "value" };
+        const rawResponseBody = {};
 
-        server.mockEndpoint().get("/v1/buy/cart").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+        server.mockEndpoint().get("/v1/buy/cart").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
 
         await expect(async () => {
             return await client.cart.get();
-        }).rejects.toThrow(Wavix.BadRequestError);
+        }).rejects.toThrow(Wavix.UnauthorizedError);
     });
 
     test("get (3)", async () => {
@@ -74,20 +74,21 @@ describe("CartClient", () => {
         const rawRequestBody = { ids: ["541139862174", "541139862175"] };
         const rawResponseBody = [
             {
+                id: 541139862174,
                 activation_fee: "15.0",
+                monthly_fee: "10.0",
+                per_min: "0.01",
                 channels: "4",
                 city: "Buenos Aires",
-                cnam: false,
                 country: "Argentina",
                 country_short_name: "AR",
-                domestic_cli: false,
+                cnam: false,
                 free_min: 0,
-                id: 541139862174,
-                monthly_fee: "10.0",
                 number: "541139862174",
-                per_min: "0.01",
+                require_docs: ["address"],
                 sms_enabled: false,
                 sms_price: 0,
+                domestic_cli: false,
             },
         ];
 
@@ -132,6 +133,28 @@ describe("CartClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { ids: ["ids", "ids"] };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .put("/v1/buy/cart")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.cart.add({
+                ids: ["ids", "ids"],
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("add (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { ids: ["ids", "ids"] };
         const rawResponseBody = { key: "value" };
 
         server
@@ -150,7 +173,7 @@ describe("CartClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("add (4)", async () => {
+    test("add (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { ids: ["ids", "ids"] };
@@ -219,6 +242,28 @@ describe("CartClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { ids: ["ids", "ids"] };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/v1/buy/cart")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.cart.remove({
+                ids: ["ids", "ids"],
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("remove (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { ids: ["ids", "ids"] };
         const rawResponseBody = { key: "value" };
 
         server
@@ -237,7 +282,7 @@ describe("CartClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("remove (4)", async () => {
+    test("remove (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { ids: ["ids", "ids"] };
@@ -291,6 +336,50 @@ describe("CartClient", () => {
             .post("/v1/buy/cart/checkout")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.cart.checkout({
+                ids: ["ids", "ids"],
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("checkout (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { ids: ["ids", "ids"] };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v1/buy/cart/checkout")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.cart.checkout({
+                ids: ["ids", "ids"],
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("checkout (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { ids: ["ids", "ids"] };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/buy/cart/checkout")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -302,7 +391,7 @@ describe("CartClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("checkout (3)", async () => {
+    test("checkout (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { ids: ["ids", "ids"] };
@@ -322,5 +411,27 @@ describe("CartClient", () => {
                 ids: ["ids", "ids"],
             });
         }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
+    test("checkout (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { ids: ["ids", "ids"] };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/buy/cart/checkout")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.cart.checkout({
+                ids: ["ids", "ids"],
+            });
+        }).rejects.toThrow(Wavix.UnprocessableEntityError);
     });
 });

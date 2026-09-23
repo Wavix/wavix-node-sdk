@@ -47,6 +47,69 @@ describe("SpeechAnalyticsClient", () => {
             .mockEndpoint()
             .get("/v1/speech-analytics/request_id")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.speechAnalytics.get({
+                request_id: "request_id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v1/speech-analytics/request_id")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.speechAnalytics.get({
+                request_id: "request_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("get (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v1/speech-analytics/request_id")
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.speechAnalytics.get({
+                request_id: "request_id",
+            });
+        }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("get (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v1/speech-analytics/request_id")
+            .respondWith()
             .statusCode(404)
             .jsonBody(rawResponseBody)
             .build();
@@ -107,6 +170,52 @@ describe("SpeechAnalyticsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { callback_url: "callback_url" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .put("/v1/speech-analytics/request_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.speechAnalytics.retranscribe({
+                request_id: "request_id",
+                callback_url: "callback_url",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("retranscribe (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { callback_url: "callback_url" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .put("/v1/speech-analytics/request_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.speechAnalytics.retranscribe({
+                request_id: "request_id",
+                callback_url: "callback_url",
+            });
+        }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("retranscribe (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { callback_url: "callback_url" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -126,7 +235,7 @@ describe("SpeechAnalyticsClient", () => {
         }).rejects.toThrow(Wavix.NotFoundError);
     });
 
-    test("retranscribe (4)", async () => {
+    test("retranscribe (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { callback_url: "callback_url" };

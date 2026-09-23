@@ -42,7 +42,10 @@ export class CallControlClient {
      *
      * @param {CallControlClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
      *
      * @example
      *     await client.callControl.list()
@@ -82,11 +85,17 @@ export class CallControlClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Wavix.UnauthorizedError(
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
                         _response.rawResponse,
                     );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -100,13 +109,15 @@ export class CallControlClient {
     }
 
     /**
-     * Places an outbound call. Returns the call with its `uuid` for tracking and control.
+     * Places a real, billable outbound PSTN call. Returns the call with its `uuid` for tracking and control.
      *
      * @param {Wavix.CallRequest} request
      * @param {CallControlClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
      *
      * @example
      *     await client.callControl.create({
@@ -164,6 +175,10 @@ export class CallControlClient {
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
                         _response.rawResponse,
                     );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -182,7 +197,9 @@ export class CallControlClient {
      * @param {Wavix.GetCallControlRequest} request
      * @param {CallControlClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
      * @example
@@ -230,11 +247,15 @@ export class CallControlClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Wavix.UnauthorizedError(
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
                         _response.rawResponse,
                     );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -250,12 +271,14 @@ export class CallControlClient {
     }
 
     /**
-     * Ends the active call identified by `id` by hanging up.
+     * Ends the active call identified by `id` by hanging up. Irreversible — the call cannot be resumed once ended.
      *
      * @param {Wavix.DeleteCallControlRequest} request
      * @param {CallControlClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
      * @example
@@ -303,11 +326,15 @@ export class CallControlClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Wavix.UnauthorizedError(
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
                         _response.rawResponse,
                     );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -330,6 +357,7 @@ export class CallControlClient {
      *
      * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
      * @example
@@ -388,6 +416,8 @@ export class CallControlClient {
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
                         _response.rawResponse,
                     );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -403,13 +433,14 @@ export class CallControlClient {
     }
 
     /**
-     * Answers the inbound call identified by `id`. Optionally starts media streaming on answer.
+     * Answers the inbound call identified by `id`. Optionally starts recording, post-call transcription, or live media streaming on answer.
      *
      * @param {Wavix.CallAnswerRequest} request
      * @param {CallControlClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
      * @example
@@ -467,6 +498,8 @@ export class CallControlClient {
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
                         _response.rawResponse,
                     );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -489,6 +522,7 @@ export class CallControlClient {
      *
      * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
      * @example
@@ -546,6 +580,8 @@ export class CallControlClient {
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
                         _response.rawResponse,
                     );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:

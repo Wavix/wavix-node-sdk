@@ -123,7 +123,6 @@ export class SipTrunksClient {
      *         ip_restrict: false,
      *         didinfo_enabled: true,
      *         call_restrict: true,
-     *         cost_limit: true,
      *         channels_restrict: false,
      *         rewrite_enabled: true,
      *         transcription_enabled: true,
@@ -201,6 +200,8 @@ export class SipTrunksClient {
      * @param {Wavix.GetSipTrunksRequest} request
      * @param {SipTrunksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -249,6 +250,13 @@ export class SipTrunksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
@@ -286,7 +294,6 @@ export class SipTrunksClient {
      *             ip_restrict: false,
      *             didinfo_enabled: true,
      *             call_restrict: true,
-     *             cost_limit: true,
      *             channels_restrict: false,
      *             rewrite_enabled: true,
      *             transcription_enabled: true,
@@ -366,6 +373,7 @@ export class SipTrunksClient {
      * @param {Wavix.DeleteSipTrunksRequest} request
      * @param {SipTrunksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
@@ -415,6 +423,8 @@ export class SipTrunksClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Wavix.UnauthorizedError(
                         _response.error.body as Wavix.UnauthorizedErrorResponse,

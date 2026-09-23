@@ -58,6 +58,22 @@ describe("NumberValidatorClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v1/validation").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.numberValidator.get({
+                phone_number: "phone_number",
+                type: "format",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("get (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = { key: "value" };
 
         server.mockEndpoint().get("/v1/validation").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
@@ -70,15 +86,26 @@ describe("NumberValidatorClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
+    test("get (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server.mockEndpoint().get("/v1/validation").respondWith().statusCode(404).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.numberValidator.get({
+                phone_number: "phone_number",
+                type: "format",
+            });
+        }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
     test("createBulk (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            phone_numbers: ["971501390098", "971504359195"],
-            type: "format",
-            async: true,
-            force: true,
-        };
+        const rawRequestBody = { phone_numbers: ["971501390098", "971504359195"], type: "format" };
         const rawResponseBody = {
             status: "success",
             pending: 0,
@@ -118,8 +145,6 @@ describe("NumberValidatorClient", () => {
         const response = await client.numberValidator.createBulk({
             phone_numbers: ["971501390098", "971504359195"],
             type: "format",
-            async: true,
-            force: true,
         });
         expect(response).toEqual(rawResponseBody);
     });
@@ -127,12 +152,7 @@ describe("NumberValidatorClient", () => {
     test("createBulk (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            phone_numbers: ["phone_numbers", "phone_numbers"],
-            type: "format",
-            async: true,
-            force: true,
-        };
+        const rawRequestBody = { phone_numbers: ["phone_numbers", "phone_numbers"], type: "format" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -148,8 +168,6 @@ describe("NumberValidatorClient", () => {
             return await client.numberValidator.createBulk({
                 phone_numbers: ["phone_numbers", "phone_numbers"],
                 type: "format",
-                async: true,
-                force: true,
             });
         }).rejects.toThrow(Wavix.BadRequestError);
     });
@@ -157,12 +175,30 @@ describe("NumberValidatorClient", () => {
     test("createBulk (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            phone_numbers: ["phone_numbers", "phone_numbers"],
-            type: "format",
-            async: true,
-            force: true,
-        };
+        const rawRequestBody = { phone_numbers: ["phone_numbers", "phone_numbers"], type: "format" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v1/validation")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.numberValidator.createBulk({
+                phone_numbers: ["phone_numbers", "phone_numbers"],
+                type: "format",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("createBulk (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { phone_numbers: ["phone_numbers", "phone_numbers"], type: "format" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -178,21 +214,14 @@ describe("NumberValidatorClient", () => {
             return await client.numberValidator.createBulk({
                 phone_numbers: ["phone_numbers", "phone_numbers"],
                 type: "format",
-                async: true,
-                force: true,
             });
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("createBulk (4)", async () => {
+    test("createBulk (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            phone_numbers: ["phone_numbers", "phone_numbers"],
-            type: "format",
-            async: true,
-            force: true,
-        };
+        const rawRequestBody = { phone_numbers: ["phone_numbers", "phone_numbers"], type: "format" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -208,9 +237,30 @@ describe("NumberValidatorClient", () => {
             return await client.numberValidator.createBulk({
                 phone_numbers: ["phone_numbers", "phone_numbers"],
                 type: "format",
-                async: true,
-                force: true,
             });
         }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
+    test("createBulk (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { phone_numbers: ["phone_numbers", "phone_numbers"], type: "format" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/validation")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.numberValidator.createBulk({
+                phone_numbers: ["phone_numbers", "phone_numbers"],
+                type: "format",
+            });
+        }).rejects.toThrow(Wavix.UnprocessableEntityError);
     });
 });

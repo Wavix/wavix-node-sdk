@@ -12,7 +12,7 @@ describe("BrandAppealsClient", () => {
         const rawResponseBody = [
             {
                 categories: ["VERIFY_TAX_ID"],
-                created_at: "2024-08-01T14:09:43Z",
+                created_at: "2024-08-01T14:09:43",
                 evidence: ["13d8e00c-3cb4-4dc0-9e26-d5057fa938d9"],
                 outcome: {
                     optional_attributes: { key: "value" },
@@ -31,7 +31,7 @@ describe("BrandAppealsClient", () => {
                     },
                 },
                 status: "COMPLETE",
-                updated_at: "2024-08-01T18:33:15Z",
+                updated_at: "2024-08-01T18:33:15",
                 explanation: "Dear partner, please review the registration docs",
             },
         ];
@@ -75,6 +75,27 @@ describe("BrandAppealsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v3/10dlc/brands/brand_id/appeals")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandAppeals.list({
+                brand_id: "brand_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = { key: "value" };
 
         server
@@ -92,7 +113,7 @@ describe("BrandAppealsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("list (4)", async () => {
+    test("list (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -143,7 +164,7 @@ describe("BrandAppealsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {
-            appeal_categories: ["appeal_categories", "appeal_categories"],
+            appeal_categories: ["VERIFY_TAX_ID", "VERIFY_TAX_ID"],
             evidence: ["evidence", "evidence"],
         };
         const rawResponseBody = { key: "value" };
@@ -160,7 +181,7 @@ describe("BrandAppealsClient", () => {
         await expect(async () => {
             return await client.tenDlc.brandAppeals.create({
                 brand_id: "brand_id",
-                appeal_categories: ["appeal_categories", "appeal_categories"],
+                appeal_categories: ["VERIFY_TAX_ID", "VERIFY_TAX_ID"],
                 evidence: ["evidence", "evidence"],
             });
         }).rejects.toThrow(Wavix.BadRequestError);
@@ -170,7 +191,61 @@ describe("BrandAppealsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {
-            appeal_categories: ["appeal_categories", "appeal_categories"],
+            appeal_categories: ["VERIFY_TAX_ID", "VERIFY_TAX_ID"],
+            evidence: ["evidence", "evidence"],
+        };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v3/10dlc/brands/brand_id/appeals")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandAppeals.create({
+                brand_id: "brand_id",
+                appeal_categories: ["VERIFY_TAX_ID", "VERIFY_TAX_ID"],
+                evidence: ["evidence", "evidence"],
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("create (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            appeal_categories: ["VERIFY_TAX_ID", "VERIFY_TAX_ID"],
+            evidence: ["evidence", "evidence"],
+        };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v3/10dlc/brands/brand_id/appeals")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.tenDlc.brandAppeals.create({
+                brand_id: "brand_id",
+                appeal_categories: ["VERIFY_TAX_ID", "VERIFY_TAX_ID"],
+                evidence: ["evidence", "evidence"],
+            });
+        }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("create (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            appeal_categories: ["VERIFY_TAX_ID", "VERIFY_TAX_ID"],
             evidence: ["evidence", "evidence"],
         };
         const rawResponseBody = { key: "value" };
@@ -187,17 +262,17 @@ describe("BrandAppealsClient", () => {
         await expect(async () => {
             return await client.tenDlc.brandAppeals.create({
                 brand_id: "brand_id",
-                appeal_categories: ["appeal_categories", "appeal_categories"],
+                appeal_categories: ["VERIFY_TAX_ID", "VERIFY_TAX_ID"],
                 evidence: ["evidence", "evidence"],
             });
         }).rejects.toThrow(Wavix.NotFoundError);
     });
 
-    test("create (4)", async () => {
+    test("create (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {
-            appeal_categories: ["appeal_categories", "appeal_categories"],
+            appeal_categories: ["VERIFY_TAX_ID", "VERIFY_TAX_ID"],
             evidence: ["evidence", "evidence"],
         };
         const rawResponseBody = { key: "value" };
@@ -214,7 +289,7 @@ describe("BrandAppealsClient", () => {
         await expect(async () => {
             return await client.tenDlc.brandAppeals.create({
                 brand_id: "brand_id",
-                appeal_categories: ["appeal_categories", "appeal_categories"],
+                appeal_categories: ["VERIFY_TAX_ID", "VERIFY_TAX_ID"],
                 evidence: ["evidence", "evidence"],
             });
         }).rejects.toThrow(Wavix.UnprocessableEntityError);

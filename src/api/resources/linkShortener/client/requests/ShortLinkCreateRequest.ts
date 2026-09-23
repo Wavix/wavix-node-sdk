@@ -7,13 +7,13 @@
  *     }
  */
 export interface ShortLinkCreateRequest {
-    /** Target URL to shorten. */
+    /** Target URL to shorten. Must be `https://` — the short link is publicly resolvable and redirects any visitor here, so only pass URLs you trust; this endpoint is a common target for open-redirect and phishing abuse. */
     link: string;
     /** Expiration date and time in ISO 8601 format. */
     expiration_time?: string;
-    /** Fallback URL for expired or invalid links. */
+    /** Fallback URL for expired or invalid links. Must be `https://` — same open-redirect/phishing considerations as `link` apply. */
     fallback_url?: string;
-    /** Phone number for the short link. */
+    /** Phone number the short link is associated with, in E.164 format (without the leading `+`). Used to attribute click metrics returned by short link metrics list. */
     phone?: string;
     /** UTM campaign name for tracking insights. */
     utm_campaign?: string;

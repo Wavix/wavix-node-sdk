@@ -143,14 +143,14 @@ export class ApiKeysClient {
     public create(
         request: Wavix.ApiKeyCreateRequest,
         requestOptions?: ApiKeysClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.ApiKey> {
+    ): core.HttpResponsePromise<Wavix.ApiKeyWithSecret> {
         return core.HttpResponsePromise.fromPromise(this.__create(request, requestOptions));
     }
 
     private async __create(
         request: Wavix.ApiKeyCreateRequest,
         requestOptions?: ApiKeysClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.ApiKey>> {
+    ): Promise<core.WithRawResponse<Wavix.ApiKeyWithSecret>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -177,7 +177,7 @@ export class ApiKeysClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.ApiKey, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.ApiKeyWithSecret, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
@@ -211,6 +211,7 @@ export class ApiKeysClient {
      * @param {Wavix.DeleteApiKeysRequest} request
      * @param {ApiKeysClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
@@ -260,6 +261,8 @@ export class ApiKeysClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Wavix.UnauthorizedError(
                         _response.error.body as Wavix.UnauthorizedErrorResponse,

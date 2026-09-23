@@ -27,20 +27,20 @@ export class ConfigClient {
      *
      * @param {ConfigClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      *
      * @example
      *     await client.profile.config.get()
      */
-    public get(
-        requestOptions?: ConfigClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.profile.GetConfigResponse> {
+    public get(requestOptions?: ConfigClient.RequestOptions): core.HttpResponsePromise<Wavix.ProfileConfigResponse> {
         return core.HttpResponsePromise.fromPromise(this.__get(requestOptions));
     }
 
     private async __get(
         requestOptions?: ConfigClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.profile.GetConfigResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.ProfileConfigResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -64,11 +64,18 @@ export class ConfigClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.profile.GetConfigResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.ProfileConfigResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 default:

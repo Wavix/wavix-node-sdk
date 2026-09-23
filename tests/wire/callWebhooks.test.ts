@@ -24,6 +24,19 @@ describe("CallWebhooksClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = { key: "value" };
+
+        server.mockEndpoint().get("/v1/calls/webhooks").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.callWebhooks.list();
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("list (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = {};
 
         server.mockEndpoint().get("/v1/calls/webhooks").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
@@ -33,7 +46,7 @@ describe("CallWebhooksClient", () => {
         }).rejects.toThrow(Wavix.UnauthorizedError);
     });
 
-    test("list (3)", async () => {
+    test("list (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -135,6 +148,29 @@ describe("CallWebhooksClient", () => {
                 event_type: "post-call",
             });
         }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("create (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { url: "url", event_type: "post-call" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/calls/webhooks")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.callWebhooks.create({
+                url: "url",
+                event_type: "post-call",
+            });
+        }).rejects.toThrow(Wavix.UnprocessableEntityError);
     });
 
     test("delete (1)", async () => {

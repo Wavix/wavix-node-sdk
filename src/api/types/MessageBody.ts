@@ -8,5 +8,5 @@ export interface MessageBody {
      *  If provided, the message is sent as an MMS;
      *   otherwise, it is sent as an SMS.
      */
-    media: string[] | null;
+    media?: (string[] | null) | undefined;
 }

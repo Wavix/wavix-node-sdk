@@ -7,9 +7,7 @@ import type * as Wavix from "../../../../index.js";
  *     {
  *         type: "placed",
  *         from: "2023-08-01",
- *         to: "2023-08-31",
- *         page: 1,
- *         per_page: 50
+ *         to: "2023-08-31"
  *     }
  */
 export interface CdrSearchRequest {
@@ -32,15 +30,15 @@ export interface CdrSearchRequest {
     uuid?: string;
     /**
      * Call disposition to filter results.  If omitted, returns only answered
-     *  calls. Allowed values: `answered`, `busy`, `rejected`,
+     *  calls. Allowed values: `answered`, `noanswer`, `busy`,
      *   `failed`, `all`. Use `all` to return calls
      *    regardless of their disposition.
      */
-    disposition?: CdrSearchRequest.Disposition;
+    disposition?: Wavix.CallDisposition;
     /** Page number to retrieve. */
-    page: number;
+    page?: number;
     /** Number of records per page. */
-    per_page: number;
+    per_page?: number;
 }
 
 export namespace CdrSearchRequest {
@@ -50,18 +48,4 @@ export namespace CdrSearchRequest {
         Received: "received",
     } as const;
     export type Type = (typeof Type)[keyof typeof Type];
-    /**
-     * Call disposition to filter results.  If omitted, returns only answered
-     *  calls. Allowed values: `answered`, `busy`, `rejected`,
-     *   `failed`, `all`. Use `all` to return calls
-     *    regardless of their disposition.
-     */
-    export const Disposition = {
-        Answered: "answered",
-        Noanswer: "noanswer",
-        Busy: "busy",
-        Failed: "failed",
-        All: "all",
-    } as const;
-    export type Disposition = (typeof Disposition)[keyof typeof Disposition];
 }

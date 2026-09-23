@@ -16,7 +16,8 @@ export interface NumberDocument {
     doc_content_type: string;
     /** The uploaded document name */
     doc_file_name: string;
-    doc_type_id: Wavix.DocumentTypeId;
+    /** Document type. */
+    doc_type: Wavix.DocumentType | null;
     /** Status of the uploaded document. Can be either `approved`, `pending`, or `rejected` */
     status: string;
     /** A link to the uploaded document */

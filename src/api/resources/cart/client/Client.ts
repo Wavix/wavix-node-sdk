@@ -30,19 +30,17 @@ export class CartClient {
      *
      * @param {CartClient.RequestOptions} requestOptions - Request-specific configuration.
      *
-     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      *
      * @example
      *     await client.cart.get()
      */
-    public get(requestOptions?: CartClient.RequestOptions): core.HttpResponsePromise<Wavix.GetCartResponse> {
+    public get(requestOptions?: CartClient.RequestOptions): core.HttpResponsePromise<Wavix.CartResponse> {
         return core.HttpResponsePromise.fromPromise(this.__get(requestOptions));
     }
 
-    private async __get(
-        requestOptions?: CartClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.GetCartResponse>> {
+    private async __get(requestOptions?: CartClient.RequestOptions): Promise<core.WithRawResponse<Wavix.CartResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -66,13 +64,16 @@ export class CartClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.GetCartResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.CartResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
-                case 400:
-                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -94,6 +95,7 @@ export class CartClient {
      * @param {CartClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -105,14 +107,14 @@ export class CartClient {
     public add(
         request: Wavix.AddCartRequest,
         requestOptions?: CartClient.RequestOptions,
-    ): core.HttpResponsePromise<unknown[]> {
+    ): core.HttpResponsePromise<Wavix.AvailableNumber[]> {
         return core.HttpResponsePromise.fromPromise(this.__add(request, requestOptions));
     }
 
     private async __add(
         request: Wavix.AddCartRequest,
         requestOptions?: CartClient.RequestOptions,
-    ): Promise<core.WithRawResponse<unknown[]>> {
+    ): Promise<core.WithRawResponse<Wavix.AvailableNumber[]>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -139,13 +141,18 @@ export class CartClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as unknown[], rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.AvailableNumber[], rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
@@ -169,6 +176,7 @@ export class CartClient {
      * @param {CartClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -180,14 +188,14 @@ export class CartClient {
     public remove(
         request: Wavix.RemoveCartRequest,
         requestOptions?: CartClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.RemoveCartResponse> {
+    ): core.HttpResponsePromise<Wavix.SuccessResponse> {
         return core.HttpResponsePromise.fromPromise(this.__remove(request, requestOptions));
     }
 
     private async __remove(
         request: Wavix.RemoveCartRequest,
         requestOptions?: CartClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.RemoveCartResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.SuccessResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -214,13 +222,18 @@ export class CartClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.RemoveCartResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.SuccessResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
@@ -238,13 +251,16 @@ export class CartClient {
     }
 
     /**
-     * Purchases the listed phone numbers from the cart. Activation and monthly fees are deducted from the account balance.
+     * Purchases the listed phone numbers from the cart. Activation and monthly fees are debited from the account balance immediately, and the purchase cannot be reversed through this API.
      *
      * @param {Wavix.CheckoutCartRequest} request
      * @param {CartClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
+     * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.cart.checkout({
@@ -254,14 +270,14 @@ export class CartClient {
     public checkout(
         request: Wavix.CheckoutCartRequest,
         requestOptions?: CartClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.CheckoutCartResponse> {
+    ): core.HttpResponsePromise<Wavix.SuccessResponse> {
         return core.HttpResponsePromise.fromPromise(this.__checkout(request, requestOptions));
     }
 
     private async __checkout(
         request: Wavix.CheckoutCartRequest,
         requestOptions?: CartClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.CheckoutCartResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.SuccessResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -288,15 +304,24 @@ export class CartClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.CheckoutCartResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.SuccessResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,

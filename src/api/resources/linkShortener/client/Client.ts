@@ -38,6 +38,7 @@ export class LinkShortenerClient {
      * @param {LinkShortenerClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      * @throws {@link Wavix.UnprocessableEntityError}
@@ -91,6 +92,11 @@ export class LinkShortenerClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:

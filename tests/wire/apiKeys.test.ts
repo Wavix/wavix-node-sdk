@@ -250,6 +250,21 @@ describe("ApiKeysClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = { key: "value" };
+
+        server.mockEndpoint().delete("/v1/api-keys/1").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.apiKeys.delete({
+                id: 1,
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("delete (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = {};
 
         server.mockEndpoint().delete("/v1/api-keys/1").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
@@ -261,7 +276,7 @@ describe("ApiKeysClient", () => {
         }).rejects.toThrow(Wavix.UnauthorizedError);
     });
 
-    test("delete (3)", async () => {
+    test("delete (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -276,7 +291,7 @@ describe("ApiKeysClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("delete (4)", async () => {
+    test("delete (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

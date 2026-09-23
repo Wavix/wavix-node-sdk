@@ -48,9 +48,9 @@ export interface TenDlcCampaignCreateRequest {
     /** Indicates whether the Campaign messages contain embedded links. */
     embedded_links: boolean;
     /** Indicates whether the Campaign messages contain embedded phone numbers. */
-    embedded_phones: boolean | null;
+    embedded_phones?: boolean | null;
     /** Sample of an embedded link used in Campaign messages. */
-    embedded_link_sample: string | null;
+    embedded_link_sample?: string | null;
     /** Description of the Campaign and its messaging purpose. */
     description: string;
     /** Description of the workflow through which subscribers opt in to the Campaign. */
@@ -78,13 +78,13 @@ export interface TenDlcCampaignCreateRequest {
     /** Sample message demonstrating the content sent through the Campaign. */
     sample1: string;
     /** Sample message demonstrating the content sent through the Campaign. */
-    sample2: string | null;
+    sample2?: string | null;
     /** Sample message demonstrating the content sent through the Campaign. */
-    sample3: string | null;
+    sample3?: string | null;
     /** Sample message demonstrating the content sent through the Campaign. */
-    sample4: string | null;
+    sample4?: string | null;
     /** Sample message demonstrating the content sent through the Campaign. */
-    sample5: string | null;
+    sample5?: string | null;
     /** Indicates whether the Campaign is a mock campaign used for testing. Mock campaigns cannot send production traffic. */
     mock: boolean;
     /** Registered use case for the Campaign, such as `2FA` or `MARKETING`. */

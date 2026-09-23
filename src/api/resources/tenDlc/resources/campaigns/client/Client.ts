@@ -28,7 +28,10 @@ export class CampaignsClient {
      * @param {Wavix.tenDlc.ListCampaignsRequest} request
      * @param {CampaignsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
      *
      * @example
      *     await client.tenDlc.campaigns.list({
@@ -45,14 +48,14 @@ export class CampaignsClient {
     public list(
         request: Wavix.tenDlc.ListCampaignsRequest = {},
         requestOptions?: CampaignsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.ListCampaignsResponse> {
+    ): core.HttpResponsePromise<Wavix.TenDlcCampaignListResponse> {
         return core.HttpResponsePromise.fromPromise(this.__list(request, requestOptions));
     }
 
     private async __list(
         request: Wavix.tenDlc.ListCampaignsRequest = {},
         requestOptions?: CampaignsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.ListCampaignsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.TenDlcCampaignListResponse>> {
         const {
             name,
             usecase,
@@ -100,13 +103,22 @@ export class CampaignsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.tenDlc.ListCampaignsResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.TenDlcCampaignListResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -125,6 +137,8 @@ export class CampaignsClient {
      * @param {Wavix.tenDlc.ListByBrandCampaignsRequest} request
      * @param {CampaignsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -144,14 +158,14 @@ export class CampaignsClient {
     public listByBrand(
         request: Wavix.tenDlc.ListByBrandCampaignsRequest,
         requestOptions?: CampaignsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.ListByBrandCampaignsResponse> {
+    ): core.HttpResponsePromise<Wavix.TenDlcCampaignListResponse> {
         return core.HttpResponsePromise.fromPromise(this.__listByBrand(request, requestOptions));
     }
 
     private async __listByBrand(
         request: Wavix.tenDlc.ListByBrandCampaignsRequest,
         requestOptions?: CampaignsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.ListByBrandCampaignsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.TenDlcCampaignListResponse>> {
         const {
             brand_id: brandId,
             name,
@@ -200,14 +214,18 @@ export class CampaignsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as Wavix.tenDlc.ListByBrandCampaignsResponse,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as Wavix.TenDlcCampaignListResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
@@ -236,8 +254,10 @@ export class CampaignsClient {
      * @param {CampaignsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
+     * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.tenDlc.campaigns.create({
@@ -275,14 +295,14 @@ export class CampaignsClient {
     public create(
         request: Wavix.tenDlc.TenDlcCampaignCreateRequest,
         requestOptions?: CampaignsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.CreateCampaignsResponse> {
+    ): core.HttpResponsePromise<Wavix.TenDlcCampaign> {
         return core.HttpResponsePromise.fromPromise(this.__create(request, requestOptions));
     }
 
     private async __create(
         request: Wavix.tenDlc.TenDlcCampaignCreateRequest,
         requestOptions?: CampaignsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.CreateCampaignsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.TenDlcCampaign>> {
         const { brand_id: brandId, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -310,17 +330,24 @@ export class CampaignsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.tenDlc.CreateCampaignsResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.TenDlcCampaign, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -344,6 +371,8 @@ export class CampaignsClient {
      * @param {Wavix.tenDlc.GetCampaignsRequest} request
      * @param {CampaignsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -356,14 +385,14 @@ export class CampaignsClient {
     public get(
         request: Wavix.tenDlc.GetCampaignsRequest,
         requestOptions?: CampaignsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.GetCampaignsResponse> {
+    ): core.HttpResponsePromise<Wavix.TenDlcCampaign> {
         return core.HttpResponsePromise.fromPromise(this.__get(request, requestOptions));
     }
 
     private async __get(
         request: Wavix.tenDlc.GetCampaignsRequest,
         requestOptions?: CampaignsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.GetCampaignsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.TenDlcCampaign>> {
         const { brand_id: brandId, campaign_id: campaignId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -388,11 +417,18 @@ export class CampaignsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.tenDlc.GetCampaignsResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.TenDlcCampaign, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
@@ -421,8 +457,10 @@ export class CampaignsClient {
      * @param {CampaignsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
+     * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.tenDlc.campaigns.update({
@@ -433,14 +471,14 @@ export class CampaignsClient {
     public update(
         request: Wavix.tenDlc.TenDlcCampaignUpdateRequest,
         requestOptions?: CampaignsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.UpdateCampaignsResponse> {
+    ): core.HttpResponsePromise<Wavix.TenDlcCampaign> {
         return core.HttpResponsePromise.fromPromise(this.__update(request, requestOptions));
     }
 
     private async __update(
         request: Wavix.tenDlc.TenDlcCampaignUpdateRequest,
         requestOptions?: CampaignsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.UpdateCampaignsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.TenDlcCampaign>> {
         const { brand_id: brandId, campaign_id: campaignId, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -468,17 +506,24 @@ export class CampaignsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.tenDlc.UpdateCampaignsResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.TenDlcCampaign, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -502,6 +547,8 @@ export class CampaignsClient {
      * @param {Wavix.tenDlc.DeleteCampaignsRequest} request
      * @param {CampaignsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -514,14 +561,14 @@ export class CampaignsClient {
     public delete(
         request: Wavix.tenDlc.DeleteCampaignsRequest,
         requestOptions?: CampaignsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.DeleteCampaignsResponse> {
+    ): core.HttpResponsePromise<Wavix.SuccessResponse> {
         return core.HttpResponsePromise.fromPromise(this.__delete(request, requestOptions));
     }
 
     private async __delete(
         request: Wavix.tenDlc.DeleteCampaignsRequest,
         requestOptions?: CampaignsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.DeleteCampaignsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.SuccessResponse>> {
         const { brand_id: brandId, campaign_id: campaignId } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -546,11 +593,18 @@ export class CampaignsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.tenDlc.DeleteCampaignsResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.SuccessResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
@@ -583,6 +637,7 @@ export class CampaignsClient {
      * @param {CampaignsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      * @throws {@link Wavix.TooManyRequestsError}
@@ -640,15 +695,17 @@ export class CampaignsClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 case 429:
-                    throw new Wavix.TooManyRequestsError(
-                        _response.error.body as Wavix.ValidationErrorResponse,
-                        _response.rawResponse,
-                    );
+                    throw new Wavix.TooManyRequestsError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,

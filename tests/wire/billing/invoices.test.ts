@@ -40,6 +40,44 @@ describe("InvoicesClient", () => {
             .mockEndpoint()
             .get("/v1/billing/invoices")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.billing.invoices.list();
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("list (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v1/billing/invoices")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.billing.invoices.list();
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v1/billing/invoices")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();

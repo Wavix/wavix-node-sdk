@@ -29,13 +29,15 @@ export class NumberValidatorClient {
     }
 
     /**
-     * Validates a single phone number and returns line type, carrier, portability, and reachability details.
+     * Validates a single phone number and returns line type, carrier, portability, and reachability details. The response's `error_code` is a per-number result code (`000` success; `013` internal error; `021` invalid format; `041` remote timeout; `042` remote query failed; `091` insufficient funds) — distinct from the HTTP status codes below.
      *
      * @param {Wavix.GetNumberValidatorRequest} request
      * @param {NumberValidatorClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
      *
      * @example
      *     await client.numberValidator.get({
@@ -46,14 +48,14 @@ export class NumberValidatorClient {
     public get(
         request: Wavix.GetNumberValidatorRequest,
         requestOptions?: NumberValidatorClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.GetNumberValidatorResponse> {
+    ): core.HttpResponsePromise<Wavix.PhoneValidationResponse> {
         return core.HttpResponsePromise.fromPromise(this.__get(request, requestOptions));
     }
 
     private async __get(
         request: Wavix.GetNumberValidatorRequest,
         requestOptions?: NumberValidatorClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.GetNumberValidatorResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.PhoneValidationResponse>> {
         const { phone_number: phoneNumber, type: type_ } = request;
         const _queryParams: Record<string, unknown> = {
             phone_number: phoneNumber,
@@ -86,15 +88,22 @@ export class NumberValidatorClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.GetNumberValidatorResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.PhoneValidationResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -114,15 +123,15 @@ export class NumberValidatorClient {
      * @param {NumberValidatorClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
+     * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.numberValidator.createBulk({
      *         phone_numbers: ["971501390098", "971504359195"],
-     *         type: "format",
-     *         async: true,
-     *         force: true
+     *         type: "format"
      *     })
      */
     public createBulk(
@@ -172,10 +181,17 @@ export class NumberValidatorClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 422:
+                    throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,

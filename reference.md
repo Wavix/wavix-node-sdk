@@ -65,7 +65,7 @@ await client.apiKeys.list({
 </dl>
 </details>
 
-<details><summary><code>client.apiKeys.<a href="/src/api/resources/apiKeys/client/Client.ts">create</a>({ ...params }) -> Wavix.ApiKey</code></summary>
+<details><summary><code>client.apiKeys.<a href="/src/api/resources/apiKeys/client/Client.ts">create</a>({ ...params }) -> Wavix.ApiKeyWithSecret</code></summary>
 <dl>
 <dd>
 
@@ -382,7 +382,6 @@ await client.sipTrunks.create({
     ip_restrict: false,
     didinfo_enabled: true,
     call_restrict: true,
-    cost_limit: true,
     channels_restrict: false,
     rewrite_enabled: true,
     transcription_enabled: true,
@@ -524,7 +523,6 @@ await client.sipTrunks.update({
         ip_restrict: false,
         didinfo_enabled: true,
         call_restrict: true,
-        cost_limit: true,
         channels_restrict: false,
         rewrite_enabled: true,
         transcription_enabled: true,
@@ -632,7 +630,7 @@ await client.sipTrunks.delete({
 </details>
 
 ## Cart
-<details><summary><code>client.cart.<a href="/src/api/resources/cart/client/Client.ts">get</a>() -> Wavix.GetCartResponse</code></summary>
+<details><summary><code>client.cart.<a href="/src/api/resources/cart/client/Client.ts">get</a>() -> Wavix.CartResponse</code></summary>
 <dl>
 <dd>
 
@@ -687,7 +685,7 @@ await client.cart.get();
 </dl>
 </details>
 
-<details><summary><code>client.cart.<a href="/src/api/resources/cart/client/Client.ts">add</a>({ ...params }) -> unknown[]</code></summary>
+<details><summary><code>client.cart.<a href="/src/api/resources/cart/client/Client.ts">add</a>({ ...params }) -> Wavix.AvailableNumber[]</code></summary>
 <dl>
 <dd>
 
@@ -752,7 +750,7 @@ await client.cart.add({
 </dl>
 </details>
 
-<details><summary><code>client.cart.<a href="/src/api/resources/cart/client/Client.ts">remove</a>({ ...params }) -> Wavix.RemoveCartResponse</code></summary>
+<details><summary><code>client.cart.<a href="/src/api/resources/cart/client/Client.ts">remove</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -817,7 +815,7 @@ await client.cart.remove({
 </dl>
 </details>
 
-<details><summary><code>client.cart.<a href="/src/api/resources/cart/client/Client.ts">checkout</a>({ ...params }) -> Wavix.CheckoutCartResponse</code></summary>
+<details><summary><code>client.cart.<a href="/src/api/resources/cart/client/Client.ts">checkout</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -829,7 +827,7 @@ await client.cart.remove({
 <dl>
 <dd>
 
-Purchases the listed phone numbers from the cart. Activation and monthly fees are deducted from the account balance.
+Purchases the listed phone numbers from the cart. Activation and monthly fees are debited from the account balance immediately, and the purchase cannot be reversed through this API.
 </dd>
 </dl>
 </dd>
@@ -953,7 +951,7 @@ await client.numbers.list({
 </dl>
 </details>
 
-<details><summary><code>client.numbers.<a href="/src/api/resources/numbers/client/Client.ts">delete</a>({ ...params }) -> Wavix.DeleteNumbersResponse</code></summary>
+<details><summary><code>client.numbers.<a href="/src/api/resources/numbers/client/Client.ts">delete</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -1317,9 +1315,7 @@ Searches call transcriptions for the given keywords or phrases and returns the m
 await client.cdrs.search({
     type: "placed",
     from: "2023-08-01",
-    to: "2023-08-31",
-    page: 1,
-    per_page: 50
+    to: "2023-08-31"
 });
 
 ```
@@ -1368,7 +1364,7 @@ await client.cdrs.search({
 <dl>
 <dd>
 
-Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result.
+Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result. Billed per minute at the account's call-transcription rate; fails with an insufficient-funds error when the balance cannot cover it.
 </dd>
 </dl>
 </dd>
@@ -1384,7 +1380,7 @@ Transcribes the recording of the call identified by `call_id`. Transcription is 
 
 ```typescript
 await client.cdrs.retranscribe({
-    call_id: "bbaa37bf-430a-46da-ade3-c248e407016"
+    call_id: "bbaa37bf-430a-46da-ade3-c248e4070160"
 });
 
 ```
@@ -1449,7 +1445,7 @@ Returns the transcription of the recorded call identified by `call_id`. Alias of
 
 ```typescript
 await client.cdrs.transcriptions({
-    call_id: "bbaa37bf-430a-46da-ade3-c248e407016"
+    call_id: "bbaa37bf-430a-46da-ade3-c248e4070160"
 });
 
 ```
@@ -1839,7 +1835,7 @@ await client.callRecording.get({
 <dl>
 <dd>
 
-Deletes the call recording identified by `id`. Deletion is permanent and removes the recording file.
+Deletes the call recording identified by `id`. Deletion is permanent — the audio file is unrecoverable.
 </dd>
 </dl>
 </dd>
@@ -1893,7 +1889,7 @@ await client.callRecording.delete({
 </details>
 
 ## Speech Analytics
-<details><summary><code>client.speechAnalytics.<a href="/src/api/resources/speechAnalytics/client/Client.ts">create</a>({ ...params }) -> Wavix.CreateSpeechAnalyticsResponse</code></summary>
+<details><summary><code>client.speechAnalytics.<a href="/src/api/resources/speechAnalytics/client/Client.ts">create</a>({ ...params }) -> Wavix.SubmitFileTranscriptionResponse</code></summary>
 <dl>
 <dd>
 
@@ -1972,7 +1968,7 @@ await client.speechAnalytics.create({
 </dl>
 </details>
 
-<details><summary><code>client.speechAnalytics.<a href="/src/api/resources/speechAnalytics/client/Client.ts">get</a>({ ...params }) -> Wavix.GetSpeechAnalyticsResponse</code></summary>
+<details><summary><code>client.speechAnalytics.<a href="/src/api/resources/speechAnalytics/client/Client.ts">get</a>({ ...params }) -> Wavix.FileTranscriptionResponse</code></summary>
 <dl>
 <dd>
 
@@ -2171,7 +2167,7 @@ await client.callWebhooks.list();
 <dl>
 <dd>
 
-Registers a callback URL for the `on-call` or `post-call` event. Wavix sends a POST callback to the URL when the event occurs.
+Registers a callback URL for the `on-call` or `post-call` event. Wavix sends a POST callback to the URL when the event occurs. Creates persistent configuration that forwards call metadata to the URL on every matching call until the webhook is deleted.
 </dd>
 </dl>
 </dd>
@@ -2358,7 +2354,7 @@ await client.callControl.list();
 <dl>
 <dd>
 
-Places an outbound call. Returns the call with its `uuid` for tracking and control.
+Places a real, billable outbound PSTN call. Returns the call with its `uuid` for tracking and control.
 </dd>
 </dl>
 </dd>
@@ -2490,7 +2486,7 @@ await client.callControl.get({
 <dl>
 <dd>
 
-Ends the active call identified by `id` by hanging up.
+Ends the active call identified by `id` by hanging up. Irreversible — the call cannot be resumed once ended.
 </dd>
 </dl>
 </dd>
@@ -2621,7 +2617,7 @@ await client.callControl.update({
 <dl>
 <dd>
 
-Answers the inbound call identified by `id`. Optionally starts media streaming on answer.
+Answers the inbound call identified by `id`. Optionally starts recording, post-call transcription, or live media streaming on answer.
 </dd>
 </dl>
 </dd>
@@ -2740,7 +2736,7 @@ await client.callControl.collect({
 </details>
 
 ## NumberValidator
-<details><summary><code>client.numberValidator.<a href="/src/api/resources/numberValidator/client/Client.ts">get</a>({ ...params }) -> Wavix.GetNumberValidatorResponse</code></summary>
+<details><summary><code>client.numberValidator.<a href="/src/api/resources/numberValidator/client/Client.ts">get</a>({ ...params }) -> Wavix.PhoneValidationResponse</code></summary>
 <dl>
 <dd>
 
@@ -2752,7 +2748,7 @@ await client.callControl.collect({
 <dl>
 <dd>
 
-Validates a single phone number and returns line type, carrier, portability, and reachability details.
+Validates a single phone number and returns line type, carrier, portability, and reachability details. The response's `error_code` is a per-number result code (`000` success; `013` internal error; `021` invalid format; `041` remote timeout; `042` remote query failed; `091` insufficient funds) — distinct from the HTTP status codes below.
 </dd>
 </dl>
 </dd>
@@ -2835,9 +2831,7 @@ Validates a batch of phone numbers. When `async` is `true`, returns a `request_i
 ```typescript
 await client.numberValidator.createBulk({
     phone_numbers: ["971501390098", "971504359195"],
-    type: "format",
-    async: true,
-    force: true
+    type: "format"
 });
 
 ```
@@ -2887,7 +2881,7 @@ await client.numberValidator.createBulk({
 <dl>
 <dd>
 
-Launches a voice campaign that places an outbound call using a pre-configured scenario. Track progress with the returned voice campaign `id`.
+Launches a voice campaign that places a real outbound call using a pre-configured scenario. Track progress with the returned voice campaign `id`.
 </dd>
 </dl>
 </dd>
@@ -3464,7 +3458,7 @@ await client.subAccounts.update({
 </details>
 
 ## Billing Transactions
-<details><summary><code>client.billing.transactions.<a href="/src/api/resources/billing/resources/transactions/client/Client.ts">list</a>({ ...params }) -> Wavix.ListTransactionsResponse</code></summary>
+<details><summary><code>client.billing.transactions.<a href="/src/api/resources/billing/resources/transactions/client/Client.ts">list</a>({ ...params }) -> Wavix.BillingTransactionListResponse</code></summary>
 <dl>
 <dd>
 
@@ -3535,7 +3529,7 @@ await client.billing.transactions.list({
 </details>
 
 ## Billing Invoices
-<details><summary><code>client.billing.invoices.<a href="/src/api/resources/billing/resources/invoices/client/Client.ts">list</a>({ ...params }) -> Wavix.ListInvoicesResponse</code></summary>
+<details><summary><code>client.billing.invoices.<a href="/src/api/resources/billing/resources/invoices/client/Client.ts">list</a>({ ...params }) -> Wavix.InvoiceListResponse</code></summary>
 <dl>
 <dd>
 
@@ -3667,7 +3661,7 @@ await client.billing.invoices.download({
 </details>
 
 ## Buy Countries
-<details><summary><code>client.buy.countries.<a href="/src/api/resources/buy/resources/countries/client/Client.ts">list</a>({ ...params }) -> Wavix.ListCountriesResponse</code></summary>
+<details><summary><code>client.buy.countries.<a href="/src/api/resources/buy/resources/countries/client/Client.ts">list</a>({ ...params }) -> Wavix.CountryListResponse</code></summary>
 <dl>
 <dd>
 
@@ -3731,7 +3725,7 @@ await client.buy.countries.list();
 </details>
 
 ## Buy Regions
-<details><summary><code>client.buy.regions.<a href="/src/api/resources/buy/resources/regions/client/Client.ts">list</a>({ ...params }) -> Wavix.ListRegionsResponse</code></summary>
+<details><summary><code>client.buy.regions.<a href="/src/api/resources/buy/resources/regions/client/Client.ts">list</a>({ ...params }) -> Wavix.RegionListResponse</code></summary>
 <dl>
 <dd>
 
@@ -3797,7 +3791,7 @@ await client.buy.regions.list({
 </details>
 
 ## Buy Cities
-<details><summary><code>client.buy.cities.<a href="/src/api/resources/buy/resources/cities/client/Client.ts">list</a>({ ...params }) -> Wavix.ListCitiesResponse</code></summary>
+<details><summary><code>client.buy.cities.<a href="/src/api/resources/buy/resources/cities/client/Client.ts">list</a>({ ...params }) -> Wavix.CityListResponse</code></summary>
 <dl>
 <dd>
 
@@ -3864,7 +3858,7 @@ await client.buy.cities.list({
 </details>
 
 ## Buy RegionCities
-<details><summary><code>client.buy.regionCities.<a href="/src/api/resources/buy/resources/regionCities/client/Client.ts">list</a>({ ...params }) -> Wavix.ListRegionCitiesResponse</code></summary>
+<details><summary><code>client.buy.regionCities.<a href="/src/api/resources/buy/resources/regionCities/client/Client.ts">list</a>({ ...params }) -> Wavix.CityListResponse</code></summary>
 <dl>
 <dd>
 
@@ -3931,7 +3925,7 @@ await client.buy.regionCities.list({
 </details>
 
 ## Buy Numbers
-<details><summary><code>client.buy.numbers.<a href="/src/api/resources/buy/resources/numbers/client/Client.ts">list</a>({ ...params }) -> Wavix.ListNumbersResponse</code></summary>
+<details><summary><code>client.buy.numbers.<a href="/src/api/resources/buy/resources/numbers/client/Client.ts">list</a>({ ...params }) -> Wavix.AvailableNumberListResponse</code></summary>
 <dl>
 <dd>
 
@@ -4010,7 +4004,7 @@ await client.buy.numbers.list({
 <dl>
 <dd>
 
-Starts streaming the media of the call identified by `call_id` to the configured destination. Returns the `stream_id`.
+Starts streaming the audio of the call identified by `call_id` to a WebSocket destination you supply, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The destination can be any URL you specify — Wavix does not restrict it. Returns the `stream_id`.
 </dd>
 </dl>
 </dd>
@@ -4145,7 +4139,7 @@ await client.callControl.streams.delete({
 <dl>
 <dd>
 
-Plays an audio prompt into the active call identified by `id`.
+Plays an audio prompt into the active call identified by `id`. The audio is audible to the remote party in real time.
 </dd>
 </dl>
 </dd>
@@ -4293,7 +4287,7 @@ Returns the transcription of the recorded call identified by `call_id`, includin
 
 ```typescript
 await client.cdrs.transcription.get({
-    call_id: "bbaa37bf-430a-46da-ade3-c248e407016"
+    call_id: "bbaa37bf-430a-46da-ade3-c248e4070160"
 });
 
 ```
@@ -4503,7 +4497,7 @@ Uploaded files must meet the following requirements:
 await client.numbers.papers.upload({
     doc_attachment: fs.createReadStream("/path/to/your/file"),
     did_ids: "did_ids",
-    doc_id: 1
+    doc_id: "id"
 });
 
 ```
@@ -4541,7 +4535,7 @@ await client.numbers.papers.upload({
 </details>
 
 ## Profile Config
-<details><summary><code>client.profile.config.<a href="/src/api/resources/profile/resources/config/client/Client.ts">get</a>() -> Wavix.GetConfigResponse</code></summary>
+<details><summary><code>client.profile.config.<a href="/src/api/resources/profile/resources/config/client/Client.ts">get</a>() -> Wavix.ProfileConfigResponse</code></summary>
 <dl>
 <dd>
 
@@ -4664,7 +4658,7 @@ await client.smsAndMms.senderIds.list();
 <dl>
 <dd>
 
-Creates a Sender ID. Use the 10DLC API to create Sender IDs in the US.
+Creates a Sender ID. Use the 10DLC API to create Sender IDs in the US. Registering a Sender ID incurs a recurring monthly fee, billed to the account balance.
 </dd>
 </dl>
 </dd>
@@ -4785,7 +4779,7 @@ await client.smsAndMms.senderIds.get({
 </dl>
 </details>
 
-<details><summary><code>client.smsAndMms.senderIds.<a href="/src/api/resources/smsAndMms/resources/senderIds/client/Client.ts">delete</a>({ ...params }) -> Wavix.DeleteSenderIdsResponse</code></summary>
+<details><summary><code>client.smsAndMms.senderIds.<a href="/src/api/resources/smsAndMms/resources/senderIds/client/Client.ts">delete</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -4919,7 +4913,7 @@ await client.smsAndMms.optOuts.list({
 </dl>
 </details>
 
-<details><summary><code>client.smsAndMms.optOuts.<a href="/src/api/resources/smsAndMms/resources/optOuts/client/Client.ts">create</a>({ ...params }) -> Wavix.CreateOptOutsResponse</code></summary>
+<details><summary><code>client.smsAndMms.optOuts.<a href="/src/api/resources/smsAndMms/resources/optOuts/client/Client.ts">create</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -4988,7 +4982,7 @@ await client.smsAndMms.optOuts.create({
 </details>
 
 ## SmsAndMms Messages
-<details><summary><code>client.smsAndMms.messages.<a href="/src/api/resources/smsAndMms/resources/messages/client/Client.ts">list</a>({ ...params }) -> Wavix.ListMessagesResponse</code></summary>
+<details><summary><code>client.smsAndMms.messages.<a href="/src/api/resources/smsAndMms/resources/messages/client/Client.ts">list</a>({ ...params }) -> Wavix.MessageListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5072,8 +5066,7 @@ await client.smsAndMms.messages.list({
 <dl>
 <dd>
 
-Sends an SMS or MMS message. MMS is supported for U.S. numbers only. Track delivery using the returned `message_id` and the message status callback.
-**Rate limit**: 20 messages per phone number in 24 hours.
+Sends an SMS or MMS message. MMS is supported for U.S. numbers only. Track delivery using the returned `message_id` and the message status callback. The recipient must be opted in to receive messages from the account; sending to an opted-out number fails.
 </dd>
 </dl>
 </dd>
@@ -5092,8 +5085,7 @@ await client.smsAndMms.messages.send({
     from: "Wavix",
     to: "+447537151866",
     message_body: {
-        text: "Hi there, this is a message from Wavix",
-        media: null
+        text: "Hi there, this is a message from Wavix"
     },
     callback_url: "https://you-site.com/webhook",
     validity: 3600,
@@ -5134,7 +5126,7 @@ await client.smsAndMms.messages.send({
 </dl>
 </details>
 
-<details><summary><code>client.smsAndMms.messages.<a href="/src/api/resources/smsAndMms/resources/messages/client/Client.ts">get</a>({ ...params }) -> Wavix.GetMessagesResponse</code></summary>
+<details><summary><code>client.smsAndMms.messages.<a href="/src/api/resources/smsAndMms/resources/messages/client/Client.ts">get</a>({ ...params }) -> Wavix.MessageResponse</code></summary>
 <dl>
 <dd>
 
@@ -5407,7 +5399,7 @@ await client.subAccounts.transactions.list({
 </details>
 
 ## TenDlc Brands
-<details><summary><code>client.tenDlc.brands.<a href="/src/api/resources/tenDlc/resources/brands/client/Client.ts">list</a>({ ...params }) -> Wavix.ListBrandsResponse</code></summary>
+<details><summary><code>client.tenDlc.brands.<a href="/src/api/resources/tenDlc/resources/brands/client/Client.ts">list</a>({ ...params }) -> Wavix.TenDlcBrandListResponse</code></summary>
 <dl>
 <dd>
 
@@ -5483,7 +5475,7 @@ await client.tenDlc.brands.list({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.brands.<a href="/src/api/resources/tenDlc/resources/brands/client/Client.ts">create</a>({ ...params }) -> Wavix.CreateBrandsResponse</code></summary>
+<details><summary><code>client.tenDlc.brands.<a href="/src/api/resources/tenDlc/resources/brands/client/Client.ts">create</a>({ ...params }) -> Wavix.TenDlcBrand</code></summary>
 <dl>
 <dd>
 
@@ -5495,7 +5487,7 @@ await client.tenDlc.brands.list({
 <dl>
 <dd>
 
-Registers a 10DLC Brand. TCR automatically verifies the brand identity. Only brands with `VERIFIED` or `VETTED_VERIFIED` identity status can register 10DLC Campaigns.
+Registers a 10DLC Brand. Submits the company's legal identity data (EIN/Tax ID, legal company name, contact and address) to The Campaign Registry (TCR), which verifies the brand identity. Charges a 10DLC brand registration fee on successful submission; fails with an insufficient-funds error when the balance cannot cover it. Only brands with `VERIFIED` or `VETTED_VERIFIED` identity status can register 10DLC Campaigns.
 </dd>
 </dl>
 </dd>
@@ -5546,7 +5538,7 @@ await client.tenDlc.brands.create({});
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.brands.<a href="/src/api/resources/tenDlc/resources/brands/client/Client.ts">get</a>({ ...params }) -> Wavix.GetBrandsResponse</code></summary>
+<details><summary><code>client.tenDlc.brands.<a href="/src/api/resources/tenDlc/resources/brands/client/Client.ts">get</a>({ ...params }) -> Wavix.TenDlcBrand</code></summary>
 <dl>
 <dd>
 
@@ -5611,7 +5603,7 @@ await client.tenDlc.brands.get({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.brands.<a href="/src/api/resources/tenDlc/resources/brands/client/Client.ts">update</a>({ ...params }) -> Wavix.UpdateBrandsResponse</code></summary>
+<details><summary><code>client.tenDlc.brands.<a href="/src/api/resources/tenDlc/resources/brands/client/Client.ts">update</a>({ ...params }) -> Wavix.TenDlcBrand</code></summary>
 <dl>
 <dd>
 
@@ -5676,7 +5668,7 @@ await client.tenDlc.brands.update({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.brands.<a href="/src/api/resources/tenDlc/resources/brands/client/Client.ts">delete</a>({ ...params }) -> Wavix.DeleteBrandsResponse</code></summary>
+<details><summary><code>client.tenDlc.brands.<a href="/src/api/resources/tenDlc/resources/brands/client/Client.ts">delete</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -5741,7 +5733,7 @@ await client.tenDlc.brands.delete({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.brands.<a href="/src/api/resources/tenDlc/resources/brands/client/Client.ts">qualifyUsecase</a>({ ...params }) -> Wavix.QualifyUsecaseBrandsResponse</code></summary>
+<details><summary><code>client.tenDlc.brands.<a href="/src/api/resources/tenDlc/resources/brands/client/Client.ts">qualifyUsecase</a>({ ...params }) -> Wavix.TenDlcBrandQualificationResult</code></summary>
 <dl>
 <dd>
 
@@ -5873,7 +5865,7 @@ await client.tenDlc.brandAppeals.list({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.brandAppeals.<a href="/src/api/resources/tenDlc/resources/brandAppeals/client/Client.ts">create</a>({ ...params }) -> Wavix.CreateBrandAppealsResponse</code></summary>
+<details><summary><code>client.tenDlc.brandAppeals.<a href="/src/api/resources/tenDlc/resources/brandAppeals/client/Client.ts">create</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -5888,7 +5880,7 @@ await client.tenDlc.brandAppeals.list({
 Submits an appeal for 10DLC brand identity verification. Provide any additional documentation to support the appeal. Use `appeal_category` to specify the appeal type:
 - `VERIFY_TAX_ID` — Use if the brand is UNVERIFIED due to a tax ID mismatch. Applies to private companies, public companies, non-profits, and government entities.
 - `VERIFY_NON_PROFIT` — Use if a non-profit brand is UNVERIFIED or VERIFIED but missing tax-exempt status.
-- `VERIFY_GOVERNMENT` — Use if a government brand is UNVERIFIED or VERIFIED but missing government entity status.      
+- `VERIFY_GOVERNMENT` — Use if a government brand is UNVERIFIED or VERIFIED but missing government entity status.
 </dd>
 </dl>
 </dd>
@@ -6009,7 +6001,7 @@ await client.tenDlc.brandEvidence.list({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.brandEvidence.<a href="/src/api/resources/tenDlc/resources/brandEvidence/client/Client.ts">upload</a>({ ...params }) -> Wavix.UploadBrandEvidenceResponse</code></summary>
+<details><summary><code>client.tenDlc.brandEvidence.<a href="/src/api/resources/tenDlc/resources/brandEvidence/client/Client.ts">upload</a>({ ...params }) -> Wavix.TenDlcBrandEvidence</code></summary>
 <dl>
 <dd>
 
@@ -6141,7 +6133,7 @@ await client.tenDlc.brandEvidence.get({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.brandEvidence.<a href="/src/api/resources/tenDlc/resources/brandEvidence/client/Client.ts">delete</a>({ ...params }) -> Wavix.DeleteBrandEvidenceResponse</code></summary>
+<details><summary><code>client.tenDlc.brandEvidence.<a href="/src/api/resources/tenDlc/resources/brandEvidence/client/Client.ts">delete</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -6285,7 +6277,7 @@ await client.tenDlc.brandVettings.list({
 <dl>
 <dd>
 
-Requests external vetting for a 10DLC Brand. Supported providers: `AEGIS`, `CV`, `WMC`. Supported classes: `STANDARD`, `ENHANCED`.
+Requests external vetting for a 10DLC Brand. Supported providers: `AEGIS`, `CV`, `WMC`. Supported classes: `STANDARD`, `ENHANCED`. Charges a 10DLC brand vetting fee (Standard or Enhanced); fails with an insufficient-funds error when the balance cannot cover it.
 </dd>
 </dl>
 </dd>
@@ -6474,7 +6466,7 @@ await client.tenDlc.brandVettingAppeals.list({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.brandVettingAppeals.<a href="/src/api/resources/tenDlc/resources/brandVettingAppeals/client/Client.ts">create</a>({ ...params }) -> Wavix.CreateBrandVettingAppealsResponse</code></summary>
+<details><summary><code>client.tenDlc.brandVettingAppeals.<a href="/src/api/resources/tenDlc/resources/brandVettingAppeals/client/Client.ts">create</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -6542,7 +6534,7 @@ await client.tenDlc.brandVettingAppeals.create({
 </details>
 
 ## TenDlc Campaigns
-<details><summary><code>client.tenDlc.campaigns.<a href="/src/api/resources/tenDlc/resources/campaigns/client/Client.ts">list</a>({ ...params }) -> Wavix.ListCampaignsResponse</code></summary>
+<details><summary><code>client.tenDlc.campaigns.<a href="/src/api/resources/tenDlc/resources/campaigns/client/Client.ts">list</a>({ ...params }) -> Wavix.TenDlcCampaignListResponse</code></summary>
 <dl>
 <dd>
 
@@ -6614,7 +6606,7 @@ await client.tenDlc.campaigns.list({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.campaigns.<a href="/src/api/resources/tenDlc/resources/campaigns/client/Client.ts">listByBrand</a>({ ...params }) -> Wavix.ListByBrandCampaignsResponse</code></summary>
+<details><summary><code>client.tenDlc.campaigns.<a href="/src/api/resources/tenDlc/resources/campaigns/client/Client.ts">listByBrand</a>({ ...params }) -> Wavix.TenDlcCampaignListResponse</code></summary>
 <dl>
 <dd>
 
@@ -6687,7 +6679,7 @@ await client.tenDlc.campaigns.listByBrand({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.campaigns.<a href="/src/api/resources/tenDlc/resources/campaigns/client/Client.ts">create</a>({ ...params }) -> Wavix.CreateCampaignsResponse</code></summary>
+<details><summary><code>client.tenDlc.campaigns.<a href="/src/api/resources/tenDlc/resources/campaigns/client/Client.ts">create</a>({ ...params }) -> Wavix.TenDlcCampaign</code></summary>
 <dl>
 <dd>
 
@@ -6780,7 +6772,7 @@ await client.tenDlc.campaigns.create({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.campaigns.<a href="/src/api/resources/tenDlc/resources/campaigns/client/Client.ts">get</a>({ ...params }) -> Wavix.GetCampaignsResponse</code></summary>
+<details><summary><code>client.tenDlc.campaigns.<a href="/src/api/resources/tenDlc/resources/campaigns/client/Client.ts">get</a>({ ...params }) -> Wavix.TenDlcCampaign</code></summary>
 <dl>
 <dd>
 
@@ -6846,7 +6838,7 @@ await client.tenDlc.campaigns.get({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.campaigns.<a href="/src/api/resources/tenDlc/resources/campaigns/client/Client.ts">update</a>({ ...params }) -> Wavix.UpdateCampaignsResponse</code></summary>
+<details><summary><code>client.tenDlc.campaigns.<a href="/src/api/resources/tenDlc/resources/campaigns/client/Client.ts">update</a>({ ...params }) -> Wavix.TenDlcCampaign</code></summary>
 <dl>
 <dd>
 
@@ -6912,7 +6904,7 @@ await client.tenDlc.campaigns.update({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.campaigns.<a href="/src/api/resources/tenDlc/resources/campaigns/client/Client.ts">delete</a>({ ...params }) -> Wavix.DeleteCampaignsResponse</code></summary>
+<details><summary><code>client.tenDlc.campaigns.<a href="/src/api/resources/tenDlc/resources/campaigns/client/Client.ts">delete</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -7106,7 +7098,7 @@ await client.tenDlc.subscriptions.list();
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.subscriptions.<a href="/src/api/resources/tenDlc/resources/subscriptions/client/Client.ts">create</a>({ ...params }) -> Wavix.CreateSubscriptionsResponse</code></summary>
+<details><summary><code>client.tenDlc.subscriptions.<a href="/src/api/resources/tenDlc/resources/subscriptions/client/Client.ts">create</a>({ ...params }) -> Wavix.TenDlcEventSubscription</code></summary>
 <dl>
 <dd>
 
@@ -7172,7 +7164,7 @@ await client.tenDlc.subscriptions.create({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.subscriptions.<a href="/src/api/resources/tenDlc/resources/subscriptions/client/Client.ts">delete</a>({ ...params }) -> Wavix.DeleteSubscriptionsResponse</code></summary>
+<details><summary><code>client.tenDlc.subscriptions.<a href="/src/api/resources/tenDlc/resources/subscriptions/client/Client.ts">delete</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -7238,7 +7230,7 @@ await client.tenDlc.subscriptions.delete({
 </details>
 
 ## TenDlc CampaignNumbers
-<details><summary><code>client.tenDlc.campaignNumbers.<a href="/src/api/resources/tenDlc/resources/campaignNumbers/client/Client.ts">link</a>({ ...params }) -> Wavix.LinkCampaignNumbersResponse</code></summary>
+<details><summary><code>client.tenDlc.campaignNumbers.<a href="/src/api/resources/tenDlc/resources/campaignNumbers/client/Client.ts">link</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -7305,7 +7297,7 @@ await client.tenDlc.campaignNumbers.link({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.campaignNumbers.<a href="/src/api/resources/tenDlc/resources/campaignNumbers/client/Client.ts">unlink</a>({ ...params }) -> Wavix.UnlinkCampaignNumbersResponse</code></summary>
+<details><summary><code>client.tenDlc.campaignNumbers.<a href="/src/api/resources/tenDlc/resources/campaignNumbers/client/Client.ts">unlink</a>({ ...params }) -> Wavix.SuccessResponse</code></summary>
 <dl>
 <dd>
 
@@ -7372,7 +7364,7 @@ await client.tenDlc.campaignNumbers.unlink({
 </dl>
 </details>
 
-<details><summary><code>client.tenDlc.campaignNumbers.<a href="/src/api/resources/tenDlc/resources/campaignNumbers/client/Client.ts">list</a>({ ...params }) -> Wavix.ListCampaignNumbersResponse</code></summary>
+<details><summary><code>client.tenDlc.campaignNumbers.<a href="/src/api/resources/tenDlc/resources/campaignNumbers/client/Client.ts">list</a>({ ...params }) -> Wavix.TenDlcCampaignNumberListResponse</code></summary>
 <dl>
 <dd>
 
@@ -7439,7 +7431,7 @@ await client.tenDlc.campaignNumbers.list({
 </details>
 
 ## TwoFa Verification
-<details><summary><code>client.twoFa.verification.<a href="/src/api/resources/twoFa/resources/verification/client/Client.ts">create</a>({ ...params }) -> Wavix.CreateVerificationResponse</code></summary>
+<details><summary><code>client.twoFa.verification.<a href="/src/api/resources/twoFa/resources/verification/client/Client.ts">create</a>({ ...params }) -> Wavix.TwoFactorVerificationResponse</code></summary>
 <dl>
 <dd>
 
@@ -7451,7 +7443,7 @@ await client.tenDlc.campaignNumbers.list({
 <dl>
 <dd>
 
-Creates a 2FA verification and sends a one-time password (OTP) to the destination phone number over the selected channel. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
+Creates a 2FA verification and sends a real one-time password (OTP) to the destination phone number over the selected channel; this bills the account per OTP sent. Requires a 2FA service configured in the Wavix portal; the service is reused to generate and validate OTPs.
 
 The verification proceeds through three steps:
 1. Create a verification to generate and send an OTP.
@@ -7511,7 +7503,7 @@ await client.twoFa.verification.create({
 </dl>
 </details>
 
-<details><summary><code>client.twoFa.verification.<a href="/src/api/resources/twoFa/resources/verification/client/Client.ts">resend</a>({ ...params }) -> Wavix.ResendVerificationResponse</code></summary>
+<details><summary><code>client.twoFa.verification.<a href="/src/api/resources/twoFa/resources/verification/client/Client.ts">resend</a>({ ...params }) -> Wavix.TwoFactorVerificationResendResponse</code></summary>
 <dl>
 <dd>
 
@@ -7577,7 +7569,7 @@ await client.twoFa.verification.resend({
 </dl>
 </details>
 
-<details><summary><code>client.twoFa.verification.<a href="/src/api/resources/twoFa/resources/verification/client/Client.ts">check</a>({ ...params }) -> Wavix.CheckVerificationResponse</code></summary>
+<details><summary><code>client.twoFa.verification.<a href="/src/api/resources/twoFa/resources/verification/client/Client.ts">check</a>({ ...params }) -> Wavix.TwoFactorVerificationCheckResponse</code></summary>
 <dl>
 <dd>
 
@@ -7589,7 +7581,7 @@ await client.twoFa.verification.resend({
 <dl>
 <dd>
 
-Validates the OTP submitted by the end user against the verification identified by `session_id`.
+Validates the OTP submitted by the end user against the verification identified by `session_id`. Non-idempotent — each call consumes one of a limited number of attempts tracked server-side; once exhausted, the verification returns `429` until a new verification is created.
 </dd>
 </dl>
 </dd>
@@ -7843,7 +7835,7 @@ await client.twoFa.events.list({
 </details>
 
 ## Webrtc Tokens
-<details><summary><code>client.webrtc.tokens.<a href="/src/api/resources/webrtc/resources/tokens/client/Client.ts">list</a>() -> Wavix.WebRtcTokensListResponse</code></summary>
+<details><summary><code>client.webrtc.tokens.<a href="/src/api/resources/webrtc/resources/tokens/client/Client.ts">list</a>({ ...params }) -> Wavix.WebRtcTokensListResponse</code></summary>
 <dl>
 <dd>
 
@@ -7855,7 +7847,7 @@ await client.twoFa.events.list({
 <dl>
 <dd>
 
-Returns a paginated list of active Wavix Embeddable widget tokens for the authenticated account.
+Returns a paginated list of Wavix Embeddable widget tokens for the authenticated account.
 </dd>
 </dl>
 </dd>
@@ -7882,6 +7874,14 @@ await client.webrtc.tokens.list();
 
 <dl>
 <dd>
+
+<dl>
+<dd>
+
+**request:** `Wavix.webrtc.ListTokensRequest` 
+    
+</dd>
+</dl>
 
 <dl>
 <dd>

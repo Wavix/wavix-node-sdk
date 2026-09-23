@@ -28,6 +28,8 @@ export class InvoicesClient {
      * @param {Wavix.billing.ListInvoicesRequest} request
      * @param {InvoicesClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      *
      * @example
@@ -39,14 +41,14 @@ export class InvoicesClient {
     public list(
         request: Wavix.billing.ListInvoicesRequest = {},
         requestOptions?: InvoicesClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.billing.ListInvoicesResponse> {
+    ): core.HttpResponsePromise<Wavix.InvoiceListResponse> {
         return core.HttpResponsePromise.fromPromise(this.__list(request, requestOptions));
     }
 
     private async __list(
         request: Wavix.billing.ListInvoicesRequest = {},
         requestOptions?: InvoicesClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.billing.ListInvoicesResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.InvoiceListResponse>> {
         const { page, per_page: perPage } = request;
         const _queryParams: Record<string, unknown> = {
             page,
@@ -79,11 +81,18 @@ export class InvoicesClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.billing.ListInvoicesResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.InvoiceListResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -101,6 +110,7 @@ export class InvoicesClient {
     /**
      * Returns the financial statement identified by `id` as a PDF file.
      *
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      */
@@ -145,6 +155,11 @@ export class InvoicesClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:

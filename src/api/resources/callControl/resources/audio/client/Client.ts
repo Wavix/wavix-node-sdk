@@ -23,13 +23,14 @@ export class AudioClient {
     }
 
     /**
-     * Plays an audio prompt into the active call identified by `id`.
+     * Plays an audio prompt into the active call identified by `id`. The audio is audible to the remote party in real time.
      *
      * @param {Wavix.callControl.CallAudioPlayRequest} request
      * @param {AudioClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
      * @example
@@ -88,6 +89,8 @@ export class AudioClient {
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
                         _response.rawResponse,
                     );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -108,7 +111,9 @@ export class AudioClient {
      * @param {Wavix.callControl.StopAudioRequest} request
      * @param {AudioClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
      * @example
@@ -156,11 +161,15 @@ export class AudioClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Wavix.UnauthorizedError(
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
                         _response.rawResponse,
                     );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:

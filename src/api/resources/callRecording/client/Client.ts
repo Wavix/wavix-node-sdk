@@ -31,6 +31,7 @@ export class CallRecordingClient {
      * @param {Wavix.ListCallRecordingRequest} request
      * @param {CallRecordingClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      *
@@ -108,6 +109,8 @@ export class CallRecordingClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Wavix.UnauthorizedError(
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
@@ -283,7 +286,7 @@ export class CallRecordingClient {
     }
 
     /**
-     * Deletes the call recording identified by `id`. Deletion is permanent and removes the recording file.
+     * Deletes the call recording identified by `id`. Deletion is permanent — the audio file is unrecoverable.
      *
      * @param {Wavix.DeleteCallRecordingRequest} request
      * @param {CallRecordingClient.RequestOptions} requestOptions - Request-specific configuration.

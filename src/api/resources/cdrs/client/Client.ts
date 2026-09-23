@@ -38,6 +38,9 @@ export class CdrsClient {
      * @param {CdrsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
      *
      * @example
      *     await client.cdrs.list({
@@ -121,6 +124,15 @@ export class CdrsClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,
@@ -139,6 +151,7 @@ export class CdrsClient {
      * @param {Wavix.CdrSearchRequest} request
      * @param {CdrsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.UnprocessableEntityError}
      *
@@ -146,9 +159,7 @@ export class CdrsClient {
      *     await client.cdrs.search({
      *         type: "placed",
      *         from: "2023-08-01",
-     *         to: "2023-08-31",
-     *         page: 1,
-     *         per_page: 50
+     *         to: "2023-08-31"
      *     })
      */
     public search(
@@ -193,6 +204,11 @@ export class CdrsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
@@ -210,18 +226,20 @@ export class CdrsClient {
     }
 
     /**
-     * Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result.
+     * Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result. Billed per minute at the account's call-transcription rate; fails with an insufficient-funds error when the balance cannot cover it.
      *
      * @param {Wavix.CdrRetranscriptionRequest} request
      * @param {CdrsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.cdrs.retranscribe({
-     *         call_id: "bbaa37bf-430a-46da-ade3-c248e407016"
+     *         call_id: "bbaa37bf-430a-46da-ade3-c248e4070160"
      *     })
      */
     public retranscribe(
@@ -267,6 +285,13 @@ export class CdrsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
@@ -296,12 +321,13 @@ export class CdrsClient {
      * @param {Wavix.TranscriptionsCdrsRequest} request
      * @param {CdrsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
      * @example
      *     await client.cdrs.transcriptions({
-     *         call_id: "bbaa37bf-430a-46da-ade3-c248e407016"
+     *         call_id: "bbaa37bf-430a-46da-ade3-c248e4070160"
      *     })
      */
     public transcriptions(
@@ -344,6 +370,11 @@ export class CdrsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
@@ -371,6 +402,9 @@ export class CdrsClient {
      * @param {Wavix.GetCdrsRequest} request
      * @param {CdrsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
      * @example
@@ -426,6 +460,15 @@ export class CdrsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -446,6 +489,7 @@ export class CdrsClient {
      * @param {Wavix.ListAllCdrsRequest} request
      * @param {CdrsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      *
      * @example
@@ -528,6 +572,11 @@ export class CdrsClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 default:

@@ -15,6 +15,6 @@ export interface WebRtcTokenCreateRequest {
     sip_trunk: string;
     /** Arbitrary client-defined data to associate with the token. */
     payload?: Record<string, unknown> | null;
-    /** Time to live in seconds. Pass `null` for no expiration. */
-    ttl: number | null;
+    /** Time to live in seconds. Default `3600`. Pass `null` for no expiration. */
+    ttl?: number | null;
 }

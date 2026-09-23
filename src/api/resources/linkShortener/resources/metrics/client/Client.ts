@@ -29,7 +29,9 @@ export class MetricsClient {
      * @param {MetricsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.NotFoundError}
      *
      * @example
      *     await client.linkShortener.metrics.list({
@@ -95,8 +97,15 @@ export class MetricsClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 404:
+                    throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,

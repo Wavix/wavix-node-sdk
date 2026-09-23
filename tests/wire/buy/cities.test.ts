@@ -58,6 +58,27 @@ describe("CitiesClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v1/buy/countries/1/cities")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.buy.cities.list({
+                country_id: 1,
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = { key: "value" };
 
         server
@@ -75,7 +96,7 @@ describe("CitiesClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("list (4)", async () => {
+    test("list (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

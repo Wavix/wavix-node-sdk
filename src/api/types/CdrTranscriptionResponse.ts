@@ -9,7 +9,7 @@ export interface CdrTranscriptionResponse {
     turns: Wavix.TranscriptTurn[];
     /** Transcription ID. */
     uuid: string;
-    language: Wavix.TranscriptionLanguage;
+    language: Wavix.TranscriptionLanguage | null;
     /** Call duration in seconds. */
     duration: number;
     /** Total charge for the transcription in USD. */

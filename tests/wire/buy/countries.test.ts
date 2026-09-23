@@ -26,6 +26,19 @@ describe("CountriesClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v1/buy/countries").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.buy.countries.list();
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = { key: "value" };
 
         server.mockEndpoint().get("/v1/buy/countries").respondWith().statusCode(403).jsonBody(rawResponseBody).build();

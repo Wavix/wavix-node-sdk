@@ -26,6 +26,32 @@ describe("ConfigClient", () => {
 
         const rawResponseBody = { key: "value" };
 
+        server.mockEndpoint().get("/v1/profile/config").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.profile.config.get();
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v1/profile/config").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.profile.config.get();
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("get (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
         server.mockEndpoint().get("/v1/profile/config").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
 
         await expect(async () => {

@@ -29,6 +29,7 @@ export class OptOutsClient {
      * @param {OptOutsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.UnprocessableEntityError}
      *
@@ -101,6 +102,11 @@ export class OptOutsClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 422:
@@ -124,6 +130,7 @@ export class OptOutsClient {
      * @param {OptOutsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      * @throws {@link Wavix.UnprocessableEntityError}
@@ -139,14 +146,14 @@ export class OptOutsClient {
     public create(
         request: Wavix.smsAndMms.OptOutCreateRequest,
         requestOptions?: OptOutsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.smsAndMms.CreateOptOutsResponse> {
+    ): core.HttpResponsePromise<Wavix.SuccessResponse> {
         return core.HttpResponsePromise.fromPromise(this.__create(request, requestOptions));
     }
 
     private async __create(
         request: Wavix.smsAndMms.OptOutCreateRequest,
         requestOptions?: OptOutsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.smsAndMms.CreateOptOutsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.SuccessResponse>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -173,16 +180,18 @@ export class OptOutsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as Wavix.smsAndMms.CreateOptOutsResponse,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as Wavix.SuccessResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:

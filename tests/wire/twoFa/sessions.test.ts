@@ -75,6 +75,29 @@ describe("SessionsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v1/two-fa/service/service_id/sessions")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.twoFa.sessions.list({
+                service_id: "service_id",
+                from: "2023-01-15",
+                to: "2023-01-15",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = { key: "value" };
 
         server
@@ -94,7 +117,7 @@ describe("SessionsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("list (4)", async () => {
+    test("list (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

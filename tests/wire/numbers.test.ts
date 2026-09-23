@@ -33,7 +33,7 @@ describe("NumbersClient", () => {
                         },
                     ],
                     channels: 24,
-                    require_docs: ["1"],
+                    require_docs: ["address"],
                     documents: [
                         {
                             id: 423,
@@ -41,7 +41,7 @@ describe("NumbersClient", () => {
                             did_number: "12565378257",
                             doc_content_type: "image/png",
                             doc_file_name: "Copy of ID.png",
-                            doc_type_id: 1,
+                            doc_type: "id",
                             status: "approved",
                             url: "https://api.wavix.com/v1/numbers/24882/papers/1",
                         },
@@ -86,6 +86,32 @@ describe("NumbersClient", () => {
 
         const rawResponseBody = { key: "value" };
 
+        server.mockEndpoint().get("/v1/numbers").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.numbers.list();
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("list (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v1/numbers").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.numbers.list();
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
         server.mockEndpoint().get("/v1/numbers").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
 
         await expect(async () => {
@@ -111,6 +137,19 @@ describe("NumbersClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = {};
+
+        server.mockEndpoint().delete("/v1/numbers").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.numbers.delete();
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("delete (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = { key: "value" };
 
         server.mockEndpoint().delete("/v1/numbers").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
@@ -120,7 +159,7 @@ describe("NumbersClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("delete (3)", async () => {
+    test("delete (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -133,7 +172,7 @@ describe("NumbersClient", () => {
         }).rejects.toThrow(Wavix.NotFoundError);
     });
 
-    test("delete (4)", async () => {
+    test("delete (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -174,7 +213,7 @@ describe("NumbersClient", () => {
                         },
                     ],
                     channels: 24,
-                    require_docs: ["1"],
+                    require_docs: ["address"],
                     documents: [
                         {
                             id: 423,
@@ -182,7 +221,7 @@ describe("NumbersClient", () => {
                             did_number: "12565378257",
                             doc_content_type: "image/png",
                             doc_file_name: "Copy of ID.png",
-                            doc_type_id: 1,
+                            doc_type: "id",
                             status: "approved",
                             url: "https://api.wavix.com/v1/numbers/24882/papers/1",
                         },
@@ -247,6 +286,28 @@ describe("NumbersClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { ids: [1, 1] };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .patch("/v1/numbers")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.numbers.bulkUpdate({
+                ids: [1, 1],
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("bulkUpdate (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { ids: [1, 1] };
         const rawResponseBody = { key: "value" };
 
         server
@@ -265,7 +326,7 @@ describe("NumbersClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("bulkUpdate (4)", async () => {
+    test("bulkUpdate (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { ids: [1, 1] };
@@ -313,7 +374,7 @@ describe("NumbersClient", () => {
                 },
             ],
             channels: 24,
-            require_docs: ["1"],
+            require_docs: ["address"],
             documents: [
                 {
                     id: 423,
@@ -321,7 +382,7 @@ describe("NumbersClient", () => {
                     did_number: "12565378257",
                     doc_content_type: "image/png",
                     doc_file_name: "Copy of ID.png",
-                    doc_type_id: 1,
+                    doc_type: "id",
                     status: "approved",
                     url: "https://api.wavix.com/v1/numbers/24882/papers/1",
                 },
@@ -357,6 +418,36 @@ describe("NumbersClient", () => {
 
         const rawResponseBody = { key: "value" };
 
+        server.mockEndpoint().get("/v1/numbers/1").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.numbers.get({
+                id: 1,
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v1/numbers/1").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.numbers.get({
+                id: 1,
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("get (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
         server.mockEndpoint().get("/v1/numbers/1").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
 
         await expect(async () => {
@@ -366,7 +457,7 @@ describe("NumbersClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("get (3)", async () => {
+    test("get (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -407,7 +498,7 @@ describe("NumbersClient", () => {
                 },
             ],
             channels: 24,
-            require_docs: ["1"],
+            require_docs: ["address"],
             documents: [
                 {
                     id: 423,
@@ -415,7 +506,7 @@ describe("NumbersClient", () => {
                     did_number: "12565378257",
                     doc_content_type: "image/png",
                     doc_file_name: "Copy of ID.png",
-                    doc_type_id: 1,
+                    doc_type: "id",
                     status: "approved",
                     url: "https://api.wavix.com/v1/numbers/24882/papers/1",
                 },
@@ -478,6 +569,28 @@ describe("NumbersClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .patch("/v1/numbers/1")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.numbers.update({
+                id: 1,
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("update (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
         const rawResponseBody = { key: "value" };
 
         server
@@ -496,7 +609,7 @@ describe("NumbersClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("update (4)", async () => {
+    test("update (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = {};

@@ -2,11 +2,11 @@
 
 export interface TranscriptionFilter {
     /** Search in an agent's spoken words and phrases */
-    agent: TranscriptionFilter.Agent;
+    agent?: TranscriptionFilter.Agent | undefined;
     /** Search in an customer's spoken words and phrases */
-    client: TranscriptionFilter.Client;
+    client?: TranscriptionFilter.Client | undefined;
     /** Search in both speakers' spoken words and phrases */
-    any: TranscriptionFilter.Any;
+    any?: TranscriptionFilter.Any | undefined;
 }
 
 export namespace TranscriptionFilter {

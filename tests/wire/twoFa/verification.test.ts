@@ -64,6 +64,30 @@ describe("VerificationClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { service_id: "service_id", to: "to", channel: "channel" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v1/two-fa/verification")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.twoFa.verification.create({
+                service_id: "service_id",
+                to: "to",
+                channel: "channel",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("create (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { service_id: "service_id", to: "to", channel: "channel" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -82,6 +106,54 @@ describe("VerificationClient", () => {
                 channel: "channel",
             });
         }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("create (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { service_id: "service_id", to: "to", channel: "channel" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/two-fa/verification")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.twoFa.verification.create({
+                service_id: "service_id",
+                to: "to",
+                channel: "channel",
+            });
+        }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
+    test("create (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { service_id: "service_id", to: "to", channel: "channel" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/two-fa/verification")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.twoFa.verification.create({
+                service_id: "service_id",
+                to: "to",
+                channel: "channel",
+            });
+        }).rejects.toThrow(Wavix.UnprocessableEntityError);
     });
 
     test("resend (1)", async () => {
@@ -138,6 +210,29 @@ describe("VerificationClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { channel: "sms" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v1/two-fa/verification/session_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.twoFa.verification.resend({
+                session_id: "session_id",
+                channel: "sms",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("resend (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { channel: "sms" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -155,6 +250,52 @@ describe("VerificationClient", () => {
                 channel: "sms",
             });
         }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("resend (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { channel: "sms" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/two-fa/verification/session_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.twoFa.verification.resend({
+                session_id: "session_id",
+                channel: "sms",
+            });
+        }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
+    test("resend (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { channel: "sms" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/two-fa/verification/session_id")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.twoFa.verification.resend({
+                session_id: "session_id",
+                channel: "sms",
+            });
+        }).rejects.toThrow(Wavix.UnprocessableEntityError);
     });
 
     test("check (1)", async () => {
@@ -206,6 +347,29 @@ describe("VerificationClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { code: "code" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v1/two-fa/verification/session_id/check")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.twoFa.verification.check({
+                session_id: "session_id",
+                code: "code",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("check (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { code: "code" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -223,6 +387,52 @@ describe("VerificationClient", () => {
                 code: "code",
             });
         }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("check (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { code: "code" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/two-fa/verification/session_id/check")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.twoFa.verification.check({
+                session_id: "session_id",
+                code: "code",
+            });
+        }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
+    test("check (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { code: "code" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/two-fa/verification/session_id/check")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(429)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.twoFa.verification.check({
+                session_id: "session_id",
+                code: "code",
+            });
+        }).rejects.toThrow(Wavix.TooManyRequestsError);
     });
 
     test("cancel (1)", async () => {
@@ -270,6 +480,27 @@ describe("VerificationClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .patch("/v1/two-fa/verification/session_id/cancel")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.twoFa.verification.cancel({
+                session_id: "session_id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("cancel (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = { key: "value" };
 
         server
@@ -287,7 +518,7 @@ describe("VerificationClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("cancel (4)", async () => {
+    test("cancel (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

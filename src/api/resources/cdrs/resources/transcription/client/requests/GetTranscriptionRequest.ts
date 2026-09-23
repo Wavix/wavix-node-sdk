@@ -3,7 +3,7 @@
 /**
  * @example
  *     {
- *         call_id: "bbaa37bf-430a-46da-ade3-c248e407016"
+ *         call_id: "bbaa37bf-430a-46da-ade3-c248e4070160"
  *     }
  */
 export interface GetTranscriptionRequest {

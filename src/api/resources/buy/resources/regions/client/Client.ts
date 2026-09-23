@@ -29,6 +29,7 @@ export class RegionsClient {
      * @param {RegionsClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      * @throws {@link Wavix.UnprocessableEntityError}
@@ -41,14 +42,14 @@ export class RegionsClient {
     public list(
         request: Wavix.buy.ListRegionsRequest,
         requestOptions?: RegionsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.buy.ListRegionsResponse> {
+    ): core.HttpResponsePromise<Wavix.RegionListResponse> {
         return core.HttpResponsePromise.fromPromise(this.__list(request, requestOptions));
     }
 
     private async __list(
         request: Wavix.buy.ListRegionsRequest,
         requestOptions?: RegionsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.buy.ListRegionsResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.RegionListResponse>> {
         const { country_id: countryId, text_enabled_only: textEnabledOnly } = request;
         const _queryParams: Record<string, unknown> = {
             text_enabled_only: textEnabledOnly,
@@ -80,13 +81,18 @@ export class RegionsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.buy.ListRegionsResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.RegionListResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:

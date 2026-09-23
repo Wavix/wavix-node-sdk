@@ -9,4 +9,8 @@ import type * as Wavix from "../../../../index.js";
 export interface ListSubAccountsRequest {
     /** Filters sub-accounts by status. One of `enabled` (the sub-account is active) or `disabled` (the sub-account is suspended). */
     status?: Wavix.ListSubAccountsRequestStatus;
+    /** Page number to retrieve. Default `1`. */
+    page?: number;
+    /** Number of records to return per page. Default `25`. */
+    per_page?: number;
 }

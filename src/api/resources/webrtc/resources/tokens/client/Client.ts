@@ -23,8 +23,9 @@ export class TokensClient {
     }
 
     /**
-     * Returns a paginated list of active Wavix Embeddable widget tokens for the authenticated account.
+     * Returns a paginated list of Wavix Embeddable widget tokens for the authenticated account.
      *
+     * @param {Wavix.webrtc.ListTokensRequest} request
      * @param {TokensClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.UnauthorizedError}
@@ -34,14 +35,21 @@ export class TokensClient {
      *     await client.webrtc.tokens.list()
      */
     public list(
+        request: Wavix.webrtc.ListTokensRequest = {},
         requestOptions?: TokensClient.RequestOptions,
     ): core.HttpResponsePromise<Wavix.WebRtcTokensListResponse> {
-        return core.HttpResponsePromise.fromPromise(this.__list(requestOptions));
+        return core.HttpResponsePromise.fromPromise(this.__list(request, requestOptions));
     }
 
     private async __list(
+        request: Wavix.webrtc.ListTokensRequest = {},
         requestOptions?: TokensClient.RequestOptions,
     ): Promise<core.WithRawResponse<Wavix.WebRtcTokensListResponse>> {
+        const { page, per_page: perPage } = request;
+        const _queryParams: Record<string, unknown> = {
+            page,
+            per_page: perPage,
+        };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -57,7 +65,11 @@ export class TokensClient {
             ),
             method: "GET",
             headers: _headers,
-            queryString: core.url.queryBuilder().mergeAdditional(requestOptions?.queryParams).build(),
+            queryString: core.url
+                .queryBuilder()
+                .addMany(_queryParams)
+                .mergeAdditional(requestOptions?.queryParams)
+                .build(),
             timeoutMs: (requestOptions?.timeoutInSeconds ?? this._options?.timeoutInSeconds ?? 60) * 1000,
             maxRetries: requestOptions?.maxRetries ?? this._options?.maxRetries,
             abortSignal: requestOptions?.abortSignal,
@@ -180,6 +192,7 @@ export class TokensClient {
      * @param {Wavix.webrtc.GetTokensRequest} request
      * @param {TokensClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
@@ -229,6 +242,8 @@ export class TokensClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Wavix.UnauthorizedError(
                         _response.error.body as Wavix.UnauthorizedErrorResponse,
@@ -341,6 +356,7 @@ export class TokensClient {
      * @param {Wavix.webrtc.DeleteTokensRequest} request
      * @param {TokensClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
@@ -390,6 +406,8 @@ export class TokensClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
                 case 401:
                     throw new Wavix.UnauthorizedError(
                         _response.error.body as Wavix.UnauthorizedErrorResponse,

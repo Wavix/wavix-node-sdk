@@ -34,13 +34,13 @@ export namespace CallDtmfCollectRequest {
     export interface Prompt {
         /** Audio file URL. */
         play?: string | undefined;
-        /** Text to speak and voice to use. */
+        /** Text to speak and voice to use. Pick `voice` from the language family matching `language` (for example, a German voice such as `Hans` for `ge`, a Spanish voice such as `Conchita` for `sp`) — Wavix does not validate the pairing itself. */
         say?: Prompt.Say | undefined;
     }
 
     export namespace Prompt {
         /**
-         * Text to speak and voice to use.
+         * Text to speak and voice to use. Pick `voice` from the language family matching `language` (for example, a German voice such as `Hans` for `ge`, a Spanish voice such as `Conchita` for `sp`) — Wavix does not validate the pairing itself.
          */
         export interface Say {
             /** Text to speak. */

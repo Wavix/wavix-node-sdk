@@ -11,8 +11,8 @@
 export interface TenDlcBrandVettingAppealCreateRequest {
     /** The unique ID of the 10DLC Brand. */
     brand_id: string;
-    /** List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`, `LOW_SCORE`. */
-    appeal_categories: string[];
+    /** List of appeal categories. Allowed values: `VERIFY_TAX_ID`, `VERIFY_NON_PROFIT`, `VERIFY_GOVERNMENT`, `LOW_SCORE`. `LOW_SCORE` is only valid for vetting appeals — brand identity appeals (`ten_dlc_brand_appeals_create`) do not accept it. */
+    appeal_categories: TenDlcBrandVettingAppealCreateRequest.AppealCategories.Item[];
     /** List of evidence IDs associated with the appeal. */
     evidence: string[];
     /** Appeal comment or justification. */
@@ -21,4 +21,18 @@ export interface TenDlcBrandVettingAppealCreateRequest {
     evp_id?: string;
     /** Vetting ID. */
     vetting_id?: string;
+}
+
+export namespace TenDlcBrandVettingAppealCreateRequest {
+    export type AppealCategories = AppealCategories.Item[];
+
+    export namespace AppealCategories {
+        export const Item = {
+            VerifyTaxId: "VERIFY_TAX_ID",
+            VerifyNonProfit: "VERIFY_NON_PROFIT",
+            VerifyGovernment: "VERIFY_GOVERNMENT",
+            LowScore: "LOW_SCORE",
+        } as const;
+        export type Item = (typeof Item)[keyof typeof Item];
+    }
 }

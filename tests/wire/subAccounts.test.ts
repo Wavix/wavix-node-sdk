@@ -145,6 +145,28 @@ describe("SubAccountsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { name: "name" };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v1/sub-organizations")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.subAccounts.create({
+                name: "name",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("create (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { name: "name" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -163,7 +185,7 @@ describe("SubAccountsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("create (4)", async () => {
+    test("create (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { name: "name" };
@@ -220,6 +242,27 @@ describe("SubAccountsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v1/sub-organizations/1")
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.subAccounts.get({
+                id: 1,
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = {};
 
         server
@@ -237,7 +280,7 @@ describe("SubAccountsClient", () => {
         }).rejects.toThrow(Wavix.UnauthorizedError);
     });
 
-    test("get (3)", async () => {
+    test("get (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -258,7 +301,7 @@ describe("SubAccountsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("get (4)", async () => {
+    test("get (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -327,7 +370,7 @@ describe("SubAccountsClient", () => {
     test("update (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { name: "name" };
+        const rawRequestBody = {};
         const rawResponseBody = { key: "value" };
 
         server
@@ -342,7 +385,6 @@ describe("SubAccountsClient", () => {
         await expect(async () => {
             return await client.subAccounts.update({
                 id: 1,
-                name: "name",
             });
         }).rejects.toThrow(Wavix.BadRequestError);
     });
@@ -350,7 +392,7 @@ describe("SubAccountsClient", () => {
     test("update (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { name: "name" };
+        const rawRequestBody = {};
         const rawResponseBody = {};
 
         server
@@ -365,7 +407,6 @@ describe("SubAccountsClient", () => {
         await expect(async () => {
             return await client.subAccounts.update({
                 id: 1,
-                name: "name",
             });
         }).rejects.toThrow(Wavix.UnauthorizedError);
     });
@@ -373,7 +414,7 @@ describe("SubAccountsClient", () => {
     test("update (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { name: "name" };
+        const rawRequestBody = {};
         const rawResponseBody = { key: "value" };
 
         server
@@ -388,7 +429,6 @@ describe("SubAccountsClient", () => {
         await expect(async () => {
             return await client.subAccounts.update({
                 id: 1,
-                name: "name",
             });
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
@@ -396,7 +436,7 @@ describe("SubAccountsClient", () => {
     test("update (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { name: "name" };
+        const rawRequestBody = {};
         const rawResponseBody = { key: "value" };
 
         server
@@ -411,7 +451,6 @@ describe("SubAccountsClient", () => {
         await expect(async () => {
             return await client.subAccounts.update({
                 id: 1,
-                name: "name",
             });
         }).rejects.toThrow(Wavix.NotFoundError);
     });
@@ -419,7 +458,7 @@ describe("SubAccountsClient", () => {
     test("update (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { name: "name" };
+        const rawRequestBody = {};
         const rawResponseBody = { key: "value" };
 
         server
@@ -434,7 +473,6 @@ describe("SubAccountsClient", () => {
         await expect(async () => {
             return await client.subAccounts.update({
                 id: 1,
-                name: "name",
             });
         }).rejects.toThrow(Wavix.UnprocessableEntityError);
     });

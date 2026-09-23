@@ -22,7 +22,7 @@ export interface SipTrunkCreateRequest {
     /** Maximum call duration for the SIP trunk, in seconds. Must not exceed the maximum duration set for the account. Ignored when `call_restrict` is `false`. */
     call_limit?: number | undefined;
     /** Indicates if the max cost limit for an outbound call limit is activated for the SIP trunk. */
-    cost_limit: boolean;
+    cost_limit?: boolean | undefined;
     /** Maximum cost for an outbound call, in USD */
     max_call_cost?: number | undefined;
     /** Indicates whether a limit on the number of concurrent outbound calls is enforced for the SIP trunk */

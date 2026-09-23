@@ -8,8 +8,7 @@ import type * as Wavix from "../../../../../../index.js";
  *         from: "Wavix",
  *         to: "+447537151866",
  *         message_body: {
- *             text: "Hi there, this is a message from Wavix",
- *             media: null
+ *             text: "Hi there, this is a message from Wavix"
  *         },
  *         callback_url: "https://you-site.com/webhook",
  *         validity: 3600,

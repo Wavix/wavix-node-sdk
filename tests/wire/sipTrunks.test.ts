@@ -76,7 +76,6 @@ describe("SipTrunksClient", () => {
             ip_restrict: false,
             didinfo_enabled: true,
             call_restrict: true,
-            cost_limit: true,
             channels_restrict: false,
             rewrite_enabled: true,
             transcription_enabled: true,
@@ -127,7 +126,6 @@ describe("SipTrunksClient", () => {
             ip_restrict: false,
             didinfo_enabled: true,
             call_restrict: true,
-            cost_limit: true,
             channels_restrict: false,
             rewrite_enabled: true,
             transcription_enabled: true,
@@ -146,7 +144,6 @@ describe("SipTrunksClient", () => {
             ip_restrict: true,
             didinfo_enabled: true,
             call_restrict: true,
-            cost_limit: true,
             channels_restrict: true,
             rewrite_enabled: true,
             transcription_enabled: true,
@@ -171,7 +168,6 @@ describe("SipTrunksClient", () => {
                 ip_restrict: true,
                 didinfo_enabled: true,
                 call_restrict: true,
-                cost_limit: true,
                 channels_restrict: true,
                 rewrite_enabled: true,
                 transcription_enabled: true,
@@ -190,7 +186,6 @@ describe("SipTrunksClient", () => {
             ip_restrict: true,
             didinfo_enabled: true,
             call_restrict: true,
-            cost_limit: true,
             channels_restrict: true,
             rewrite_enabled: true,
             transcription_enabled: true,
@@ -215,7 +210,6 @@ describe("SipTrunksClient", () => {
                 ip_restrict: true,
                 didinfo_enabled: true,
                 call_restrict: true,
-                cost_limit: true,
                 channels_restrict: true,
                 rewrite_enabled: true,
                 transcription_enabled: true,
@@ -234,7 +228,6 @@ describe("SipTrunksClient", () => {
             ip_restrict: true,
             didinfo_enabled: true,
             call_restrict: true,
-            cost_limit: true,
             channels_restrict: true,
             rewrite_enabled: true,
             transcription_enabled: true,
@@ -259,7 +252,6 @@ describe("SipTrunksClient", () => {
                 ip_restrict: true,
                 didinfo_enabled: true,
                 call_restrict: true,
-                cost_limit: true,
                 channels_restrict: true,
                 rewrite_enabled: true,
                 transcription_enabled: true,
@@ -278,7 +270,6 @@ describe("SipTrunksClient", () => {
             ip_restrict: true,
             didinfo_enabled: true,
             call_restrict: true,
-            cost_limit: true,
             channels_restrict: true,
             rewrite_enabled: true,
             transcription_enabled: true,
@@ -303,7 +294,6 @@ describe("SipTrunksClient", () => {
                 ip_restrict: true,
                 didinfo_enabled: true,
                 call_restrict: true,
-                cost_limit: true,
                 channels_restrict: true,
                 rewrite_enabled: true,
                 transcription_enabled: true,
@@ -359,6 +349,36 @@ describe("SipTrunksClient", () => {
 
         const rawResponseBody = { key: "value" };
 
+        server.mockEndpoint().get("/v1/trunks/1").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.sipTrunks.get({
+                id: 1,
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v1/trunks/1").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.sipTrunks.get({
+                id: 1,
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("get (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
         server.mockEndpoint().get("/v1/trunks/1").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
 
         await expect(async () => {
@@ -368,7 +388,7 @@ describe("SipTrunksClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("get (3)", async () => {
+    test("get (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -393,7 +413,6 @@ describe("SipTrunksClient", () => {
             ip_restrict: false,
             didinfo_enabled: true,
             call_restrict: true,
-            cost_limit: true,
             channels_restrict: false,
             rewrite_enabled: true,
             transcription_enabled: true,
@@ -446,7 +465,6 @@ describe("SipTrunksClient", () => {
                 ip_restrict: false,
                 didinfo_enabled: true,
                 call_restrict: true,
-                cost_limit: true,
                 channels_restrict: false,
                 rewrite_enabled: true,
                 transcription_enabled: true,
@@ -466,7 +484,6 @@ describe("SipTrunksClient", () => {
             ip_restrict: true,
             didinfo_enabled: true,
             call_restrict: true,
-            cost_limit: true,
             channels_restrict: true,
             rewrite_enabled: true,
             transcription_enabled: true,
@@ -493,7 +510,6 @@ describe("SipTrunksClient", () => {
                     ip_restrict: true,
                     didinfo_enabled: true,
                     call_restrict: true,
-                    cost_limit: true,
                     channels_restrict: true,
                     rewrite_enabled: true,
                     transcription_enabled: true,
@@ -513,7 +529,6 @@ describe("SipTrunksClient", () => {
             ip_restrict: true,
             didinfo_enabled: true,
             call_restrict: true,
-            cost_limit: true,
             channels_restrict: true,
             rewrite_enabled: true,
             transcription_enabled: true,
@@ -540,7 +555,6 @@ describe("SipTrunksClient", () => {
                     ip_restrict: true,
                     didinfo_enabled: true,
                     call_restrict: true,
-                    cost_limit: true,
                     channels_restrict: true,
                     rewrite_enabled: true,
                     transcription_enabled: true,
@@ -560,7 +574,6 @@ describe("SipTrunksClient", () => {
             ip_restrict: true,
             didinfo_enabled: true,
             call_restrict: true,
-            cost_limit: true,
             channels_restrict: true,
             rewrite_enabled: true,
             transcription_enabled: true,
@@ -587,7 +600,6 @@ describe("SipTrunksClient", () => {
                     ip_restrict: true,
                     didinfo_enabled: true,
                     call_restrict: true,
-                    cost_limit: true,
                     channels_restrict: true,
                     rewrite_enabled: true,
                     transcription_enabled: true,
@@ -607,7 +619,6 @@ describe("SipTrunksClient", () => {
             ip_restrict: true,
             didinfo_enabled: true,
             call_restrict: true,
-            cost_limit: true,
             channels_restrict: true,
             rewrite_enabled: true,
             transcription_enabled: true,
@@ -634,7 +645,6 @@ describe("SipTrunksClient", () => {
                     ip_restrict: true,
                     didinfo_enabled: true,
                     call_restrict: true,
-                    cost_limit: true,
                     channels_restrict: true,
                     rewrite_enabled: true,
                     transcription_enabled: true,
@@ -662,6 +672,21 @@ describe("SipTrunksClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = { key: "value" };
+
+        server.mockEndpoint().delete("/v1/trunks/1").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.sipTrunks.delete({
+                id: 1,
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("delete (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = {};
 
         server.mockEndpoint().delete("/v1/trunks/1").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
@@ -673,7 +698,7 @@ describe("SipTrunksClient", () => {
         }).rejects.toThrow(Wavix.UnauthorizedError);
     });
 
-    test("delete (3)", async () => {
+    test("delete (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -688,7 +713,7 @@ describe("SipTrunksClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("delete (4)", async () => {
+    test("delete (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

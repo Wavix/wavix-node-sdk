@@ -20,7 +20,7 @@ describe("MessagesClient", () => {
                     direction: "outbound",
                     mcc: "234",
                     mnc: "024",
-                    message_body: { text: "Please call me back", media: null },
+                    message_body: { text: "Please call me back" },
                     tag: null,
                     status: "delivered",
                     segments: 1,
@@ -68,6 +68,21 @@ describe("MessagesClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v3/messages").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.smsAndMms.messages.list({
+                type: "type",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = { key: "value" };
 
         server.mockEndpoint().get("/v3/messages").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
@@ -85,7 +100,7 @@ describe("MessagesClient", () => {
         const rawRequestBody = {
             from: "Wavix",
             to: "+447537151866",
-            message_body: { text: "Hi there, this is a message from Wavix", media: null },
+            message_body: { text: "Hi there, this is a message from Wavix" },
             callback_url: "https://you-site.com/webhook",
             validity: 3600,
             tag: "Fall sale",
@@ -130,7 +145,6 @@ describe("MessagesClient", () => {
             to: "+447537151866",
             message_body: {
                 text: "Hi there, this is a message from Wavix",
-                media: null,
             },
             callback_url: "https://you-site.com/webhook",
             validity: 3600,
@@ -142,7 +156,7 @@ describe("MessagesClient", () => {
     test("send (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { from: "from", to: "to", message_body: { text: "text", media: null } };
+        const rawRequestBody = { from: "from", to: "to", message_body: { text: "text" } };
         const rawResponseBody = { key: "value" };
 
         server
@@ -160,7 +174,6 @@ describe("MessagesClient", () => {
                 to: "to",
                 message_body: {
                     text: "text",
-                    media: null,
                 },
             });
         }).rejects.toThrow(Wavix.BadRequestError);
@@ -169,7 +182,33 @@ describe("MessagesClient", () => {
     test("send (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = { from: "from", to: "to", message_body: { text: "text", media: null } };
+        const rawRequestBody = { from: "from", to: "to", message_body: { text: "text" } };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v3/messages")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.messages.send({
+                from: "from",
+                to: "to",
+                message_body: {
+                    text: "text",
+                },
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("send (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { from: "from", to: "to", message_body: { text: "text" } };
         const rawResponseBody = { key: "value" };
 
         server
@@ -187,10 +226,87 @@ describe("MessagesClient", () => {
                 to: "to",
                 message_body: {
                     text: "text",
-                    media: null,
                 },
             });
         }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("send (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { from: "from", to: "to", message_body: { text: "text" } };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v3/messages")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.messages.send({
+                from: "from",
+                to: "to",
+                message_body: {
+                    text: "text",
+                },
+            });
+        }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
+    test("send (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { from: "from", to: "to", message_body: { text: "text" } };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v3/messages")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.messages.send({
+                from: "from",
+                to: "to",
+                message_body: {
+                    text: "text",
+                },
+            });
+        }).rejects.toThrow(Wavix.UnprocessableEntityError);
+    });
+
+    test("send (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { from: "from", to: "to", message_body: { text: "text" } };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v3/messages")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(429)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.messages.send({
+                from: "from",
+                to: "to",
+                message_body: {
+                    text: "text",
+                },
+            });
+        }).rejects.toThrow(Wavix.TooManyRequestsError);
     });
 
     test("get (1)", async () => {
@@ -205,7 +321,7 @@ describe("MessagesClient", () => {
             direction: "outbound",
             mcc: "310",
             mnc: "024",
-            message_body: { text: "Hello, this is a test message", media: null },
+            message_body: { text: "Hello, this is a test message" },
             tag: "Fall sale",
             status: "delivered",
             segments: 1,
@@ -237,6 +353,36 @@ describe("MessagesClient", () => {
 
         const rawResponseBody = { key: "value" };
 
+        server.mockEndpoint().get("/v3/messages/id").respondWith().statusCode(400).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.smsAndMms.messages.get({
+                id: "id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v3/messages/id").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.smsAndMms.messages.get({
+                id: "id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("get (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
         server.mockEndpoint().get("/v3/messages/id").respondWith().statusCode(403).jsonBody(rawResponseBody).build();
 
         await expect(async () => {
@@ -246,7 +392,7 @@ describe("MessagesClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("get (3)", async () => {
+    test("get (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -282,6 +428,21 @@ describe("MessagesClient", () => {
     });
 
     test("listAll (2)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v3/messages/all").respondWith().statusCode(401).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.smsAndMms.messages.listAll({
+                type: "type",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("listAll (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

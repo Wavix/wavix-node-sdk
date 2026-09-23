@@ -34,6 +34,7 @@ export class PapersClient {
      * @param {PapersClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      *
      * @example
@@ -41,7 +42,7 @@ export class PapersClient {
      *     await client.numbers.papers.upload({
      *         doc_attachment: fs.createReadStream("/path/to/your/file"),
      *         did_ids: "did_ids",
-     *         doc_id: 1
+     *         doc_id: "id"
      *     })
      */
     public upload(
@@ -58,7 +59,7 @@ export class PapersClient {
         const _body = await core.newFormData();
         _body.append("did_ids", request.did_ids);
         await _body.appendFile("doc_attachment", request.doc_attachment);
-        _body.append("doc_id", request.doc_id.toString());
+        _body.append("doc_id", request.doc_id);
         const _maybeEncodedRequest = await _body.getRequest();
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -94,6 +95,11 @@ export class PapersClient {
             switch (_response.error.statusCode) {
                 case 400:
                     throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 default:

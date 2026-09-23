@@ -6,5 +6,5 @@ export interface CartResponse {
     /** List of phone numbers in the cart. */
     dids: Wavix.AvailableNumber[];
     /** Document types required to activate phone numbers. */
-    doc_types: Wavix.DocumentType[];
+    doc_types: Wavix.DocumentTypeInfo[];
 }

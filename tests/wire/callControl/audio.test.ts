@@ -84,6 +84,29 @@ describe("AudioClient", () => {
             .post("/v1/calls/id/play")
             .jsonBody(rawRequestBody)
             .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.callControl.audio.play({
+                id: "id",
+                audio_file: "audio_file",
+            });
+        }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("play (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { audio_file: "audio_file" };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/calls/id/play")
+            .jsonBody(rawRequestBody)
+            .respondWith()
             .statusCode(404)
             .jsonBody(rawResponseBody)
             .build();
@@ -120,6 +143,27 @@ describe("AudioClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .delete("/v1/calls/id/audio")
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.callControl.audio.stop({
+                id: "id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("stop (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = {};
 
         server
@@ -137,7 +181,28 @@ describe("AudioClient", () => {
         }).rejects.toThrow(Wavix.UnauthorizedError);
     });
 
-    test("stop (3)", async () => {
+    test("stop (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .delete("/v1/calls/id/audio")
+            .respondWith()
+            .statusCode(403)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.callControl.audio.stop({
+                id: "id",
+            });
+        }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("stop (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

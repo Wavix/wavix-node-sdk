@@ -28,6 +28,8 @@ export class BrandEvidenceClient {
      * @param {Wavix.tenDlc.ListBrandEvidenceRequest} request
      * @param {BrandEvidenceClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -76,6 +78,13 @@ export class BrandEvidenceClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
@@ -103,6 +112,7 @@ export class BrandEvidenceClient {
      * @param {Wavix.tenDlc.UploadBrandEvidenceRequest} request
      * @param {BrandEvidenceClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      * @throws {@link Wavix.UnprocessableEntityError}
@@ -117,14 +127,14 @@ export class BrandEvidenceClient {
     public upload(
         request: Wavix.tenDlc.UploadBrandEvidenceRequest,
         requestOptions?: BrandEvidenceClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.UploadBrandEvidenceResponse> {
+    ): core.HttpResponsePromise<Wavix.TenDlcBrandEvidence> {
         return core.HttpResponsePromise.fromPromise(this.__upload(request, requestOptions));
     }
 
     private async __upload(
         request: Wavix.tenDlc.UploadBrandEvidenceRequest,
         requestOptions?: BrandEvidenceClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.UploadBrandEvidenceResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.TenDlcBrandEvidence>> {
         const _body = await core.newFormData();
         await _body.appendFile("file", request.file);
         const _maybeEncodedRequest = await _body.getRequest();
@@ -155,14 +165,16 @@ export class BrandEvidenceClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as Wavix.tenDlc.UploadBrandEvidenceResponse,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as Wavix.TenDlcBrandEvidence, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
@@ -189,6 +201,9 @@ export class BrandEvidenceClient {
     /**
      * Returns the Brand evidence file identified by the evidence ID.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
+     * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      */
     public get(
@@ -232,6 +247,15 @@ export class BrandEvidenceClient {
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 403:
+                    throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -257,6 +281,8 @@ export class BrandEvidenceClient {
      * @param {Wavix.tenDlc.DeleteBrandEvidenceRequest} request
      * @param {BrandEvidenceClient.RequestOptions} requestOptions - Request-specific configuration.
      *
+     * @throws {@link Wavix.BadRequestError}
+     * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
      *
@@ -269,14 +295,14 @@ export class BrandEvidenceClient {
     public delete(
         request: Wavix.tenDlc.DeleteBrandEvidenceRequest,
         requestOptions?: BrandEvidenceClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.tenDlc.DeleteBrandEvidenceResponse> {
+    ): core.HttpResponsePromise<Wavix.SuccessResponse> {
         return core.HttpResponsePromise.fromPromise(this.__delete(request, requestOptions));
     }
 
     private async __delete(
         request: Wavix.tenDlc.DeleteBrandEvidenceRequest,
         requestOptions?: BrandEvidenceClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.tenDlc.DeleteBrandEvidenceResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.SuccessResponse>> {
         const { brand_id: brandId, id } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -301,14 +327,18 @@ export class BrandEvidenceClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return {
-                data: _response.body as Wavix.tenDlc.DeleteBrandEvidenceResponse,
-                rawResponse: _response.rawResponse,
-            };
+            return { data: _response.body as Wavix.SuccessResponse, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {
             switch (_response.error.statusCode) {
+                case 400:
+                    throw new Wavix.BadRequestError(_response.error.body as unknown, _response.rawResponse);
+                case 401:
+                    throw new Wavix.UnauthorizedError(
+                        _response.error.body as Wavix.UnauthorizedErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:

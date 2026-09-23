@@ -44,6 +44,44 @@ describe("SenderIdsClient", () => {
             .mockEndpoint()
             .get("/v3/messages/sender-ids")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.senderIds.list();
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("list (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v3/messages/sender-ids")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.senderIds.list();
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("list (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v3/messages/sender-ids")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -128,6 +166,36 @@ describe("SenderIdsClient", () => {
             countries: ["countries", "countries"],
             usecase: "transactional",
         };
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .post("/v3/messages/sender-ids")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.senderIds.create({
+                sender_id: "sender_id",
+                type: "numeric",
+                countries: ["countries", "countries"],
+                usecase: "transactional",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("create (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            sender_id: "sender_id",
+            type: "numeric",
+            countries: ["countries", "countries"],
+            usecase: "transactional",
+        };
         const rawResponseBody = { key: "value" };
 
         server
@@ -147,6 +215,66 @@ describe("SenderIdsClient", () => {
                 usecase: "transactional",
             });
         }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("create (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            sender_id: "sender_id",
+            type: "numeric",
+            countries: ["countries", "countries"],
+            usecase: "transactional",
+        };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v3/messages/sender-ids")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(404)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.senderIds.create({
+                sender_id: "sender_id",
+                type: "numeric",
+                countries: ["countries", "countries"],
+                usecase: "transactional",
+            });
+        }).rejects.toThrow(Wavix.NotFoundError);
+    });
+
+    test("create (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {
+            sender_id: "sender_id",
+            type: "numeric",
+            countries: ["countries", "countries"],
+            usecase: "transactional",
+        };
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .post("/v3/messages/sender-ids")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.senderIds.create({
+                sender_id: "sender_id",
+                type: "numeric",
+                countries: ["countries", "countries"],
+                usecase: "transactional",
+            });
+        }).rejects.toThrow(Wavix.UnprocessableEntityError);
     });
 
     test("get (1)", async () => {
@@ -186,6 +314,48 @@ describe("SenderIdsClient", () => {
             .mockEndpoint()
             .get("/v3/messages/sender-ids/id")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.senderIds.get({
+                id: "id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("get (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .get("/v3/messages/sender-ids/id")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.senderIds.get({
+                id: "id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("get (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v3/messages/sender-ids/id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -197,7 +367,7 @@ describe("SenderIdsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("get (3)", async () => {
+    test("get (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -248,6 +418,48 @@ describe("SenderIdsClient", () => {
             .mockEndpoint()
             .delete("/v3/messages/sender-ids/id")
             .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.senderIds.delete({
+                id: "id",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("delete (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server
+            .mockEndpoint()
+            .delete("/v3/messages/sender-ids/id")
+            .respondWith()
+            .statusCode(401)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.smsAndMms.senderIds.delete({
+                id: "id",
+            });
+        }).rejects.toThrow(Wavix.UnauthorizedError);
+    });
+
+    test("delete (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .delete("/v3/messages/sender-ids/id")
+            .respondWith()
             .statusCode(403)
             .jsonBody(rawResponseBody)
             .build();
@@ -259,7 +471,7 @@ describe("SenderIdsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("delete (3)", async () => {
+    test("delete (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -280,7 +492,7 @@ describe("SenderIdsClient", () => {
         }).rejects.toThrow(Wavix.NotFoundError);
     });
 
-    test("delete (4)", async () => {
+    test("delete (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

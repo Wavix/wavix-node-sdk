@@ -46,6 +46,29 @@ describe("TransactionsClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .get("/v1/sub-organizations/1/billing/transactions")
+            .respondWith()
+            .statusCode(400)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.subAccounts.transactions.list({
+                id: 1,
+                from_date: "2023-01-15",
+                to_date: "2023-01-15",
+            });
+        }).rejects.toThrow(Wavix.BadRequestError);
+    });
+
+    test("list (3)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
         const rawResponseBody = {};
 
         server
@@ -65,7 +88,7 @@ describe("TransactionsClient", () => {
         }).rejects.toThrow(Wavix.UnauthorizedError);
     });
 
-    test("list (3)", async () => {
+    test("list (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -88,7 +111,7 @@ describe("TransactionsClient", () => {
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
 
-    test("list (4)", async () => {
+    test("list (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 
@@ -111,7 +134,7 @@ describe("TransactionsClient", () => {
         }).rejects.toThrow(Wavix.NotFoundError);
     });
 
-    test("list (5)", async () => {
+    test("list (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

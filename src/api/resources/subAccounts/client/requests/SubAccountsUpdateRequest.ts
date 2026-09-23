@@ -16,7 +16,7 @@ export interface SubAccountsUpdateRequest {
     /** The unique ID of the sub-account. */
     id: number;
     /** Sub-account name. */
-    name: string;
+    name?: string;
     /** Status of the subaccount. One of `enabled` (the subaccount is active and can be used) or `disabled` (the subaccount is suspended). */
     status?: SubAccountsUpdateRequest.Status;
     /** Default webhook URLs for inbound messages and delivery reports. */

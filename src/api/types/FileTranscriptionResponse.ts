@@ -10,13 +10,13 @@ export interface FileTranscriptionResponse {
     /** Transcription request ID. */
     request_id: string;
     /** Transcription language. */
-    language: FileTranscriptionResponse.Language;
+    language: Wavix.TranscriptionLanguage | null;
     /** File duration in seconds. */
     duration: number | null;
     /** Total transcription charge in USD. */
     charge: string;
     /** Transcription status. Possible values are `completed`, `failed`. */
-    status: FileTranscriptionResponse.Status;
+    status: Wavix.TranscriptionStatus;
     /** Date and time of the transcription in ISO 8601 format. */
     transcription_date: string;
     /** Conversation sentiment score. Scores from 1.0 to 3.0 are negative; scores from 4.0 to 5.0 are positive. */
@@ -25,22 +25,4 @@ export interface FileTranscriptionResponse {
     transcription_summary: string | null;
     /** Uploaded file URL. */
     original_file: string;
-}
-
-export namespace FileTranscriptionResponse {
-    /** Transcription language. */
-    export const Language = {
-        En: "en",
-        De: "de",
-        Es: "es",
-        Fr: "fr",
-        It: "it",
-    } as const;
-    export type Language = (typeof Language)[keyof typeof Language];
-    /** Transcription status. Possible values are `completed`, `failed`. */
-    export const Status = {
-        Completed: "completed",
-        Failed: "failed",
-    } as const;
-    export type Status = (typeof Status)[keyof typeof Status];
 }

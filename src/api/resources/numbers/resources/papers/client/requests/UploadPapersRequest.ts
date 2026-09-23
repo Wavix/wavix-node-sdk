@@ -8,7 +8,7 @@ import type * as Wavix from "../../../../../../index.js";
  *     {
  *         doc_attachment: fs.createReadStream("/path/to/your/file"),
  *         did_ids: "did_ids",
- *         doc_id: 1
+ *         doc_id: "id"
  *     }
  */
 export interface UploadPapersRequest {
@@ -16,5 +16,5 @@ export interface UploadPapersRequest {
     did_ids: string;
     /** Document file to upload. Allowed formats are PNG, JPG, JPEG, TIFF, BMP, and PDF. Maximum size is 10 MB. */
     doc_attachment: core.file.Uploadable;
-    doc_id: Wavix.DocumentTypeId;
+    doc_id: Wavix.DocumentType;
 }

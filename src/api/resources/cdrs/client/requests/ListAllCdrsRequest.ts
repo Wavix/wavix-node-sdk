@@ -23,7 +23,7 @@ export interface ListAllCdrsRequest {
     to: string;
     /** Filters CDRs by call direction. One of `placed` (outbound calls dialed by the account) or `received` (inbound calls answered by the account). */
     type: string;
-    /** Filters CDRs by call disposition. One of `answered` (the called party answered), `busy` (the called party was busy), `rejected` (the call was declined), `failed` (the call could not be routed), or `all` (no disposition filter). */
+    /** Filters CDRs by call disposition. One of `answered` (the called party answered), `noanswer` (no answer within the ring timeout), `busy` (the called party was busy), `failed` (the call could not be routed), or `all` (no disposition filter). */
     disposition?: Wavix.CallDisposition;
     /** Filters CDRs by originating phone number. Accepts a full or partial number. */
     from_search?: string;

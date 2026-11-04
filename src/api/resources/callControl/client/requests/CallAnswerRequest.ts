@@ -15,7 +15,7 @@ export interface CallAnswerRequest {
     call_recording?: boolean;
     /** Indicates whether the call should be transcribed after it ends. */
     call_transcription?: boolean;
-    /** WebSocket URL to stream the call. */
+    /** WebSocket URL (`ws://` or `wss://`) that receives the call's audio, which can include the caller's voice. */
     stream_url?: string;
     /** Direction of audio streamed to `stream_url`. */
     stream_type?: Wavix.CallStreamType;

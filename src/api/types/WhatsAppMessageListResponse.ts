@@ -2,6 +2,9 @@
 
 import type * as Wavix from "../index.js";
 
+/**
+ * Returned by `whatsapp_messages_list`.
+ */
 export interface WhatsAppMessageListResponse {
     /** Messages that match the request. */
     messages: Wavix.WhatsAppMessageListItem[];

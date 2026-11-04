@@ -154,6 +154,29 @@ describe("CallWebhooksClient", () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
         const rawRequestBody = { url: "url", event_type: "post-call" };
+        const rawResponseBody = { success: true, error: true, message: "message" };
+
+        server
+            .mockEndpoint()
+            .post("/v1/calls/webhooks")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(409)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.callWebhooks.create({
+                url: "url",
+                event_type: "post-call",
+            });
+        }).rejects.toThrow(Wavix.ConflictError);
+    });
+
+    test("create (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = { url: "url", event_type: "post-call" };
         const rawResponseBody = { key: "value" };
 
         server
@@ -189,6 +212,7 @@ describe("CallWebhooksClient", () => {
 
         const response = await client.callWebhooks.delete({
             event_type: "post-call",
+            expected_url: "https://your-site.com/webhook",
         });
         expect(response).toEqual(rawResponseBody);
     });
@@ -257,6 +281,27 @@ describe("CallWebhooksClient", () => {
     });
 
     test("delete (5)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = { success: true, error: true, message: "message" };
+
+        server
+            .mockEndpoint()
+            .delete("/v1/calls/webhooks")
+            .respondWith()
+            .statusCode(409)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.callWebhooks.delete({
+                event_type: "post-call",
+            });
+        }).rejects.toThrow(Wavix.ConflictError);
+    });
+
+    test("delete (6)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
 

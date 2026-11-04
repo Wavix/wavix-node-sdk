@@ -23,7 +23,7 @@ export class StreamsClient {
     }
 
     /**
-     * Starts streaming the audio of the call identified by `call_id` to a WebSocket destination you supply, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The destination can be any URL you specify — Wavix does not restrict it. Returns the `stream_id`.
+     * Starts streaming the audio of the call identified by `call_id` to the WebSocket destination in `stream_url`, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The streamed audio can include the remote party's voice.
      *
      * @param {Wavix.callControl.CallStreamCreateRequest} request
      * @param {StreamsClient.RequestOptions} requestOptions - Request-specific configuration.

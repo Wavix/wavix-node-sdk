@@ -499,7 +499,7 @@ await client.sipTrunks.get({
 <dl>
 <dd>
 
-Replaces the configuration of the SIP trunk identified by `id`. Omitted fields revert to their defaults.
+Updates the SIP trunk identified by `id`. Only the provided fields are changed. On trial accounts, every update also applies the trial limits: a `call_limit` of at most 300 seconds (300 when omitted) and one concurrent call.
 </dd>
 </dl>
 </dd>
@@ -515,19 +515,7 @@ Replaces the configuration of the SIP trunk identified by `id`. Omitted fields r
 
 ```typescript
 await client.sipTrunks.update({
-    id: 3107,
-    body: {
-        label: "My trunk",
-        password: "4r=h;EaCB85QNtr2",
-        callerid: "13132847320",
-        ip_restrict: false,
-        didinfo_enabled: true,
-        call_restrict: true,
-        channels_restrict: false,
-        rewrite_enabled: true,
-        transcription_enabled: true,
-        transcription_threshold: 10
-    }
+    id: 3107
 });
 
 ```
@@ -544,7 +532,7 @@ await client.sipTrunks.update({
 <dl>
 <dd>
 
-**request:** `Wavix.UpdateSipTrunksRequest` 
+**request:** `Wavix.SipTrunkUpdateRequest` 
     
 </dd>
 </dl>
@@ -1159,6 +1147,8 @@ await client.numbers.get({
 <dd>
 
 Updates the phone number identified by `id`. Only the provided fields are changed.
+
+**Behavior:** With `expected_sms_relay_url`, the `sms_relay_url` change is applied only while the number currently has that URL; an empty string matches a number with no `sms_relay_url`. Otherwise the call returns `409` and no field in the request is changed. Setting the URL the number already has succeeds. To clear `sms_relay_url`, send `null`, not an empty string. If the call returns a `Something went wrong` error, you can retry the request; repeating the `sms_relay_url` change is a no-op, so it is safe even if the first attempt already applied it.
 </dd>
 </dl>
 </dd>
@@ -1364,7 +1354,7 @@ await client.cdrs.search({
 <dl>
 <dd>
 
-Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result. Billed per minute at the account's call-transcription rate; fails with an insufficient-funds error when the balance cannot cover it.
+Transcribes the recording of the call identified by `call_id`. Transcription is asynchronous; poll the transcription endpoint for the result. When it completes, the new transcription replaces any earlier one that the transcription endpoints return. Billed per minute at the account's call-transcription rate; fails with an insufficient-funds error when the balance cannot cover it.
 </dd>
 </dl>
 </dd>
@@ -2168,6 +2158,8 @@ await client.callWebhooks.list();
 <dd>
 
 Registers a callback URL for the `on-call` or `post-call` event. Wavix sends a POST callback to the URL when the event occurs. Creates persistent configuration that forwards call metadata to the URL on every matching call until the webhook is deleted.
+
+**Behavior:** Without `expected_url`, the webhook is set to `url` whatever it was before. With `expected_url`, the webhook is set only while it currently has that URL; an empty string matches an unset webhook. Otherwise the call returns `409` and the webhook is unchanged. Setting the URL the webhook already has succeeds. If the call returns a `Something went wrong` error, the webhook is unchanged and you can retry the request.
 </dd>
 </dl>
 </dd>
@@ -2234,6 +2226,8 @@ await client.callWebhooks.create({
 <dd>
 
 Removes the call webhook for the given event type. Wavix stops sending callbacks for that event.
+
+**Behavior:** Without `expected_url`, the webhook is cleared whatever URL it has. With `expected_url`, the webhook is cleared only while it currently has that URL; an empty value matches an unset webhook. Otherwise the call returns `409` and the webhook is unchanged. Clearing an unset webhook succeeds. Percent-encode the `expected_url` value in the query string. If the call returns a `Something went wrong` error, the webhook is unchanged and you can retry the request.
 </dd>
 </dl>
 </dd>
@@ -2249,7 +2243,8 @@ Removes the call webhook for the given event type. Wavix stops sending callbacks
 
 ```typescript
 await client.callWebhooks.delete({
-    event_type: "post-call"
+    event_type: "post-call",
+    expected_url: "https://your-site.com/webhook"
 });
 
 ```
@@ -3398,7 +3393,7 @@ await client.subAccounts.get({
 <dl>
 <dd>
 
-Replaces the configuration of the sub-account identified by `id`. Omitted fields revert to their defaults.
+Updates the sub-account identified by `id`. Only the provided fields are changed.
 </dd>
 </dl>
 </dd>
@@ -4004,7 +3999,7 @@ await client.buy.numbers.list({
 <dl>
 <dd>
 
-Starts streaming the audio of the call identified by `call_id` to a WebSocket destination you supply, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The destination can be any URL you specify — Wavix does not restrict it. Returns the `stream_id`.
+Starts streaming the audio of the call identified by `call_id` to the WebSocket destination in `stream_url`, in the direction (`stream_type`) and channel (`stream_channel`) you configure. The streamed audio can include the remote party's voice.
 </dd>
 </dl>
 </dd>

@@ -2,6 +2,9 @@
 
 import type * as Wavix from "../index.js";
 
+/**
+ * Returned by `whatsapp_templates_get` and `whatsapp_templates_create`.
+ */
 export interface WhatsAppTemplateResponse {
     template: Wavix.WhatsAppTemplate;
 }

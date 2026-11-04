@@ -14,7 +14,7 @@ import type * as Wavix from "../../../../../../index.js";
 export interface CallStreamCreateRequest {
     /** The `uuid` of the call. */
     call_id: string;
-    /** WebSocket URL for call streaming */
+    /** WebSocket URL (`ws://` or `wss://`) that receives the call's audio. */
     stream_url: string;
     /** Direction of audio streamed to `stream_url`. */
     stream_type: Wavix.CallStreamType;

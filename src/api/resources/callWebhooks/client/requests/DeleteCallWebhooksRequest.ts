@@ -5,10 +5,13 @@ import type * as Wavix from "../../../../index.js";
 /**
  * @example
  *     {
- *         event_type: "post-call"
+ *         event_type: "post-call",
+ *         expected_url: "https://your-site.com/webhook"
  *     }
  */
 export interface DeleteCallWebhooksRequest {
     /** Event type of the webhook to delete. One of `post-call` (callbacks sent after a call ends) or `on-call` (real-time call status callbacks during a call). */
     event_type: Wavix.DeleteCallWebhooksRequestEventType;
+    /** Clears the webhook only if it currently has this URL. Percent-encode the value. An empty value clears only an unset webhook. */
+    expected_url?: string;
 }

@@ -98,12 +98,15 @@ export class CallWebhooksClient {
     /**
      * Registers a callback URL for the `on-call` or `post-call` event. Wavix sends a POST callback to the URL when the event occurs. Creates persistent configuration that forwards call metadata to the URL on every matching call until the webhook is deleted.
      *
+     * **Behavior:** Without `expected_url`, the webhook is set to `url` whatever it was before. With `expected_url`, the webhook is set only while it currently has that URL; an empty string matches an unset webhook. Otherwise the call returns `409` and the webhook is unchanged. Setting the URL the webhook already has succeeds. If the call returns a `Something went wrong` error, the webhook is unchanged and you can retry the request.
+     *
      * @param {Wavix.CallWebhooksCreateRequest} request
      * @param {CallWebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.ConflictError}
      * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
@@ -163,6 +166,11 @@ export class CallWebhooksClient {
                     );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 409:
+                    throw new Wavix.ConflictError(
+                        _response.error.body as Wavix.WebhookInUseErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 422:
                     throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
@@ -180,17 +188,21 @@ export class CallWebhooksClient {
     /**
      * Removes the call webhook for the given event type. Wavix stops sending callbacks for that event.
      *
+     * **Behavior:** Without `expected_url`, the webhook is cleared whatever URL it has. With `expected_url`, the webhook is cleared only while it currently has that URL; an empty value matches an unset webhook. Otherwise the call returns `409` and the webhook is unchanged. Clearing an unset webhook succeeds. Percent-encode the `expected_url` value in the query string. If the call returns a `Something went wrong` error, the webhook is unchanged and you can retry the request.
+     *
      * @param {Wavix.DeleteCallWebhooksRequest} request
      * @param {CallWebhooksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
      * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.ConflictError}
      * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.callWebhooks.delete({
-     *         event_type: "post-call"
+     *         event_type: "post-call",
+     *         expected_url: "https://your-site.com/webhook"
      *     })
      */
     public delete(
@@ -204,9 +216,10 @@ export class CallWebhooksClient {
         request: Wavix.DeleteCallWebhooksRequest,
         requestOptions?: CallWebhooksClient.RequestOptions,
     ): Promise<core.WithRawResponse<Wavix.SuccessResponse>> {
-        const { event_type: eventType } = request;
+        const { event_type: eventType, expected_url: expectedUrl } = request;
         const _queryParams: Record<string, unknown> = {
             event_type: eventType,
+            expected_url: expectedUrl,
         };
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
@@ -249,6 +262,11 @@ export class CallWebhooksClient {
                     );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 409:
+                    throw new Wavix.ConflictError(
+                        _response.error.body as Wavix.WebhookInUseErrorResponse,
+                        _response.rawResponse,
+                    );
                 case 422:
                     throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:

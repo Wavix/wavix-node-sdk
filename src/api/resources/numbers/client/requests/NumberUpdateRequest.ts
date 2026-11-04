@@ -15,8 +15,10 @@ export interface NumberUpdateRequest {
     sms_enabled?: boolean;
     /** Inbound call routing destinations for the phone number. */
     destinations?: Wavix.NumberDestination[];
-    /** Callback URL for inbound messages. */
-    sms_relay_url?: string;
+    /** Callback URL for inbound messages. Pass `null` to clear it. */
+    sms_relay_url?: string | null;
+    /** Applies the `sms_relay_url` change only if the number currently has this URL. Pass an empty string to set it only while it is unset, or your own URL to clear or replace it. Requires `sms_relay_url`. */
+    expected_sms_relay_url?: string;
     /** Indicates whether call recording is enabled. */
     call_recording_enabled?: boolean;
     /** Indicates whether call transcription is enabled. */

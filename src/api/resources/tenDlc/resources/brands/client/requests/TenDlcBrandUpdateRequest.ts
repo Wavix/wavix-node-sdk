@@ -51,7 +51,7 @@ export interface TenDlcBrandUpdateRequest {
     street_address?: string;
     /** The city name */
     city?: string;
-    /** State or province. For the United States, use 2 character codes. */
+    /** State or province. For the United States, it is a 2-character code. */
     state_or_province?: string | null;
     /** The business zip or postal code */
     zip?: string;

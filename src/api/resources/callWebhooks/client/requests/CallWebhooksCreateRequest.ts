@@ -19,6 +19,8 @@ export interface CallWebhooksCreateRequest {
      *   with disposition, duration, and cost.
      */
     event_type: CallWebhooksCreateRequest.EventType;
+    /** Applies the change only if the webhook currently has this URL. Pass an empty string to set the webhook only while it is unset, or your own URL to replace your webhook. Setting the URL the webhook already has always succeeds. */
+    expected_url?: string;
 }
 
 export namespace CallWebhooksCreateRequest {

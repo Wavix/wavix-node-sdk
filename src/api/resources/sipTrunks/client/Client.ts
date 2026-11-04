@@ -274,9 +274,9 @@ export class SipTrunksClient {
     }
 
     /**
-     * Replaces the configuration of the SIP trunk identified by `id`. Omitted fields revert to their defaults.
+     * Updates the SIP trunk identified by `id`. Only the provided fields are changed. On trial accounts, every update also applies the trial limits: a `call_limit` of at most 300 seconds (300 when omitted) and one concurrent call.
      *
-     * @param {Wavix.UpdateSipTrunksRequest} request
+     * @param {Wavix.SipTrunkUpdateRequest} request
      * @param {SipTrunksClient.RequestOptions} requestOptions - Request-specific configuration.
      *
      * @throws {@link Wavix.BadRequestError}
@@ -286,33 +286,21 @@ export class SipTrunksClient {
      *
      * @example
      *     await client.sipTrunks.update({
-     *         id: 3107,
-     *         body: {
-     *             label: "My trunk",
-     *             password: "4r=h;EaCB85QNtr2",
-     *             callerid: "13132847320",
-     *             ip_restrict: false,
-     *             didinfo_enabled: true,
-     *             call_restrict: true,
-     *             channels_restrict: false,
-     *             rewrite_enabled: true,
-     *             transcription_enabled: true,
-     *             transcription_threshold: 10
-     *         }
+     *         id: 3107
      *     })
      */
     public update(
-        request: Wavix.UpdateSipTrunksRequest,
+        request: Wavix.SipTrunkUpdateRequest,
         requestOptions?: SipTrunksClient.RequestOptions,
     ): core.HttpResponsePromise<Wavix.SipTrunkResponse> {
         return core.HttpResponsePromise.fromPromise(this.__update(request, requestOptions));
     }
 
     private async __update(
-        request: Wavix.UpdateSipTrunksRequest,
+        request: Wavix.SipTrunkUpdateRequest,
         requestOptions?: SipTrunksClient.RequestOptions,
     ): Promise<core.WithRawResponse<Wavix.SipTrunkResponse>> {
-        const { id, body: _body } = request;
+        const { id, ..._body } = request;
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,

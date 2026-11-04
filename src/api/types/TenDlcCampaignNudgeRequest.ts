@@ -4,10 +4,7 @@
  * Nudge configuration. Set the nudge intent to `REVIEW` to request action on a pending approval, or to `APPEAL_REJECTION` to submit an appeal for a rejected campaign.
  */
 export interface TenDlcCampaignNudgeRequest {
-    /**
-     * Nudge intent. Allowed values: `REVIEW`, `APPEAL_REJECTION`.
-     * Use `nudge_intent` to specify the action: - `REVIEW`: Request review for a pending Campaign. - `APPEAL_REJECTION`: Appeal a rejected Campaign.
-     */
+    /** Action the nudge requests: `REVIEW` requests review of a pending Campaign, and `APPEAL_REJECTION` appeals a rejected Campaign. */
     nudge_intent: string;
     /** Description of the nudge request. */
     description: string;

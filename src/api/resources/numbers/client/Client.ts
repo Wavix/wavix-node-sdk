@@ -371,6 +371,8 @@ export class NumbersClient {
     /**
      * Updates the phone number identified by `id`. Only the provided fields are changed.
      *
+     * **Behavior:** With `expected_sms_relay_url`, the `sms_relay_url` change is applied only while the number currently has that URL; an empty string matches a number with no `sms_relay_url`. Otherwise the call returns `409` and no field in the request is changed. Setting the URL the number already has succeeds. To clear `sms_relay_url`, send `null`, not an empty string. If the call returns a `Something went wrong` error, you can retry the request; repeating the `sms_relay_url` change is a no-op, so it is safe even if the first attempt already applied it.
+     *
      * @param {Wavix.NumberUpdateRequest} request
      * @param {NumbersClient.RequestOptions} requestOptions - Request-specific configuration.
      *
@@ -378,6 +380,8 @@ export class NumbersClient {
      * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
      * @throws {@link Wavix.NotFoundError}
+     * @throws {@link Wavix.ConflictError}
+     * @throws {@link Wavix.UnprocessableEntityError}
      *
      * @example
      *     await client.numbers.update({
@@ -438,6 +442,13 @@ export class NumbersClient {
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
                 case 404:
                     throw new Wavix.NotFoundError(_response.error.body as unknown, _response.rawResponse);
+                case 409:
+                    throw new Wavix.ConflictError(
+                        _response.error.body as Wavix.WebhookInUseErrorResponse,
+                        _response.rawResponse,
+                    );
+                case 422:
+                    throw new Wavix.UnprocessableEntityError(_response.error.body as unknown, _response.rawResponse);
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,

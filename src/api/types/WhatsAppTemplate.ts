@@ -2,36 +2,87 @@
 
 import type * as Wavix from "../index.js";
 
+/**
+ * A WhatsApp message template with its review status and components. Returned by `whatsapp_templates_list`, `whatsapp_templates_get`, and `whatsapp_templates_create`.
+ */
 export interface WhatsAppTemplate {
-    /** Template ID. */
+    /** ID of the template. Pass it to `whatsapp_templates_get` to check the review outcome. */
     uuid: string;
     /** Template name. */
     name: string;
     /** Template language code. */
     language: string;
-    /** Template category. */
+    /**
+     * Template category. Possible values:
+     *
+     * - `marketing` — Promotions, offers, and other marketing content.
+     * - `authentication` — One-time passcodes for verifying a user.
+     * - `utility` — Transactional updates about an order or an account.
+     */
     category: WhatsAppTemplate.Category;
-    /** Template review/approval status. */
+    /**
+     * Template review status. Possible values:
+     *
+     * - `draft` — The template is created but not yet submitted to the provider.
+     * - `pending` — The provider is reviewing the template.
+     * - `approved` — The template is approved and can be sent.
+     * - `rejected` — The provider rejected the template.
+     * - `paused` — The provider paused the template.
+     * - `flagged` — The provider flagged the template. It can still be sent.
+     * - `disabled` — The template is disabled and can't be sent.
+     * - `in_appeal` — An appeal of the review decision is in progress.
+     * - `pending_deletion` — The template is being deleted.
+     * - `deleted` — The template was deleted.
+     * - `unknown` — The provider reported a status that Wavix doesn't recognize.
+     */
     status: WhatsAppTemplate.Status;
-    /** Template's messaging quality rating. */
-    quality_rating?: (WhatsAppTemplate.QualityRating | null) | undefined;
-    /** Date and time the template was submitted for review, in ISO 8601 format. */
-    submitted_at?: (string | null) | undefined;
+    /**
+     * Template's messaging quality rating. Meta rates quality from customer feedback over the past seven days, such as blocks and reports. Possible values:
+     *
+     * - `high` — High quality.
+     * - `medium` — Medium quality.
+     * - `low` — Low quality.
+     * - `unknown` — Not rated yet.
+     */
+    quality_rating: WhatsAppTemplate.QualityRating | null;
+    /** Date and time the template's state was last updated from WhatsApp, in ISO 8601 format. */
+    submitted_at?: string | undefined;
     /** Structural components of the template. */
-    components: Wavix.WhatsAppTemplateComponent[];
+    components: Wavix.WhatsAppTemplateResponseComponent[];
+    waba: Wavix.WhatsAppWaba;
     /** Date and time the template was created, in ISO 8601 format. */
     created_at: string;
 }
 
 export namespace WhatsAppTemplate {
-    /** Template category. */
+    /**
+     * Template category. Possible values:
+     *
+     * - `marketing` — Promotions, offers, and other marketing content.
+     * - `authentication` — One-time passcodes for verifying a user.
+     * - `utility` — Transactional updates about an order or an account.
+     */
     export const Category = {
         Marketing: "marketing",
         Authentication: "authentication",
         Utility: "utility",
     } as const;
     export type Category = (typeof Category)[keyof typeof Category];
-    /** Template review/approval status. */
+    /**
+     * Template review status. Possible values:
+     *
+     * - `draft` — The template is created but not yet submitted to the provider.
+     * - `pending` — The provider is reviewing the template.
+     * - `approved` — The template is approved and can be sent.
+     * - `rejected` — The provider rejected the template.
+     * - `paused` — The provider paused the template.
+     * - `flagged` — The provider flagged the template. It can still be sent.
+     * - `disabled` — The template is disabled and can't be sent.
+     * - `in_appeal` — An appeal of the review decision is in progress.
+     * - `pending_deletion` — The template is being deleted.
+     * - `deleted` — The template was deleted.
+     * - `unknown` — The provider reported a status that Wavix doesn't recognize.
+     */
     export const Status = {
         Draft: "draft",
         Pending: "pending",
@@ -46,7 +97,14 @@ export namespace WhatsAppTemplate {
         Unknown: "unknown",
     } as const;
     export type Status = (typeof Status)[keyof typeof Status];
-    /** Template's messaging quality rating. */
+    /**
+     * Template's messaging quality rating. Meta rates quality from customer feedback over the past seven days, such as blocks and reports. Possible values:
+     *
+     * - `high` — High quality.
+     * - `medium` — Medium quality.
+     * - `low` — Low quality.
+     * - `unknown` — Not rated yet.
+     */
     export const QualityRating = {
         High: "high",
         Medium: "medium",

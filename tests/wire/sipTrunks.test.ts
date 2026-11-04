@@ -406,18 +406,7 @@ describe("SipTrunksClient", () => {
     test("update (1)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            label: "My trunk",
-            password: "4r=h;EaCB85QNtr2",
-            callerid: "13132847320",
-            ip_restrict: false,
-            didinfo_enabled: true,
-            call_restrict: true,
-            channels_restrict: false,
-            rewrite_enabled: true,
-            transcription_enabled: true,
-            transcription_threshold: 10,
-        };
+        const rawRequestBody = {};
         const rawResponseBody = {
             id: 293,
             name: "67758",
@@ -458,18 +447,6 @@ describe("SipTrunksClient", () => {
 
         const response = await client.sipTrunks.update({
             id: 3107,
-            body: {
-                label: "My trunk",
-                password: "4r=h;EaCB85QNtr2",
-                callerid: "13132847320",
-                ip_restrict: false,
-                didinfo_enabled: true,
-                call_restrict: true,
-                channels_restrict: false,
-                rewrite_enabled: true,
-                transcription_enabled: true,
-                transcription_threshold: 10,
-            },
         });
         expect(response).toEqual(rawResponseBody);
     });
@@ -477,18 +454,7 @@ describe("SipTrunksClient", () => {
     test("update (2)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            label: "label",
-            password: "password",
-            callerid: "callerid",
-            ip_restrict: true,
-            didinfo_enabled: true,
-            call_restrict: true,
-            channels_restrict: true,
-            rewrite_enabled: true,
-            transcription_enabled: true,
-            transcription_threshold: 1,
-        };
+        const rawRequestBody = {};
         const rawResponseBody = { key: "value" };
 
         server
@@ -503,18 +469,6 @@ describe("SipTrunksClient", () => {
         await expect(async () => {
             return await client.sipTrunks.update({
                 id: 1,
-                body: {
-                    label: "label",
-                    password: "password",
-                    callerid: "callerid",
-                    ip_restrict: true,
-                    didinfo_enabled: true,
-                    call_restrict: true,
-                    channels_restrict: true,
-                    rewrite_enabled: true,
-                    transcription_enabled: true,
-                    transcription_threshold: 1,
-                },
             });
         }).rejects.toThrow(Wavix.BadRequestError);
     });
@@ -522,18 +476,7 @@ describe("SipTrunksClient", () => {
     test("update (3)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            label: "label",
-            password: "password",
-            callerid: "callerid",
-            ip_restrict: true,
-            didinfo_enabled: true,
-            call_restrict: true,
-            channels_restrict: true,
-            rewrite_enabled: true,
-            transcription_enabled: true,
-            transcription_threshold: 1,
-        };
+        const rawRequestBody = {};
         const rawResponseBody = {};
 
         server
@@ -548,18 +491,6 @@ describe("SipTrunksClient", () => {
         await expect(async () => {
             return await client.sipTrunks.update({
                 id: 1,
-                body: {
-                    label: "label",
-                    password: "password",
-                    callerid: "callerid",
-                    ip_restrict: true,
-                    didinfo_enabled: true,
-                    call_restrict: true,
-                    channels_restrict: true,
-                    rewrite_enabled: true,
-                    transcription_enabled: true,
-                    transcription_threshold: 1,
-                },
             });
         }).rejects.toThrow(Wavix.UnauthorizedError);
     });
@@ -567,18 +498,7 @@ describe("SipTrunksClient", () => {
     test("update (4)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            label: "label",
-            password: "password",
-            callerid: "callerid",
-            ip_restrict: true,
-            didinfo_enabled: true,
-            call_restrict: true,
-            channels_restrict: true,
-            rewrite_enabled: true,
-            transcription_enabled: true,
-            transcription_threshold: 1,
-        };
+        const rawRequestBody = {};
         const rawResponseBody = { key: "value" };
 
         server
@@ -593,18 +513,6 @@ describe("SipTrunksClient", () => {
         await expect(async () => {
             return await client.sipTrunks.update({
                 id: 1,
-                body: {
-                    label: "label",
-                    password: "password",
-                    callerid: "callerid",
-                    ip_restrict: true,
-                    didinfo_enabled: true,
-                    call_restrict: true,
-                    channels_restrict: true,
-                    rewrite_enabled: true,
-                    transcription_enabled: true,
-                    transcription_threshold: 1,
-                },
             });
         }).rejects.toThrow(Wavix.ForbiddenError);
     });
@@ -612,18 +520,7 @@ describe("SipTrunksClient", () => {
     test("update (5)", async () => {
         const server = mockServerPool.createServer();
         const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
-        const rawRequestBody = {
-            label: "label",
-            password: "password",
-            callerid: "callerid",
-            ip_restrict: true,
-            didinfo_enabled: true,
-            call_restrict: true,
-            channels_restrict: true,
-            rewrite_enabled: true,
-            transcription_enabled: true,
-            transcription_threshold: 1,
-        };
+        const rawRequestBody = {};
         const rawResponseBody = { key: "value" };
 
         server
@@ -638,18 +535,6 @@ describe("SipTrunksClient", () => {
         await expect(async () => {
             return await client.sipTrunks.update({
                 id: 1,
-                body: {
-                    label: "label",
-                    password: "password",
-                    callerid: "callerid",
-                    ip_restrict: true,
-                    didinfo_enabled: true,
-                    call_restrict: true,
-                    channels_restrict: true,
-                    rewrite_enabled: true,
-                    transcription_enabled: true,
-                    transcription_threshold: 1,
-                },
             });
         }).rejects.toThrow(Wavix.NotFoundError);
     });

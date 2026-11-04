@@ -630,4 +630,48 @@ describe("NumbersClient", () => {
             });
         }).rejects.toThrow(Wavix.NotFoundError);
     });
+
+    test("update (6)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { success: true, error: true, message: "message" };
+
+        server
+            .mockEndpoint()
+            .patch("/v1/numbers/1")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(409)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.numbers.update({
+                id: 1,
+            });
+        }).rejects.toThrow(Wavix.ConflictError);
+    });
+
+    test("update (7)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+        const rawRequestBody = {};
+        const rawResponseBody = { key: "value" };
+
+        server
+            .mockEndpoint()
+            .patch("/v1/numbers/1")
+            .jsonBody(rawRequestBody)
+            .respondWith()
+            .statusCode(422)
+            .jsonBody(rawResponseBody)
+            .build();
+
+        await expect(async () => {
+            return await client.numbers.update({
+                id: 1,
+            });
+        }).rejects.toThrow(Wavix.UnprocessableEntityError);
+    });
 });

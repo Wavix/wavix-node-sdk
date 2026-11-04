@@ -2,19 +2,38 @@
 
 import type * as Wavix from "../index.js";
 
+/**
+ * Attributes of a new WhatsApp template. Consumed by `whatsapp_templates_create`.
+ */
 export interface WhatsAppTemplateCreateRequest {
-    /** Template name. */
+    /** Template name, made of lowercase letters, digits, and underscores, up to 512 characters. */
     name: string;
-    /** Template language code. */
+    /** Template language code, such as `en` or `en_US`. */
     language: string;
-    /** Template category. */
+    /**
+     * Template category. Possible values:
+     *
+     * - `marketing` — Promotions, offers, and other marketing content.
+     * - `authentication` — One-time passcodes for verifying a user.
+     * - `utility` — Transactional updates about an order or an account.
+     */
     category: WhatsAppTemplateCreateRequest.Category;
-    /** Structural components of the template. Must include a `BODY` component. */
-    components: Wavix.WhatsAppTemplateComponent[];
+    /** Structural components of the template. Each component type can appear once, exactly one `body` component is required, and `type` and `format` values must be lowercase. */
+    components: Wavix.WhatsAppTemplateComponentRequest[];
+    /** ID of the WhatsApp Business Account that owns the template, as returned in `waba.id` by `whatsapp_senders_list`. Required when your account has more than one, unless `sender` is set. When both are set, `sender` must belong to this WhatsApp Business Account. */
+    waba_id?: string | undefined;
+    /** Phone number of a connected sender whose WhatsApp Business Account owns the template, as an alternative to `waba_id`. When both are set, the sender must belong to `waba_id`. The leading `+` is optional. */
+    sender?: string | undefined;
 }
 
 export namespace WhatsAppTemplateCreateRequest {
-    /** Template category. */
+    /**
+     * Template category. Possible values:
+     *
+     * - `marketing` — Promotions, offers, and other marketing content.
+     * - `authentication` — One-time passcodes for verifying a user.
+     * - `utility` — Transactional updates about an order or an account.
+     */
     export const Category = {
         Marketing: "marketing",
         Authentication: "authentication",

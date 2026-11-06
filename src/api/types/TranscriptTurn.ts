@@ -14,4 +14,6 @@ export interface TranscriptTurn {
     text?: string | undefined;
     /** Sentiment detected in the speaker's text for this turn, such as `neutral`, `positive`, or `negative`. */
     sentiment?: string | undefined;
+    /** Topics detected in the speaker's text for this turn. Empty when no topic was detected. */
+    topics?: string[] | undefined;
 }

@@ -372,13 +372,21 @@ describe("CdrsClient", () => {
         const rawResponseBody = {
             transcript: { "16572026750": "", "16465292513": "" },
             turns: [
-                { type: "46844685344", s: 160, e: 7280, text: "Hello, how can I help you?", sentiment: "neutral" },
+                {
+                    type: "46844685344",
+                    s: 160,
+                    e: 7280,
+                    text: "Hello, how can I help you?",
+                    sentiment: "neutral",
+                    topics: ["billing"],
+                },
                 {
                     type: "+16572026750",
                     s: 2400,
                     e: 3280,
                     text: "Hello, I have a question about my bill.",
                     sentiment: "neutral",
+                    topics: ["billing"],
                 },
             ],
             uuid: "e84f350f-6da7-4b56-80eb-41dec572626b",

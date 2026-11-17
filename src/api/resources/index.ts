@@ -36,3 +36,4 @@ export * as twoFa from "./twoFa/index.js";
 export * from "./voiceCampaigns/client/requests/index.js";
 export * as voiceCampaigns from "./voiceCampaigns/index.js";
 export * as webrtc from "./webrtc/index.js";
+export * as whatsAppWebhookPayloads from "./whatsAppWebhookPayloads/index.js";

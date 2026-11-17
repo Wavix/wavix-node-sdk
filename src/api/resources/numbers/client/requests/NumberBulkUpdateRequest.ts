@@ -18,8 +18,8 @@ export interface NumberBulkUpdateRequest {
     sms_enabled?: boolean;
     /** Inbound call routing destinations for the phone numbers. */
     destinations?: Wavix.NumberDestination[];
-    /** Callback URL for inbound messages. */
-    sms_relay_url?: string;
+    /** Callback URL for inbound messages. Pass `null` to clear it. */
+    sms_relay_url?: string | null;
     /** Indicates whether call recording is enabled. */
     call_recording_enabled?: boolean;
     /** Indicates whether call transcription is enabled. */

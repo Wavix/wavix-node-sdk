@@ -3,7 +3,7 @@
 import type * as Wavix from "../index.js";
 
 /**
- * Attributes of a WhatsApp template message to send. Consumed by `whatsapp_messages_send`.
+ * Attributes of a WhatsApp message to send. Send exactly one of `template` and `content`. Use `content` only while the 24-hour service window of the recipient is open. Consumed by `whatsapp_messages_send`.
  */
 export interface WhatsAppMessageSendRequest {
     /** Phone number of a sender registered on your account, in E.164 format, as returned by `whatsapp_senders_list`. The leading `+` is optional. */
@@ -12,5 +12,6 @@ export interface WhatsAppMessageSendRequest {
     to: string;
     /** Key that makes the send safe to retry, unique per account. Matching is exact, so case and accents are significant - `ORDER-1` and `order-1` are two different keys and both are sent. Printable ASCII only. Must not begin with `campaign:`, a prefix reserved for campaign messages. A request with a key in that namespace is rejected. */
     idempotency_key?: string | undefined;
-    template: Wavix.WhatsAppSendTemplate;
+    template?: Wavix.WhatsAppSendTemplate | undefined;
+    content?: Wavix.WhatsAppSendContent | undefined;
 }

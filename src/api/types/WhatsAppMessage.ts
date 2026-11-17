@@ -17,6 +17,7 @@ export interface WhatsAppMessage {
      *
      * - `sent` — The message isn't delivered yet.
      * - `delivered` — The message was delivered to the recipient.
+     * - `read` — The recipient opened the message. WhatsApp reports it only when the recipient has read receipts turned on.
      * - `undelivered` — The message was sent but not delivered.
      * - `expired` — The message expired before it was delivered.
      * - `rejected` — The message was permanently rejected before or by the provider.
@@ -25,6 +26,8 @@ export interface WhatsAppMessage {
     status: WhatsAppMessage.Status;
     /** Template used to send the message. */
     template: Wavix.WhatsAppMessageTemplate | null;
+    /** End of the 24-hour window in which you may reply to the recipient without a template. It's `null` when the recipient hasn't written to the sender in the retained history. A value in the past means the window is closed. */
+    service_window_open_until?: (string | null) | undefined;
     /** Date and time the message was created, in ISO 8601 format. */
     created_at: string;
 }
@@ -35,6 +38,7 @@ export namespace WhatsAppMessage {
      *
      * - `sent` — The message isn't delivered yet.
      * - `delivered` — The message was delivered to the recipient.
+     * - `read` — The recipient opened the message. WhatsApp reports it only when the recipient has read receipts turned on.
      * - `undelivered` — The message was sent but not delivered.
      * - `expired` — The message expired before it was delivered.
      * - `rejected` — The message was permanently rejected before or by the provider.
@@ -43,6 +47,7 @@ export namespace WhatsAppMessage {
     export const Status = {
         Sent: "sent",
         Delivered: "delivered",
+        Read: "read",
         Undelivered: "undelivered",
         Expired: "expired",
         Rejected: "rejected",

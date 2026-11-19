@@ -23,7 +23,7 @@ export interface WhatsAppProblem {
      * - `invalid_template` — The template content is invalid.
      */
     error_class?: WhatsAppProblem.ErrorClass | undefined;
-    /** Stable machine-readable error code. It's the problem type slug in upper case with the `WAVIX_` prefix. */
+    /** Stable machine-readable error code. It's the problem type slug in upper case, with underscores in place of hyphens. */
     error_code?: string | undefined;
     /** Time the 24-hour service window of the recipient closed. Returned with `service-window-closed`. It's `null` when the recipient never wrote to the sender or the last message is older than the retained history. */
     service_window_closed_at?: (string | null) | undefined;

@@ -39,6 +39,8 @@ export interface WhatsAppMessageListItem {
     content?: (Wavix.WhatsAppInboundMessageContent | null) | undefined;
     /** End of the 24-hour window in which you may reply to the customer without a template. It's `null` when the customer hasn't written to the sender in the retained history. A value in the past means the window is closed. */
     service_window_open_until?: (string | null) | undefined;
+    /** Why an `outbound` message wasn't delivered. It's `null` unless `status` is `undelivered`, `expired`, or `rejected`. */
+    error?: (Wavix.WhatsAppMessageError | null) | undefined;
 }
 
 export namespace WhatsAppMessageListItem {

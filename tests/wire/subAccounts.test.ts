@@ -16,6 +16,7 @@ describe("SubAccountsClient", () => {
                     created_at: "2023-06-15T10:30:00Z",
                     name: "My sub-account",
                     api_key: "abc123def456",
+                    redacted_api_key: "...f456",
                     master_organization: 456,
                     status: "enabled",
                     default_destinations: {
@@ -92,6 +93,7 @@ describe("SubAccountsClient", () => {
             created_at: "2023-06-15T10:30:00Z",
             name: "My sub-account",
             api_key: "abc123def456",
+            redacted_api_key: "...f456",
             master_organization: 456,
             status: "enabled",
             default_destinations: {
@@ -216,6 +218,7 @@ describe("SubAccountsClient", () => {
             created_at: "2023-06-15T10:30:00Z",
             name: "My sub-account",
             api_key: "abc123def456",
+            redacted_api_key: "...f456",
             master_organization: 456,
             status: "enabled",
             default_destinations: {
@@ -338,6 +341,7 @@ describe("SubAccountsClient", () => {
             created_at: "2023-06-15T10:30:00Z",
             name: "My sub-account",
             api_key: "abc123def456",
+            redacted_api_key: "...f456",
             master_organization: 456,
             status: "enabled",
             default_destinations: {

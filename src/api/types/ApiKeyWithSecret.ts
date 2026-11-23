@@ -3,7 +3,12 @@
 import type * as Wavix from "../index.js";
 
 /**
- * API key details, including the secret `value`. Returned only at creation time —
- * store it securely, it cannot be retrieved again.
+ * API key details, including the secret `value`. Store the `value` securely. Later reads return `redacted_value`,
+ * and `value` on reads is deprecated.
  */
-export type ApiKeyWithSecret = Wavix.ApiKey;
+export interface ApiKeyWithSecret extends Wavix.ApiKeyBase {
+    /** Full API key value. */
+    value: string;
+    /** Redacted API key value, shown as `...` followed by the last 4 characters. */
+    redacted_value: string | null;
+}

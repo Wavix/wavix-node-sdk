@@ -122,7 +122,9 @@ export class BrandVettingAppealsClient {
      *     await client.tenDlc.brandVettingAppeals.create({
      *         brand_id: "B6AI7PA",
      *         appeal_categories: ["VERIFY_TAX_ID"],
-     *         evidence: ["855dff49-c097-4645-3983-08dcb9856232"]
+     *         evidence: ["855dff49-c097-4645-3983-08dcb9856232"],
+     *         evp_id: "AEGIS",
+     *         vetting_id: "48c0ffaa-4e51-4d44-3982-08dcb9856232"
      *     })
      */
     public create(

@@ -7,6 +7,6 @@
  *     }
  */
 export interface GetResultsRequest {
-    /** The `request_id` returned by the asynchronous bulk validation request. */
+    /** The `request_uuid` returned by the asynchronous bulk validation request. */
     request_id: string;
 }

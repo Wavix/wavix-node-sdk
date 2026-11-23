@@ -5,7 +5,7 @@ import type * as Wavix from "../index.js";
 export type NumberValidatorCreateBulkResponse =
     | Wavix.PhoneValidationBatchResponse
     /**
-     * Returned when validation runs asynchronously; poll results using `request_id`. */
+     * Returned when validation runs asynchronously; poll results using `request_uuid`. */
     | {
-          request_id?: string | undefined;
+          request_uuid: string;
       };

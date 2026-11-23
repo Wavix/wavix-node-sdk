@@ -2809,7 +2809,7 @@ await client.numberValidator.get({
 <dl>
 <dd>
 
-Validates a batch of phone numbers. When `async` is `true`, returns a `request_id` to poll for results instead of the validation details.
+Validates a batch of phone numbers. When `async` is `true`, returns a `request_uuid` to poll for results instead of the validation details.
 </dd>
 </dl>
 </dd>
@@ -6491,7 +6491,9 @@ Submits an appeal for an external vetting of the 10DLC Brand identified by `bran
 await client.tenDlc.brandVettingAppeals.create({
     brand_id: "B6AI7PA",
     appeal_categories: ["VERIFY_TAX_ID"],
-    evidence: ["855dff49-c097-4645-3983-08dcb9856232"]
+    evidence: ["855dff49-c097-4645-3983-08dcb9856232"],
+    evp_id: "AEGIS",
+    vetting_id: "48c0ffaa-4e51-4d44-3982-08dcb9856232"
 });
 
 ```

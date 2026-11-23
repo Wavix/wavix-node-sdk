@@ -10,7 +10,7 @@ import type * as Wavix from "../../../../index.js";
  *     }
  */
 export interface PhoneValidationRequest {
-    /** List of phone numbers to get detailed information about. Maximum 1000 numbers per request. */
+    /** List of phone numbers to get detailed information about. Maximum 500 numbers per request, or 100000 when `async` is `true`. */
     phone_numbers: string[];
     type: Wavix.PhoneNumberValidationType;
     /** Indicates whether the request should be executed asynchronously. If `true`, the response will include a `request_uuid` that can be used to poll for results. If `false` (default), the response will include validation results directly. */

@@ -117,7 +117,7 @@ export class NumberValidatorClient {
     }
 
     /**
-     * Validates a batch of phone numbers. When `async` is `true`, returns a `request_id` to poll for results instead of the validation details.
+     * Validates a batch of phone numbers. When `async` is `true`, returns a `request_uuid` to poll for results instead of the validation details.
      *
      * @param {Wavix.PhoneValidationRequest} request
      * @param {NumberValidatorClient.RequestOptions} requestOptions - Request-specific configuration.

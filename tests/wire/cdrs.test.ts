@@ -138,7 +138,7 @@ describe("CdrsClient", () => {
                     parent_call_id: "99df5ffd-962a-410f-bcce-d08f1f7f328c",
                     transcription: {
                         uuid: "40d6f322-048d-490b-95c7-4fc5c76a74db",
-                        url: "https://api.wavix.com/v1/cdrs/40d6f322-048d-490b-95c7-4fc5c76a74db/transcription?appid=secret",
+                        url: "https://api.wavix.com/v1/cdrs/40d6f322-048d-490b-95c7-4fc5c76a74db/transcription",
                     },
                 },
             ],
@@ -500,7 +500,7 @@ describe("CdrsClient", () => {
             answered_by: "human",
             transcription: {
                 uuid: "40d6f322-048d-490b-95c7-4fc5c76a74db",
-                url: "https://api.wavix.com/v1/cdrs/40d6f322-048d-490b-95c7-4fc5c76a74db/transcription?appid=secret",
+                url: "https://api.wavix.com/v1/cdrs/40d6f322-048d-490b-95c7-4fc5c76a74db/transcription",
             },
         };
 

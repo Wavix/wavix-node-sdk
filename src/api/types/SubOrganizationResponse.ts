@@ -10,8 +10,10 @@ export interface SubOrganizationResponse {
     created_at: string;
     /** Sub-account name. */
     name: string;
-    /** Sub-account API key. */
+    /** Sub-account API key. Deprecated; use `redacted_api_key`, which shows only the last 4 characters. */
     api_key: string;
+    /** Redacted sub-account API key, shown as `...` followed by the last 4 characters. Null when the sub-account has no active key. */
+    redacted_api_key: string | null;
     /** Master account ID. */
     master_organization: number;
     /** Status of the subaccount. One of `enabled` (the subaccount is active and can be used) or `disabled` (the subaccount is suspended). */

@@ -109,7 +109,7 @@ export class SubAccountsClient {
     }
 
     /**
-     * Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`.
+     * Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`. Store the returned `api_key` securely. Later reads return `redacted_api_key`, and `api_key` on reads is deprecated.
      *
      * @param {Wavix.SubAccountsCreateRequest} request
      * @param {SubAccountsClient.RequestOptions} requestOptions - Request-specific configuration.
@@ -131,14 +131,14 @@ export class SubAccountsClient {
     public create(
         request: Wavix.SubAccountsCreateRequest,
         requestOptions?: SubAccountsClient.RequestOptions,
-    ): core.HttpResponsePromise<Wavix.SubOrganizationResponse> {
+    ): core.HttpResponsePromise<Wavix.SubOrganizationWithSecret> {
         return core.HttpResponsePromise.fromPromise(this.__create(request, requestOptions));
     }
 
     private async __create(
         request: Wavix.SubAccountsCreateRequest,
         requestOptions?: SubAccountsClient.RequestOptions,
-    ): Promise<core.WithRawResponse<Wavix.SubOrganizationResponse>> {
+    ): Promise<core.WithRawResponse<Wavix.SubOrganizationWithSecret>> {
         const _authRequest: core.AuthRequest = await this._options.authProvider.getAuthRequest();
         const _headers: core.Fetcher.Args["headers"] = mergeHeaders(
             _authRequest.headers,
@@ -165,7 +165,7 @@ export class SubAccountsClient {
             logging: this._options.logging,
         });
         if (_response.ok) {
-            return { data: _response.body as Wavix.SubOrganizationResponse, rawResponse: _response.rawResponse };
+            return { data: _response.body as Wavix.SubOrganizationWithSecret, rawResponse: _response.rawResponse };
         }
 
         if (_response.error.reason === "status-code") {

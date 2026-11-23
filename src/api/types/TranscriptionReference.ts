@@ -3,6 +3,6 @@
 export interface TranscriptionReference {
     /** Unique identifier of the call transcription. */
     uuid: string;
-    /** URL for retrieving the full call transcription. */
+    /** URL for retrieving the full call transcription. Call it with your usual `Authorization` header. */
     url: string;
 }

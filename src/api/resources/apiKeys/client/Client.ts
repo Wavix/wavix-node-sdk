@@ -106,7 +106,7 @@ export class ApiKeysClient {
     }
 
     /**
-     * Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`.
+     * Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`. Store the returned `value` securely. Later reads return `redacted_value`, and `value` on reads is deprecated.
      *
      * @param {Wavix.ApiKeyCreateRequest} request
      * @param {ApiKeysClient.RequestOptions} requestOptions - Request-specific configuration.

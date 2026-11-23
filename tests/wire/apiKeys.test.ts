@@ -13,7 +13,6 @@ describe("ApiKeysClient", () => {
             {
                 id: 123,
                 label: "Production API Key",
-                value: "abc123def456ghi789jkl012mno345pqr678stu901vwx234yz",
                 active: true,
                 restricted: true,
                 permitted_ips: ["192.168.1.1", "10.0.0.1"],
@@ -33,6 +32,8 @@ describe("ApiKeysClient", () => {
                 account: { allow: "read" },
                 subaccounts: { allow: "none" },
                 created_at: "2024-01-15T10:30:00Z",
+                value: "abc123def456ghi789jkl012mno345pqr678stu901vwx234yz",
+                redacted_value: "...wxyz",
             },
         ];
 
@@ -88,7 +89,6 @@ describe("ApiKeysClient", () => {
         const rawResponseBody = {
             id: 123,
             label: "Production API Key",
-            value: "abc123def456ghi789jkl012mno345pqr678stu901vwx234yz",
             active: true,
             restricted: true,
             permitted_ips: ["192.168.1.1", "10.0.0.1"],
@@ -108,6 +108,8 @@ describe("ApiKeysClient", () => {
             account: { allow: "none" },
             subaccounts: { allow: "none" },
             created_at: "2024-01-15T10:30:00Z",
+            value: "abc123def456ghi789jkl012mno345pqr678stu901vwx234yz",
+            redacted_value: "...wxyz",
         };
 
         server
@@ -319,7 +321,6 @@ describe("ApiKeysClient", () => {
         const rawResponseBody = {
             id: 123,
             label: "Production API Key",
-            value: "abc123def456ghi789jkl012mno345pqr678stu901vwx234yz",
             active: true,
             restricted: true,
             permitted_ips: ["192.168.1.1", "10.0.0.1"],
@@ -339,6 +340,8 @@ describe("ApiKeysClient", () => {
             account: { allow: "none" },
             subaccounts: { allow: "none" },
             created_at: "2024-01-15T10:30:00Z",
+            value: "abc123def456ghi789jkl012mno345pqr678stu901vwx234yz",
+            redacted_value: "...wxyz",
         };
 
         server

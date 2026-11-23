@@ -77,7 +77,7 @@ await client.apiKeys.list({
 <dl>
 <dd>
 
-Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`.
+Creates an API key for the authenticated account. Restrict access by listing permitted IP addresses in `permitted_ips`. Store the returned `value` securely. Later reads return `redacted_value`, and `value` on reads is deprecated.
 </dd>
 </dl>
 </dd>
@@ -3247,7 +3247,7 @@ await client.subAccounts.list();
 </dl>
 </details>
 
-<details><summary><code>client.subAccounts.<a href="/src/api/resources/subAccounts/client/Client.ts">create</a>({ ...params }) -> Wavix.SubOrganizationResponse</code></summary>
+<details><summary><code>client.subAccounts.<a href="/src/api/resources/subAccounts/client/Client.ts">create</a>({ ...params }) -> Wavix.SubOrganizationWithSecret</code></summary>
 <dl>
 <dd>
 
@@ -3259,7 +3259,7 @@ await client.subAccounts.list();
 <dl>
 <dd>
 
-Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`.
+Creates a sub-account under the authenticated master account. Returns the sub-account with its generated `api_key`. Store the returned `api_key` securely. Later reads return `redacted_api_key`, and `api_key` on reads is deprecated.
 </dd>
 </dl>
 </dd>

@@ -133,7 +133,7 @@ export class MessagesClient {
     }
 
     /**
-     * Sends an SMS or MMS message. MMS is supported for U.S. numbers only. Track delivery using the returned `message_id` and the message status callback. The recipient must be opted in to receive messages from the account; sending to an opted-out number fails.
+     * Sends an SMS or MMS message. MMS is supported for U.S. numbers only. Track delivery using the returned `message_id` and the message status callback. The recipient must be opted in to receive messages from the account; sending to an opted-out number fails. Each message is charged to the account balance; `charge` in the response shows the amount.
      *
      * @param {Wavix.smsAndMms.SendMessagesRequest} request
      * @param {MessagesClient.RequestOptions} requestOptions - Request-specific configuration.

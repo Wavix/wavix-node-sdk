@@ -29,6 +29,7 @@ describe("CartClient", () => {
                     domestic_cli: false,
                 },
             ],
+            unavailable_dids: ["541139862175"],
             doc_types: [
                 { id: 1, name: "id", title: "Any form of ID" },
                 { id: 2, name: "address", title: "Proof of address" },
@@ -66,6 +67,19 @@ describe("CartClient", () => {
         await expect(async () => {
             return await client.cart.get();
         }).rejects.toThrow(Wavix.ForbiddenError);
+    });
+
+    test("get (4)", async () => {
+        const server = mockServerPool.createServer();
+        const client = new WavixClient({ maxRetries: 0, token: "test", environment: server.baseUrl });
+
+        const rawResponseBody = {};
+
+        server.mockEndpoint().get("/v1/buy/cart").respondWith().statusCode(503).jsonBody(rawResponseBody).build();
+
+        await expect(async () => {
+            return await client.cart.get();
+        }).rejects.toThrow(Wavix.ServiceUnavailableError);
     });
 
     test("add (1)", async () => {

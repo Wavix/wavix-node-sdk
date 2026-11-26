@@ -3,8 +3,10 @@
 import type * as Wavix from "../index.js";
 
 export interface CartResponse {
-    /** List of phone numbers in the cart. */
+    /** Phone numbers in the cart that are available for purchase. */
     dids: Wavix.AvailableNumber[];
+    /** Phone numbers in the cart that are no longer available for purchase. Retrieving the cart doesn't remove them. Empty when every number is available. */
+    unavailable_dids?: string[] | undefined;
     /** Document types required to activate phone numbers. */
     doc_types: Wavix.DocumentTypeInfo[];
 }

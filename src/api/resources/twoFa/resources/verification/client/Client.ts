@@ -114,7 +114,7 @@ export class VerificationClient {
     }
 
     /**
-     * Resends the OTP for the verification identified by `session_id` over the specified channel. Previously sent codes are invalidated.
+     * Resends the OTP for the verification identified by `session_id` over the specified channel. Previously sent codes are invalidated. Each code sent is charged to the account balance.
      *
      * @param {Wavix.twoFa.TwoFactorVerificationResendRequest} request
      * @param {VerificationClient.RequestOptions} requestOptions - Request-specific configuration.

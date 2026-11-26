@@ -32,6 +32,7 @@ export class CartClient {
      *
      * @throws {@link Wavix.UnauthorizedError}
      * @throws {@link Wavix.ForbiddenError}
+     * @throws {@link Wavix.ServiceUnavailableError}
      *
      * @example
      *     await client.cart.get()
@@ -76,6 +77,11 @@ export class CartClient {
                     );
                 case 403:
                     throw new Wavix.ForbiddenError(_response.error.body as unknown, _response.rawResponse);
+                case 503:
+                    throw new Wavix.ServiceUnavailableError(
+                        _response.error.body as Wavix.ValidationErrorResponse,
+                        _response.rawResponse,
+                    );
                 default:
                     throw new errors.WavixError({
                         statusCode: _response.error.statusCode,

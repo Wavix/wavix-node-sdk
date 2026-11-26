@@ -41,6 +41,17 @@ export interface WhatsAppMessageListItem {
     service_window_open_until?: (string | null) | undefined;
     /** Why an `outbound` message wasn't delivered. It's `null` unless `status` is `undelivered`, `expired`, or `rejected`. */
     error?: (Wavix.WhatsAppMessageError | null) | undefined;
+    /** Amount charged for the message in USD, such as `0.0950`. `0.0000` means the message wasn't charged. `null` means no amount is recorded, for example while the message isn't delivered yet. Returned for outbound messages, and only to users who can view prices. */
+    charge?: (string | null) | undefined;
+    /**
+     * WhatsApp conversation category the message is billed in, or `null` if it isn't known. Returned for outbound messages, and only to users who can view prices. Possible values:
+     *
+     * - `marketing` — Promotions, offers, and other marketing content.
+     * - `utility` — Transactional updates about an order or an account.
+     * - `authentication` — One-time passcodes for verifying a user.
+     * - `service` — Replies sent within a customer service window.
+     */
+    category?: (WhatsAppMessageListItem.Category | null) | undefined;
 }
 
 export namespace WhatsAppMessageListItem {
@@ -76,4 +87,19 @@ export namespace WhatsAppMessageListItem {
         Unknown: "unknown",
     } as const;
     export type Status = (typeof Status)[keyof typeof Status];
+    /**
+     * WhatsApp conversation category the message is billed in, or `null` if it isn't known. Returned for outbound messages, and only to users who can view prices. Possible values:
+     *
+     * - `marketing` — Promotions, offers, and other marketing content.
+     * - `utility` — Transactional updates about an order or an account.
+     * - `authentication` — One-time passcodes for verifying a user.
+     * - `service` — Replies sent within a customer service window.
+     */
+    export const Category = {
+        Marketing: "marketing",
+        Utility: "utility",
+        Authentication: "authentication",
+        Service: "service",
+    } as const;
+    export type Category = (typeof Category)[keyof typeof Category];
 }

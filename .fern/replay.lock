@@ -54,19 +54,25 @@ generations:
     cli_version: unknown
     generator_versions:
       fernapi/fern-typescript-sdk: 3.72.3
-current_generation: 2fabdbc6f19eda1f356c05e9c49c31a46305beba
+  - commit_sha: 8cc80decc509723de3d453589b66251afbd492ff
+    tree_hash: 710502810dedfd462eab0e6b7fa390dcae1985b9
+    timestamp: 2026-11-26T08:08:15.742Z
+    cli_version: unknown
+    generator_versions:
+      fernapi/fern-typescript-sdk: 3.72.3
+current_generation: 8cc80decc509723de3d453589b66251afbd492ff
 patches:
   - id: patch-f223b3fa
     content_hash: sha256:2a4776017cae391f4d523ae55bab9386844ed22fb02625c1ebb87a0946a00bd8
     original_commit: f223b3fa9684c640c7596adf2052184b53c69b44
     original_message: Fix repository.url case for npm provenance
     original_author: Nikolay Makarov <n.makarov@wavix.com>
-    base_generation: 2fabdbc6f19eda1f356c05e9c49c31a46305beba
+    base_generation: 8cc80decc509723de3d453589b66251afbd492ff
     files:
       - package.json
     patch_content: |
       diff --git a/package.json b/package.json
-      index deba380..b1a4a92 100644
+      index 5465fff..fa146e9 100644
       --- a/package.json
       +++ b/package.json
       @@ -4,7 +4,7 @@
@@ -82,7 +88,7 @@ patches:
       package.json: |
         {
             "name": "wavix-node-sdk",
-            "version": "3.1.1",
+            "version": "3.2.0",
             "private": false,
             "repository": {
                 "type": "git",
